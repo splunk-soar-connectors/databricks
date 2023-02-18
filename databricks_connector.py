@@ -19,10 +19,12 @@ import traceback
 
 import phantom.app as phantom
 import requests
+from databricks_cli.sdk.api_client import ApiClient
 from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
 
 import databricks_consts as consts
+from databricks_enums import DatabricksEndpoint
 
 
 class DatabricksConnector(BaseConnector):
@@ -37,25 +39,34 @@ class DatabricksConnector(BaseConnector):
         self._password = None
         self._token = None
 
-    def _get_error_msg_from_exception(self, e):
+    def _get_error_msg_from_exception(self, exception):
         error_code = consts.DATABRICKS_ERROR_CODE_UNAVAILABLE
         error_message = consts.DATABRICKS_ERROR_MESSAGE_UNAVAILABLE
 
         self.error_print(traceback.format_exc())
 
         try:
-            if e.args:
-                if len(e.args) > 1:
-                    error_code = e.args[0]
-                    error_message = e.args[1]
+            if exception.args:
+                if len(exception.args) > 1:
+                    error_code = exception.args[0]
+                    error_message = exception.args[1]
                     return f'Error Code: {error_code}. Error Message: {error_message}'
 
-                if len(e.args) == 1:
-                    error_message = e.args[0]
+                if len(exception.args) == 1:
+                    error_message = exception.args[0]
         except Exception:
             pass
 
         return f'Error Message: {error_message}'
+
+    def _get_api_client(self):
+        api_client = ApiClient(
+            host=self._host,
+            user=self._username,
+            password=self._password,
+            token=self._token,
+        )
+        return api_client
 
     def _handle_test_connectivity(self, param):
         self.save_progress(consts.TEST_CONNECTIVITY_PROGRESS_MESSAGE)
@@ -72,6 +83,41 @@ class DatabricksConnector(BaseConnector):
 
     def _handle_create_alert(self, param):
         self.debug_print(f'In action handler for: {self.get_action_identifier()}')
+
+        action_result = self.add_action_result(ActionResult(dict(param)))
+        api_client = self._get_api_client()
+
+        data = {}
+        data['name'] = param['name']
+        data['query_id'] = param['query_id']
+        data['options'] = {
+            'column': param['column'],
+            'custom_body': param.get('custom_body'),
+            'custom_subject': param.get('custom_subject'),
+            'muted': param.get('muted'),
+            'op': param['operator'],
+            'schedule_failures': param.get('schedule_failures'),
+            'value': param['value'],
+        }
+        # Clear null options
+        data['options'] = {option: value for option, value in data['options'] if value is not None}
+
+        rearm = param.get('rearm')
+        if rearm is not None:
+            data['rearm'] = rearm
+
+        data['parent'] = param['parent']
+
+        try:
+            result = api_client.perform_query(**DatabricksEndpoint.CREATE_ALERT.api_info, data=data)
+            action_result.add_data(result)
+        except Exception as e:
+            error_message = self._get_error_msg_from_exception(e)
+            return action_result.set_status(phantom.APP_ERROR, error_message)
+
+        summary = action_result.update_summary({})
+        summary['status'] = 'Successfully created alert'
+        return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_delete_alert(self, param):
         self.debug_print(f'In action handler for: {self.get_action_identifier()}')
