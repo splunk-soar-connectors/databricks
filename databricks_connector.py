@@ -100,7 +100,7 @@ class DatabricksConnector(BaseConnector):
             'value': param['value'],
         }
         # Clear null options
-        data['options'] = {option: value for option, value in data['options'] if value is not None}
+        data['options'] = {option: value for option, value in data['options'].items() if value is not None}
 
         rearm = param.get('rearm')
         if rearm is not None:
@@ -115,12 +115,35 @@ class DatabricksConnector(BaseConnector):
             error_message = self._get_error_msg_from_exception(e)
             return action_result.set_status(phantom.APP_ERROR, error_message)
 
-        summary = action_result.update_summary({})
-        summary['status'] = 'Successfully created alert'
+        summary = {
+            'status': 'Successfully created alert',
+        }
+        action_result.update_summary(summary)
+
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_delete_alert(self, param):
         self.debug_print(f'In action handler for: {self.get_action_identifier()}')
+
+        action_result = self.add_action_result(ActionResult(dict(param)))
+        api_client = self._get_api_client()
+
+        alert_id = param['alert_id']
+
+        try:
+            api_info = DatabricksEndpoint.DELETE_ALERT.api_info_with_interpolation(alert_id=alert_id)
+            result = api_client.perform_query(**api_info)
+            action_result.add_data(result)
+        except Exception as e:
+            error_message = self._get_error_msg_from_exception(e)
+            return action_result.set_status(phantom.APP_ERROR, error_message)
+
+        summary = {
+            'status': 'Successfully deleted alert',
+        }
+        action_result.update_summary(summary)
+
+        return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_perform_query(self, param):
         self.debug_print(f'In action handler for: {self.get_action_identifier()}')
@@ -132,8 +155,6 @@ class DatabricksConnector(BaseConnector):
         self.debug_print(f'In action handler for: {self.get_action_identifier()}')
 
     def handle_action(self, param):
-        ret_val = phantom.APP_SUCCESS
-
         # Get the action that we are supposed to execute for this App Run
         action_id = self.get_action_identifier()
 
@@ -167,10 +188,12 @@ class DatabricksConnector(BaseConnector):
         config = self.get_config()
 
         self._host = config['host']
-        self._username = config['username']
-        self._password = config['password']
-        self._token = config['password']
-        self._connection = None
+        self._username = config.get('username')
+        self._password = config.get('password')
+        self._token = config.get('token')
+
+        if not (self._username and self._password) and not self._token:
+            return self.set_status(phantom.APP_ERROR, consts.MISSING_AUTHENTICATION_ERROR_MESSAGE)
 
         return phantom.APP_SUCCESS
 

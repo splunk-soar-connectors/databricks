@@ -127,7 +127,7 @@
                     "data_type": "numeric",
                     "order": 9
                 },
-                "rearm": {
+                "parent": {
                     "description": "The identifier of the workspace folder containing the alert",
                     "data_type": "string",
                     "default": "folders/HOME",
@@ -135,7 +135,6 @@
                 }
             },
             "output": [],
-            "render": {},
             "versions": "EQ(*)"
         },
         {
@@ -143,10 +142,16 @@
             "description": "Remove alert for Splunk SOAR to poll",
             "type": "generic",
             "identifier": "delete_alert",
-            "read_only": true,
-            "parameters": {},
+            "read_only": false,
+            "parameters": {
+                "alert_id": {
+                    "description": "ID of the alert to delete",
+                    "data_type": "string",
+                    "required": true,
+                    "order": 0
+                }
+            },
             "output": [],
-            "render": {},
             "versions": "EQ(*)"
         },
         {

@@ -18,7 +18,8 @@ from enum import Enum
 
 
 class DatabricksEndpoint(Enum):
-    CREATE_ALERT = ('POST', '/alerts')
+    CREATE_ALERT = ('POST', '/preview/sql/alerts')
+    DELETE_ALERT = ('DELETE', '/preview/sql/alerts/{alert_id}')
 
     def __init__(self, method, path):
         self.method = method
@@ -27,3 +28,7 @@ class DatabricksEndpoint(Enum):
     @property
     def api_info(self):
         return {'method': self.method, 'path': self.path}
+
+    def api_info_with_interpolation(self, **values):
+        """ Return API info with the path interpolated using the specified values. """
+        return {'method': self.method, 'path': self.path.format(**values)}
