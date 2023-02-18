@@ -69,15 +69,69 @@
                     "required": true,
                     "order": 0
                 },
-                "channel_type": {
-                    "description": "Type of channel to create (public or private)",
+                "query_id": {
+                    "description": "ID of the query evaluated by the alert",
                     "data_type": "string",
-                    "order": 1,
-                    "default": "public",
+                    "required": true,
+                    "order": 1
+                },
+                "column": {
+                    "description": "Name of column in the query result to compare in alert evaluation",
+                    "data_type": "string",
+                    "required": true,
+                    "order": 2
+                },
+                "operator": {
+                    "description": "Operator used to compare in alert evaluation",
+                    "data_type": "string",
+                    "required": true,
                     "value_list": [
-                        "public",
-                        "private"
-                    ]
+                      ">",
+                      ">=",
+                      "<",
+                      "<=",
+                      "==",
+                      "!="
+                    ],
+                    "order": 3
+                },
+                "value": {
+                    "description": "Value used to compare in alert evaluation",
+                    "data_type": "string",
+                    "required": true,
+                    "order": 4
+                },
+                "custom_body": {
+                    "description": "Custom body of alert notification",
+                    "data_type": "string",
+                    "order": 5
+                },
+                "custom_subject": {
+                    "description": "Custom subject of alert notification",
+                    "data_type": "string",
+                    "order": 6
+                },
+                "muted": {
+                    "description": "Whether or not the alert is muted",
+                    "data_type": "boolean",
+                    "default": false,
+                    "order": 7
+                },
+                "schedule_failures": {
+                    "description": "Number of failures encountered during alert refresh. This counter is used for sending aggregated alert failure email notifications",
+                    "data_type": "numeric",
+                    "order": 8
+                },
+                "rearm": {
+                    "description": "Number of seconds after being triggered before the alert rearms itself and can be triggered again. If not set, alert will never be triggered again",
+                    "data_type": "numeric",
+                    "order": 9
+                },
+                "rearm": {
+                    "description": "The identifier of the workspace folder containing the alert",
+                    "data_type": "string",
+                    "default": "folders/HOME",
+                    "order": 10
                 }
             },
             "output": [],
