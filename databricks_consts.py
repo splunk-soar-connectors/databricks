@@ -14,6 +14,9 @@
 # and limitations under the License.
 #
 
+MISSING_AUTHENTICATION_ERROR_MESSAGE = \
+    'Either username/password or an authentication token must be specified in the app configuration'
+
 TEST_CONNECTIVITY_SUCCESS_MESSAGE = 'Test connectivity passed'
 TEST_CONNECTIVITY_ERROR_MESSAGE = 'Test connectivity failed'
 TEST_CONNECTIVITY_PROGRESS_MESSAGE = "Connecting to Databricks host"
