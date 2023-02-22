@@ -515,7 +515,50 @@
                     "order": 0
                 }
             },
-            "output": [],
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Status: Successfully deleted alert"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "Successfully deleted alert"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.context.guid",
+                    "data_type": "string",
+                    "example_values": [
+                        "955af0d7-5220-49a7-b96f-e2cc8e135472"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.context.artifact_id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.alert_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "fc833528-33e6-4f6f-8ea8-3625cf1e778e"
+                    ]
+                }
+            ],
             "versions": "EQ(*)"
         },
         {

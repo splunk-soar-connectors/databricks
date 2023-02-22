@@ -118,7 +118,7 @@ class DatabricksConnector(BaseConnector):
             return action_result.set_status(phantom.APP_ERROR, error_message)
 
         summary = {
-            'status': 'Successfully created alert',
+            'status': consts.CREATE_ALERT_SUCCESS_MESSAGE,
         }
         action_result.update_summary(summary)
 
@@ -141,7 +141,7 @@ class DatabricksConnector(BaseConnector):
             return action_result.set_status(phantom.APP_ERROR, error_message)
 
         summary = {
-            'status': 'Successfully deleted alert',
+            'status': consts.DELETE_ALERT_SUCCESS_MESSAGE,
         }
         action_result.update_summary(summary)
 
