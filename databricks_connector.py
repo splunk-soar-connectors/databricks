@@ -106,7 +106,9 @@ class DatabricksConnector(BaseConnector):
         if rearm is not None:
             data['rearm'] = rearm
 
-        data['parent'] = param['parent']
+        parent = param.get('parent')
+        if parent is not None:
+            data['parent'] = parent
 
         try:
             result = api_client.perform_query(**DatabricksEndpoint.CREATE_ALERT.api_info, data=data)
