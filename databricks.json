@@ -471,17 +471,17 @@
 										]
 								},
 								{
-										"data_path": "action_result.parameter.context.guid",
+										"data_path": "action_result.parameter.custom_body",
 										"data_type": "string",
 										"example_values": [
-												"3d919f34-35a9-4d11-9b75-abdb20ccef80"
+												"example template"
 										]
 								},
 								{
-										"data_path": "action_result.parameter.context.artifact_id",
-										"data_type": "numeric",
+										"data_path": "action_result.parameter.custom_subject",
+										"data_type": "string",
 										"example_values": [
-												0
+												"example template"
 										]
 								},
 								{
@@ -497,8 +497,32 @@
 										"example_values": [
 												"4cace055-7ffa-48b6-baca-e7d354531d6c"
 										]
+								},
+								{
+										"data_path": "action_result.parameter.parent",
+										"data_type": "string",
+										"example_values": [
+												"folders/1234567891234567"
+										]
+								},
+								{
+										"data_path": "action_result.parameter.rearm",
+										"data_type": "numeric",
+										"example_values": [
+												1
+										]
+								},
+								{
+										"data_path": "action_result.parameter.schedule_failures",
+										"data_type": "numeric",
+										"example_values": [
+												0
+										]
 								}
             ],
+            "render": {
+                "type": "table"
+            },
             "versions": "EQ(*)"
         },
         {
@@ -516,6 +540,10 @@
                 }
             },
             "output": [
+                {
+                    "data_path": "action_result.data",
+                    "data_type": "string"
+                },
                 {
                     "data_path": "action_result.status",
                     "data_type": "string",
@@ -538,20 +566,6 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.parameter.context.guid",
-                    "data_type": "string",
-                    "example_values": [
-                        "955af0d7-5220-49a7-b96f-e2cc8e135472"
-                    ]
-                },
-                {
-                    "data_path": "action_result.parameter.context.artifact_id",
-                    "data_type": "numeric",
-                    "example_values": [
-                        0
-                    ]
-                },
-                {
                     "data_path": "action_result.parameter.alert_id",
                     "data_type": "string",
                     "example_values": [
@@ -559,6 +573,9 @@
                     ]
                 }
             ],
+            "render": {
+                "type": "table"
+            },
             "versions": "EQ(*)"
         },
         {
