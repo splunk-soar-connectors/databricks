@@ -21,6 +21,9 @@ TEST_CONNECTIVITY_SUCCESS_MESSAGE = 'Test connectivity passed'
 TEST_CONNECTIVITY_ERROR_MESSAGE = 'Test connectivity failed'
 TEST_CONNECTIVITY_PROGRESS_MESSAGE = "Connecting to Databricks host"
 
+CREATE_ALERT_SUCCESS_MESSAGE = 'Successfully created alert'
+DELETE_ALERT_SUCCESS_MESSAGE = 'Successfully deleted alert'
+
 DATABRICKS_ERROR_CODE_UNAVAILABLE = 'Unavailable'
 DATABRICKS_ERROR_MESSAGE_UNAVAILABLE = 'Unavailable. Please check the asset configuration and|or the action parameters.'
 
