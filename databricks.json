@@ -86,12 +86,12 @@
                     "data_type": "string",
                     "required": true,
                     "value_list": [
-                      ">",
-                      ">=",
-                      "<",
-                      "<=",
-                      "==",
-                      "!="
+                        ">",
+                        ">=",
+                        "<",
+                        "<=",
+                        "==",
+                        "!="
                     ],
                     "order": 3
                 },
@@ -134,391 +134,391 @@
                 }
             },
             "output": [
-								{
-										"data_path": "action_result.data.*.id",
-										"data_type": "string",
-										"example_values": [
-												"fc833528-33e6-4f6f-8ea8-3625cf1e778e"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.name",
-										"data_type": "string",
-										"example_values": [
-												"test"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.user.id",
-										"data_type": "numeric",
-										"example_values": [
-												1234567891234567
-										]
-								},
-								{
-										"data_path": "action_result.data.*.user.name",
-										"data_type": "string",
-										"example_values": [
-												"John Doe"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.user.email",
-										"data_type": "string",
-										"example_values": [
-												"johndoe@example.com"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.user.is_db_admin",
-										"data_type": "numeric",
-										"example_values": [
-												false
-										]
-								},
-								{
-										"data_path": "action_result.data.*.user.profile_image_url",
-										"data_type": "string",
-										"example_values": [
-												"https://www.gravatar.com/avatar/123456789abcdef123456789abcdef12?s=40&d=identicon"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.query.id",
-										"data_type": "string",
-										"example_values": [
-												"4cace055-7ffa-48b6-baca-e7d354531d6c"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.query.name",
-										"data_type": "string",
-										"example_values": [
-												"sample query"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.query.query",
-										"data_type": "string",
-										"example_values": [
-												"SELECT\n  concat(pickup_zip, '-', dropoff_zip) as route,\n  AVG(fare_amount) as average_fare\nFROM\n  `samples`.`nyctaxi`.`trips`\nGROUP BY\n  1\nORDER BY\n  2 DESC\nLIMIT 1000"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.query.parent",
-										"data_type": "string",
-										"example_values": [
-												"folders/1234567891234567"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.query.is_safe",
-										"data_type": "boolean",
-										"example_values": [
-												true
-										]
-								},
-								{
-										"data_path": "action_result.data.*.query.options.parent",
-										"data_type": "string",
-										"example_values": [
-												"folders/1234567891234567"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.query.options.apply_auto_limit",
-										"data_type": "boolean",
-										"example_values": [
-												true
-										]
-								},
-								{
-										"data_path": "action_result.data.*.query.options.folder_node_status",
-										"data_type": "string",
-										"example_values": [
-												"ACTIVE"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.query.options.folder_node_internal_name",
-										"data_type": "string",
-										"example_values": [
-												"tree/1234567891234567"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.query.user_id",
-										"data_type": "numeric",
-										"example_values": [
-												1234567891234567
-										]
-								},
-								{
-										"data_path": "action_result.data.*.query.version",
-										"data_type": "numeric",
-										"example_values": [
-												1
-										]
-								},
-								{
-										"data_path": "action_result.data.*.query.is_draft",
-										"data_type": "numeric",
-										"example_values": [
-												false
-										]
-								},
-								{
-										"data_path": "action_result.data.*.query.schedule",
-										"data_type": "string"
-								},
-								{
-										"data_path": "action_result.data.*.query.created_at",
-										"data_type": "string",
-										"example_values": [
-												"2023-02-22T01:44:05Z"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.query.updated_at",
-										"data_type": "string",
-										"example_values": [
-												"2023-02-22T01:48:00Z"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.query.description",
-										"data_type": "string"
-								},
-								{
-										"data_path": "action_result.data.*.query.is_archived",
-										"data_type": "numeric",
-										"example_values": [
-												false
-										]
-								},
-								{
-										"data_path": "action_result.data.*.query.run_as_role",
-										"data_type": "string"
-								},
-								{
-										"data_path": "action_result.data.*.query.data_source_id",
-										"data_type": "string",
-										"example_values": [
-												"468e81e8-b8f4-49f6-a817-3aaa221f3b88"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.query.run_as_service_principal_id",
-										"data_type": "string"
-								},
-								{
-										"data_path": "action_result.data.*.rearm",
-										"data_type": "string"
-								},
-								{
-										"data_path": "action_result.data.*.state",
-										"data_type": "string",
-										"example_values": [
-												"unknown"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.parent",
-										"data_type": "string",
-										"example_values": [
-												"folders/1234567891234567"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.options.op",
-										"data_type": "string",
-										"example_values": [
-												">"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.options.muted",
-										"data_type": "numeric",
-										"example_values": [
-												false
-										]
-								},
-								{
-										"data_path": "action_result.data.*.options.value",
-										"data_type": "string",
-										"example_values": [
-												"80"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.options.column",
-										"data_type": "string",
-										"example_values": [
-												"average_fare"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.options.parent",
-										"data_type": "string",
-										"example_values": [
-												"folders/3042705489298866"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.options.query_plan",
-										"data_type": "string"
-								},
-								{
-										"data_path": "action_result.data.*.options.folder_node_status",
-										"data_type": "string",
-										"example_values": [
-												"ACTIVE"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.options.folder_node_internal_name",
-										"data_type": "string",
-										"example_values": [
-												"tree/1234567891234567"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.user_id",
-										"data_type": "numeric",
-										"example_values": [
-												1234567891234567
-										]
-								},
-								{
-										"data_path": "action_result.data.*.created_at",
-										"data_type": "string",
-										"example_values": [
-												"2023-02-22T02:06:45Z"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.updated_at",
-										"data_type": "string",
-										"example_values": [
-												"2023-02-22T02:06:45Z"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.is_archived",
-										"data_type": "numeric",
-										"example_values": [
-												false
-										]
-								},
-								{
-										"data_path": "action_result.data.*.permission_tier",
-										"data_type": "string",
-										"example_values": [
-												"CAN_MANAGE"
-										]
-								},
-								{
-										"data_path": "action_result.data.*.last_triggered_at",
-										"data_type": "string"
-								},
-								{
-										"data_path": "action_result.status",
-										"data_type": "string",
-										"example_values": [
-												"success"
-										]
-								},
-								{
-										"data_path": "action_result.message",
-										"data_type": "string",
-										"example_values": [
-												"Status: Successfully created alert"
-										]
-								},
-								{
-										"data_path": "action_result.summary.status",
-										"data_type": "string",
-										"example_values": [
-												"Successfully created alert"
-										]
-								},
-								{
-										"data_path": "action_result.parameter.name",
-										"data_type": "string",
-										"example_values": [
-												"test"
-										]
-								},
-								{
-										"data_path": "action_result.parameter.muted",
-										"data_type": "numeric",
-										"example_values": [
-												false
-										]
-								},
-								{
-										"data_path": "action_result.parameter.value",
-										"data_type": "string",
-										"example_values": [
-												"80"
-										]
-								},
-								{
-										"data_path": "action_result.parameter.column",
-										"data_type": "string",
-										"example_values": [
-												"average_fare"
-										]
-								},
-								{
-										"data_path": "action_result.parameter.custom_body",
-										"data_type": "string",
-										"example_values": [
-												"example template"
-										]
-								},
-								{
-										"data_path": "action_result.parameter.custom_subject",
-										"data_type": "string",
-										"example_values": [
-												"example template"
-										]
-								},
-								{
-										"data_path": "action_result.parameter.operator",
-										"data_type": "string",
-										"example_values": [
-												">"
-										]
-								},
-								{
-										"data_path": "action_result.parameter.query_id",
-										"data_type": "string",
-										"example_values": [
-												"4cace055-7ffa-48b6-baca-e7d354531d6c"
-										]
-								},
-								{
-										"data_path": "action_result.parameter.parent",
-										"data_type": "string",
-										"example_values": [
-												"folders/1234567891234567"
-										]
-								},
-								{
-										"data_path": "action_result.parameter.rearm",
-										"data_type": "numeric",
-										"example_values": [
-												1
-										]
-								},
-								{
-										"data_path": "action_result.parameter.schedule_failures",
-										"data_type": "numeric",
-										"example_values": [
-												0
-										]
-								}
+                {
+                    "data_path": "action_result.data.*.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "fc833528-33e6-4f6f-8ea8-3625cf1e778e"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "test"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.user.id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1234567891234567
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.user.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "John Doe"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.user.email",
+                    "data_type": "string",
+                    "example_values": [
+                        "johndoe@example.com"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.user.is_db_admin",
+                    "data_type": "numeric",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.user.profile_image_url",
+                    "data_type": "string",
+                    "example_values": [
+                        "https://www.gravatar.com/avatar/123456789abcdef123456789abcdef12?s=40&d=identicon"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.query.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "4cace055-7ffa-48b6-baca-e7d354531d6c"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.query.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "sample query"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.query.query",
+                    "data_type": "string",
+                    "example_values": [
+                        "SELECT\n  concat(pickup_zip, '-', dropoff_zip) as route,\n  AVG(fare_amount) as average_fare\nFROM\n  `samples`.`nyctaxi`.`trips`\nGROUP BY\n  1\nORDER BY\n  2 DESC\nLIMIT 1000"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.query.parent",
+                    "data_type": "string",
+                    "example_values": [
+                        "folders/1234567891234567"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.query.is_safe",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.query.options.parent",
+                    "data_type": "string",
+                    "example_values": [
+                        "folders/1234567891234567"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.query.options.apply_auto_limit",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.query.options.folder_node_status",
+                    "data_type": "string",
+                    "example_values": [
+                        "ACTIVE"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.query.options.folder_node_internal_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "tree/1234567891234567"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.query.user_id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1234567891234567
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.query.version",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.query.is_draft",
+                    "data_type": "numeric",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.query.schedule",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.query.created_at",
+                    "data_type": "string",
+                    "example_values": [
+                        "2023-02-22T01:44:05Z"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.query.updated_at",
+                    "data_type": "string",
+                    "example_values": [
+                        "2023-02-22T01:48:00Z"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.query.description",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.query.is_archived",
+                    "data_type": "numeric",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.query.run_as_role",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.query.data_source_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "468e81e8-b8f4-49f6-a817-3aaa221f3b88"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.query.run_as_service_principal_id",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.rearm",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.state",
+                    "data_type": "string",
+                    "example_values": [
+                        "unknown"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.parent",
+                    "data_type": "string",
+                    "example_values": [
+                        "folders/1234567891234567"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.options.op",
+                    "data_type": "string",
+                    "example_values": [
+                        ">"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.options.muted",
+                    "data_type": "numeric",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.options.value",
+                    "data_type": "string",
+                    "example_values": [
+                        "80"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.options.column",
+                    "data_type": "string",
+                    "example_values": [
+                        "average_fare"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.options.parent",
+                    "data_type": "string",
+                    "example_values": [
+                        "folders/3042705489298866"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.options.query_plan",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.options.folder_node_status",
+                    "data_type": "string",
+                    "example_values": [
+                        "ACTIVE"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.options.folder_node_internal_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "tree/1234567891234567"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.user_id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1234567891234567
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.created_at",
+                    "data_type": "string",
+                    "example_values": [
+                        "2023-02-22T02:06:45Z"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.updated_at",
+                    "data_type": "string",
+                    "example_values": [
+                        "2023-02-22T02:06:45Z"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.is_archived",
+                    "data_type": "numeric",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.permission_tier",
+                    "data_type": "string",
+                    "example_values": [
+                        "CAN_MANAGE"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.last_triggered_at",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Status: Successfully created alert"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "Successfully created alert"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "test"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.muted",
+                    "data_type": "numeric",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.value",
+                    "data_type": "string",
+                    "example_values": [
+                        "80"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.column",
+                    "data_type": "string",
+                    "example_values": [
+                        "average_fare"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.custom_body",
+                    "data_type": "string",
+                    "example_values": [
+                        "example template"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.custom_subject",
+                    "data_type": "string",
+                    "example_values": [
+                        "example template"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.operator",
+                    "data_type": "string",
+                    "example_values": [
+                        ">"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.query_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "4cace055-7ffa-48b6-baca-e7d354531d6c"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.parent",
+                    "data_type": "string",
+                    "example_values": [
+                        "folders/1234567891234567"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.rearm",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.schedule_failures",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                }
             ],
             "render": {
                 "type": "table"
@@ -664,7 +664,7 @@
             },
             {
                 "module": "databricks_cli",
-                "input_file": "wheels/py3/databricks_cli-0.17.4-py3-none-any.whl"
+                "input_file": "wheels/py3/databricks_cli-0.17.6-py3-none-any.whl"
             },
             {
                 "module": "idna",
@@ -696,7 +696,7 @@
             },
             {
                 "module": "urllib3",
-                "input_file": "wheels/shared/urllib3-1.26.14-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/urllib3-1.26.15-py2.py3-none-any.whl"
             },
             {
                 "module": "zipp",
@@ -716,7 +716,7 @@
             },
             {
                 "module": "charset_normalizer",
-                "input_file": "wheels/py39/charset_normalizer-3.0.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+                "input_file": "wheels/py39/charset_normalizer-3.1.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
             },
             {
                 "module": "click",
@@ -724,7 +724,7 @@
             },
             {
                 "module": "databricks_cli",
-                "input_file": "wheels/py3/databricks_cli-0.17.4-py3-none-any.whl"
+                "input_file": "wheels/py3/databricks_cli-0.17.6-py3-none-any.whl"
             },
             {
                 "module": "idna",
@@ -748,7 +748,7 @@
             },
             {
                 "module": "urllib3",
-                "input_file": "wheels/shared/urllib3-1.26.14-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/urllib3-1.26.15-py2.py3-none-any.whl"
             }
         ]
     }
