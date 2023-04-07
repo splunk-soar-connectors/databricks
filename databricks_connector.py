@@ -19,6 +19,7 @@ import traceback
 
 import phantom.app as phantom
 import requests
+from databricks_cli.sdk import JobsService
 from databricks_cli.sdk.api_client import ApiClient
 from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
@@ -59,6 +60,25 @@ class DatabricksConnector(BaseConnector):
 
         return f'Error Message: {error_message}'
 
+    @staticmethod
+    def _set_key_if_param_defined(dict_to_update: dict,
+                                  param: dict,
+                                  key: str,
+                                  is_json: bool = False,
+                                  param_key: str = None):
+        if param_key is None:
+            param_key = key
+
+        if param_key not in param:
+            return
+
+        if is_json:
+            value = json.loads(param[param_key])
+        else:
+            value = param[param_key]
+
+        dict_to_update[key] = value
+
     def _get_api_client(self):
         api_client = ApiClient(
             host=self._host,
@@ -66,6 +86,10 @@ class DatabricksConnector(BaseConnector):
             password=self._password,
             token=self._token,
         )
+
+        # Override user agent to {ISV Name}-{Product Name} per Databricks best practices
+        api_client.default_headers['user-agent'] = 'splunk-soar'
+
         return api_client
 
     def _handle_test_connectivity(self, param):
@@ -110,12 +134,8 @@ class DatabricksConnector(BaseConnector):
         if parent is not None:
             data['parent'] = parent
 
-        try:
-            result = api_client.perform_query(**DatabricksEndpoint.CREATE_ALERT.api_info, data=data)
-            action_result.add_data(result)
-        except Exception as e:
-            error_message = self._get_error_msg_from_exception(e)
-            return action_result.set_status(phantom.APP_ERROR, error_message)
+        result = api_client.perform_query(**DatabricksEndpoint.CREATE_ALERT.api_info, data=data)
+        action_result.add_data(result)
 
         summary = {
             'status': consts.CREATE_ALERT_SUCCESS_MESSAGE,
@@ -132,13 +152,9 @@ class DatabricksConnector(BaseConnector):
 
         alert_id = param['alert_id']
 
-        try:
-            api_info = DatabricksEndpoint.DELETE_ALERT.api_info_with_interpolation(alert_id=alert_id)
-            result = api_client.perform_query(**api_info)
-            action_result.add_data(result)
-        except Exception as e:
-            error_message = self._get_error_msg_from_exception(e)
-            return action_result.set_status(phantom.APP_ERROR, error_message)
+        api_info = DatabricksEndpoint.DELETE_ALERT.api_info_with_interpolation(alert_id=alert_id)
+        result = api_client.perform_query(**api_info)
+        action_result.add_data(result)
 
         summary = {
             'status': consts.DELETE_ALERT_SUCCESS_MESSAGE,
@@ -149,6 +165,37 @@ class DatabricksConnector(BaseConnector):
 
     def _handle_perform_query(self, param):
         self.debug_print(f'In action handler for: {self.get_action_identifier()}')
+
+        action_result = self.add_action_result(ActionResult(dict(param)))
+        api_client = self._get_api_client()
+        jobs_service = JobsService(api_client)
+
+        task_info = {}
+        task_info['task_key'] = param['task_key']
+        task_info['query_id'] = param['query_id']
+        task_info['warehouse_id'] = param['warehouse_id']
+        task_info['parameters'] = self._set_key_if_param_defined(task_info, param, 'parameters')
+        task_info['existing_cluster_id'] = self._set_key_if_param_defined(task_info, param, 'existing_cluster_id')
+        task_info['new_cluster'] = self._set_key_if_param_defined(task_info, param, 'new_cluster', is_json=True)
+        task_info['libraries'] = self._set_key_if_param_defined(task_info, param, 'libraries', is_json=True)
+        task_info['timeout_seconds'] = self._set_key_if_param_defined(task_info, param, 'timeout_seconds')
+
+        run_info = {}
+        run_info['task'] = [task_info]
+        run_info['run_name'] = self._set_key_if_param_defined(run_info, param, 'run_name')
+        run_info['timeout_seconds'] = self._set_key_if_param_defined(run_info, param, 'timeout_seconds')
+        run_info['idempotency_token'] = self._set_key_if_param_defined(run_info, param, 'idempotency_token')
+        run_info['access_control_list'] = self._set_key_if_param_defined(run_info, param, 'access_control_list', is_json=True)
+
+        result = jobs_service.submit_run(run_info)
+        action_result.add_data(result)
+
+        summary = {
+            'status': consts.CREATE_ALERT_SUCCESS_MESSAGE,
+        }
+        action_result.update_summary(summary)
+
+        return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_execute_notebook(self, param):
         self.debug_print(f'In action handler for: {self.get_action_identifier()}')
@@ -162,22 +209,27 @@ class DatabricksConnector(BaseConnector):
 
         self.debug_print("action_id", self.get_action_identifier())
 
-        if action_id == 'test_connectivity':
-            ret_val = self._handle_test_connectivity(param)
-        elif action_id == 'create_alert':
-            ret_val = self._handle_create_alert(param)
-        elif action_id == 'delete_alert':
-            ret_val = self._handle_delete_alert(param)
-        elif action_id == 'perform_query':
-            ret_val = self._handle_perform_query(param)
-        elif action_id == 'execute_notebook':
-            ret_val = self._handle_execute_notebook(param)
-        elif action_id == 'on_poll':
-            ret_val = self._handle_on_poll(param)
-        else:
+        try:
+            if action_id == 'test_connectivity':
+                ret_val = self._handle_test_connectivity(param)
+            elif action_id == 'create_alert':
+                ret_val = self._handle_create_alert(param)
+            elif action_id == 'delete_alert':
+                ret_val = self._handle_delete_alert(param)
+            elif action_id == 'perform_query':
+                ret_val = self._handle_perform_query(param)
+            elif action_id == 'execute_notebook':
+                ret_val = self._handle_execute_notebook(param)
+            elif action_id == 'on_poll':
+                ret_val = self._handle_on_poll(param)
+            else:
+                action_result = self.add_action_result(ActionResult(dict(param)))
+                ret_val = action_result.set_status(phantom.APP_ERROR,
+                                                   consts.UNHANDLED_ACTION_ID_ERROR_MESSAGE.format(action_id))
+        except Exception as e:
+            error_message = self._get_error_msg_from_exception(e)
             action_result = self.add_action_result(ActionResult(dict(param)))
-            ret_val = action_result.set_status(phantom.APP_ERROR,
-                                               consts.UNHANDLED_ACTION_ID_ERROR_MESSAGE.format(action_id))
+            ret_val = action_result.set_status(phantom.APP_ERROR, error_message)
 
         return ret_val
 
