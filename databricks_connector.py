@@ -114,25 +114,20 @@ class DatabricksConnector(BaseConnector):
         data = {}
         data['name'] = param['name']
         data['query_id'] = param['query_id']
-        data['options'] = {
+
+        options = {
             'column': param['column'],
-            'custom_body': param.get('custom_body'),
-            'custom_subject': param.get('custom_subject'),
-            'muted': param.get('muted'),
             'op': param['operator'],
-            'schedule_failures': param.get('schedule_failures'),
             'value': param['value'],
         }
-        # Clear null options
-        data['options'] = {option: value for option, value in data['options'].items() if value is not None}
+        self._set_key_if_param_defined(options, param, 'custom_body')
+        self._set_key_if_param_defined(options, param, 'custom_subject')
+        self._set_key_if_param_defined(options, param, 'muted')
+        self._set_key_if_param_defined(options, param, 'schedule_failures')
+        data['options'] = options
 
-        rearm = param.get('rearm')
-        if rearm is not None:
-            data['rearm'] = rearm
-
-        parent = param.get('parent')
-        if parent is not None:
-            data['parent'] = parent
+        self._set_key_if_param_defined(data, param, 'rearm')
+        self._set_key_if_param_defined(data, param, 'parent')
 
         result = api_client.perform_query(**DatabricksEndpoint.CREATE_ALERT.api_info, data=data)
         action_result.add_data(result)
@@ -168,24 +163,53 @@ class DatabricksConnector(BaseConnector):
 
         action_result = self.add_action_result(ActionResult(dict(param)))
         api_client = self._get_api_client()
+        data = {}
+        data['statement'] = param['statement']
+        data['warehouse_id'] = param['warehouse_id']
+
+        if 'wait_timeout' in param:
+            data['wait_timeout'] = f'{param["wait_timeout"]}s'
+
+        self._set_key_if_param_defined(data, param, 'byte_limit')
+        self._set_key_if_param_defined(data, param, 'catalog')
+        self._set_key_if_param_defined(data, param, 'disposition')
+        self._set_key_if_param_defined(data, param, 'format')
+        self._set_key_if_param_defined(data, param, 'on_wait_timeout')
+        self._set_key_if_param_defined(data, param, 'schema')
+
+        result = api_client.perform_query(**DatabricksEndpoint.PERFORM_QUERY.api_info, data=data)
+        action_result.add_data(result)
+
+        summary = {
+            'status': consts.PERFORM_QUERY_SUCCESS_MESSAGE,
+        }
+        action_result.update_summary(summary)
+
+        return action_result.set_status(phantom.APP_SUCCESS)
+
+    def _handle_execute_notebook(self, param):
+        self.debug_print(f'In action handler for: {self.get_action_identifier()}')
+
+        action_result = self.add_action_result(ActionResult(dict(param)))
+        api_client = self._get_api_client()
         jobs_service = JobsService(api_client)
 
         task_info = {}
         task_info['task_key'] = param['task_key']
         task_info['query_id'] = param['query_id']
         task_info['warehouse_id'] = param['warehouse_id']
-        task_info['parameters'] = self._set_key_if_param_defined(task_info, param, 'parameters')
-        task_info['existing_cluster_id'] = self._set_key_if_param_defined(task_info, param, 'existing_cluster_id')
-        task_info['new_cluster'] = self._set_key_if_param_defined(task_info, param, 'new_cluster', is_json=True)
-        task_info['libraries'] = self._set_key_if_param_defined(task_info, param, 'libraries', is_json=True)
-        task_info['timeout_seconds'] = self._set_key_if_param_defined(task_info, param, 'timeout_seconds')
+        self._set_key_if_param_defined(task_info, param, 'parameters')
+        self._set_key_if_param_defined(task_info, param, 'existing_cluster_id')
+        self._set_key_if_param_defined(task_info, param, 'new_cluster', is_json=True)
+        self._set_key_if_param_defined(task_info, param, 'libraries', is_json=True)
+        self._set_key_if_param_defined(task_info, param, 'timeout_seconds')
 
         run_info = {}
         run_info['task'] = [task_info]
-        run_info['run_name'] = self._set_key_if_param_defined(run_info, param, 'run_name')
-        run_info['timeout_seconds'] = self._set_key_if_param_defined(run_info, param, 'timeout_seconds')
-        run_info['idempotency_token'] = self._set_key_if_param_defined(run_info, param, 'idempotency_token')
-        run_info['access_control_list'] = self._set_key_if_param_defined(run_info, param, 'access_control_list', is_json=True)
+        self._set_key_if_param_defined(run_info, param, 'run_name')
+        self._set_key_if_param_defined(run_info, param, 'timeout_seconds')
+        self._set_key_if_param_defined(run_info, param, 'idempotency_token')
+        self._set_key_if_param_defined(run_info, param, 'access_control_list', is_json=True)
 
         result = jobs_service.submit_run(run_info)
         action_result.add_data(result)
@@ -196,9 +220,6 @@ class DatabricksConnector(BaseConnector):
         action_result.update_summary(summary)
 
         return action_result.set_status(phantom.APP_SUCCESS)
-
-    def _handle_execute_notebook(self, param):
-        self.debug_print(f'In action handler for: {self.get_action_identifier()}')
 
     def _handle_on_poll(self, param):
         self.debug_print(f'In action handler for: {self.get_action_identifier()}')

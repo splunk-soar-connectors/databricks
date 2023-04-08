@@ -20,6 +20,7 @@ from enum import Enum
 class DatabricksEndpoint(Enum):
     CREATE_ALERT = ('POST', '/preview/sql/alerts')
     DELETE_ALERT = ('DELETE', '/preview/sql/alerts/{alert_id}')
+    PERFORM_QUERY = ('POST', '/sql/statements/')
 
     def __init__(self, method, path):
         self.method = method

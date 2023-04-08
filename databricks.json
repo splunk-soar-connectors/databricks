@@ -580,9 +580,250 @@
         },
         {
             "action": "perform query",
-            "description": "Perform a SQL query on your databricks instance",
+            "description": "Perform a SQL query on your Databricks instance",
             "type": "generic",
             "identifier": "perform_query",
+            "read_only": false,
+            "parameters": {
+                "statement": {
+                    "description": "SQL statement to execute",
+                    "data_type": "string",
+                    "required": true,
+                    "order": 0
+                },
+                "warehouse_id": {
+                    "description": "Warehouse upon which to execute a statement",
+                    "data_type": "string",
+                    "required": true,
+                    "order": 1
+                },
+                "wait_timeout": {
+                    "description": "The time in seconds the API service will wait for the statement's result. Can be set to 0 or to a value between 5 and 50. When set to 0 the statement will execute in asynchronous mode",
+                    "data_type": "numeric",
+                    "order": 2
+                },
+                "on_wait_timeout": {
+                    "description": "When in synchronous mode with wait_timeout > 0s the action taken when the timeout is reached",
+                    "data_type": "string",
+                    "required": true,
+                    "order": 3,
+                    "value_list": [
+                        "CONTINUE",
+                        "CANCEL"
+                    ],
+                    "default": "CANCEL"
+                },
+                "byte_limit": {
+                    "description": "Applies the given byte limit to the statement's result size",
+                    "data_type": "numeric",
+                    "order": 4
+                },
+                "catalog": {
+                    "description": "Sets default catalog for statement execution, similar to USE CATALOG in SQL",
+                    "data_type": "string",
+                    "order": 5
+                },
+                "schema": {
+                    "description": "Sets default schema for statement execution, similar to USE SCHEMA in SQL.",
+                    "data_type": "string",
+                    "order": 6
+                },
+                "disposition": {
+                    "description": "The result disposition",
+                    "data_type": "string",
+                    "required": true,
+                    "order": 7,
+                    "value_list": [
+                        "INLINE",
+                        "EXTERNAL_LINKS"
+                    ],
+                    "default": "INLINE"
+                },
+                "format": {
+                    "description": "The result format",
+                    "data_type": "string",
+                    "required": true,
+                    "order": 8,
+                    "value_list": [
+                        "JSON_ARRAY",
+                        "ARROW_STREAM"
+                    ],
+                    "default": "JSON_ARRAY"
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.data.*.result.row_count",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1000
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.result.data_array.*.*",
+                    "data_type": "string",
+                    "example_values": [
+                        "10013-7008"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.result.row_offset",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.result.chunk_index",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.status.state",
+                    "data_type": "string",
+                    "example_values": [
+                        "SUCCEEDED"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.manifest.chunks.*.row_count",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1000
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.manifest.chunks.*.row_offset",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.manifest.chunks.*.chunk_index",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.manifest.format",
+                    "data_type": "string",
+                    "example_values": [
+                        "JSON_ARRAY"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.manifest.schema.columns.*.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "route"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.manifest.schema.columns.*.position",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.manifest.schema.columns.*.type_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "STRING"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.manifest.schema.columns.*.type_text",
+                    "data_type": "string",
+                    "example_values": [
+                        "STRING"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.manifest.schema.column_count",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.manifest.total_row_count",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1000
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.manifest.total_chunk_count",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.statement_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "01edd5a1-16c6-136e-9b1e-95fc566d511f"
+                    ]
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Status: Successfully performed SQL query"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "Successfully performed SQL query"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.format",
+                    "data_type": "string",
+                    "example_values": [
+                        "JSON_ARRAY"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.statement",
+                    "data_type": "string",
+                    "example_values": [
+                        "SELECT concat(pickup_zip, '-', dropoff_zip) as route, AVG(fare_amount) as average_fare FROM `samples`.`nyctaxi`.`trips` GROUP BY 1 ORDER BY 2 DESC LIMIT 1000"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.warehouse_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "0123456789abcdef"
+                    ]
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "execute notebook",
+            "description": "Execute a Databricks notebook",
+            "type": "generic",
+            "identifier": "execute_notebook",
             "read_only": false,
             "parameters": {
                 "task_key": {
@@ -644,19 +885,6 @@
                     "order": 10
                 }
             },
-            "output": [],
-            "render": {
-                "type": "table"
-            },
-            "versions": "EQ(*)"
-        },
-        {
-            "action": "execute notebook",
-            "description": "Execute a databricks notebook",
-            "type": "generic",
-            "identifier": "execute_notebook",
-            "read_only": false,
-            "parameters": {},
             "output": [],
             "render": {
                 "type": "table"
