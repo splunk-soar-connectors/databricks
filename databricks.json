@@ -812,6 +812,42 @@
                     "example_values": [
                         "0123456789abcdef"
                     ]
+                },
+                {
+                    "data_path": "action_result.parameter.wait_timeout",
+                    "data_type": "numeric",
+                    "example_values": [
+                        60
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.on_wait_timeout",
+                    "data_type": "string",
+                    "example_values": [
+                        "CANCEL"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.byte_limit",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1024
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.catalog",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.parameter.schema",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.parameter.disposition",
+                    "data_type": "string",
+                    "example_values": [
+                        "INLINE"
+                    ]
                 }
             ],
             "render": {
@@ -826,63 +862,52 @@
             "identifier": "execute_notebook",
             "read_only": false,
             "parameters": {
-                "task_key": {
-                    "description": "A unique name for the SQL query task",
+                "notebook_path": {
+                    "description": "The path of the notebook to be run in the Databricks workspace or remote repository",
                     "data_type": "string",
                     "required": true,
                     "order": 0
                 },
-                "query_id": {
-                    "description": "The ID of the SQL query to run",
+                "git_source": {
+                    "description": "An optional specification for a remote repository containing the notebook",
                     "data_type": "string",
-                    "required": true,
                     "order": 1
-                },
-                "warehouse_id": {
-                    "description": "The ID of the SQL warehouse",
-                    "data_type": "string",
-                    "required": true,
-                    "order": 2
-                },
-                "parameters": {
-                    "description": "Parameters to be used for each run of this query task",
-                    "data_type": "string",
-                    "order": 3
                 },
                 "existing_cluster_id": {
                     "description": "The ID of an existing cluster to use for all runs of this task",
                     "data_type": "string",
-                    "order": 4
+                    "order": 2
                 },
                 "new_cluster": {
-                    "description": "An object specifying the details of the new cluster to use for all runs of this task",
+                    "description": "An object specifying the details of the new cluster to use for this task",
                     "data_type": "string",
-                    "order": 5
+                    "order": 3
                 },
                 "libraries": {
                     "description": "An optional list of libraries to be installed on the cluster that executes the task",
                     "data_type": "string",
-                    "order": 6
+                    "order": 4
                 },
                 "timeout_seconds": {
-                    "description": "An optional timeout applied to each run of this job task",
-                    "data_type": "string",
-                    "order": 7
+                    "description": "An optional timeout applied to the job",
+                    "data_type": "numeric",
+                    "order": 5
                 },
                 "run_name": {
                     "description": "An optional name for the run",
                     "data_type": "string",
-                    "order": 8
+                    "order": 6,
+                    "default": "Untitled"
                 },
                 "idempotency_token": {
                     "description": "An optional token that can be used to guarantee the idempotency of job run requests. If a run with the provided token already exists, the request does not create a new run but returns the info of the existing run instead. If a run with the provided token is deleted, an error is returned",
                     "data_type": "string",
-                    "order": 9
+                    "order": 7
                 },
                 "access_control_list": {
                     "description": "List of permissions to set for the run",
                     "data_type": "string",
-                    "order": 10
+                    "order": 8
                 }
             },
             "output": [],

@@ -195,27 +195,29 @@ class DatabricksConnector(BaseConnector):
         jobs_service = JobsService(api_client)
 
         task_info = {}
-        task_info['task_key'] = param['task_key']
-        task_info['query_id'] = param['query_id']
-        task_info['warehouse_id'] = param['warehouse_id']
-        self._set_key_if_param_defined(task_info, param, 'parameters')
+        # Task key needs to be unique per parent job and can be used to set a dependency order
+        # within a job. However, for the purposes of this action we always create a one time job
+        # with a single task, so we can hardcode a readable value instead of exposing this detail
+        # to the user.
+        task_info['task_key'] = 'soar_execute_notebook_action'
+        task_info['notebook_path'] = param['notebook_path']
         self._set_key_if_param_defined(task_info, param, 'existing_cluster_id')
         self._set_key_if_param_defined(task_info, param, 'new_cluster', is_json=True)
         self._set_key_if_param_defined(task_info, param, 'libraries', is_json=True)
-        self._set_key_if_param_defined(task_info, param, 'timeout_seconds')
 
         run_info = {}
-        run_info['task'] = [task_info]
-        self._set_key_if_param_defined(run_info, param, 'run_name')
+        run_info['notebook_task'] = task_info
+        self._set_key_if_param_defined(run_info, param, 'git_source', is_json=True)
         self._set_key_if_param_defined(run_info, param, 'timeout_seconds')
+        self._set_key_if_param_defined(run_info, param, 'run_name')
         self._set_key_if_param_defined(run_info, param, 'idempotency_token')
         self._set_key_if_param_defined(run_info, param, 'access_control_list', is_json=True)
 
-        result = jobs_service.submit_run(run_info)
+        result = jobs_service.submit_run(**run_info)
         action_result.add_data(result)
 
         summary = {
-            'status': consts.CREATE_ALERT_SUCCESS_MESSAGE,
+            'status': consts.EXECUTE_NOTEBOOK_SUCCESS_MESSAGE
         }
         action_result.update_summary(summary)
 
