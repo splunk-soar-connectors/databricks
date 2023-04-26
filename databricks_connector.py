@@ -201,12 +201,12 @@ class DatabricksConnector(BaseConnector):
         # to the user.
         task_info['task_key'] = 'soar_execute_notebook_action'
         task_info['notebook_path'] = param['notebook_path']
-        self._set_key_if_param_defined(task_info, param, 'existing_cluster_id')
         self._set_key_if_param_defined(task_info, param, 'new_cluster', is_json=True)
         self._set_key_if_param_defined(task_info, param, 'libraries', is_json=True)
 
         run_info = {}
         run_info['notebook_task'] = task_info
+        self._set_key_if_param_defined(run_info, param, 'existing_cluster_id')
         self._set_key_if_param_defined(run_info, param, 'git_source', is_json=True)
         self._set_key_if_param_defined(run_info, param, 'timeout_seconds')
         self._set_key_if_param_defined(run_info, param, 'run_name')
