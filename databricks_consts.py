@@ -28,8 +28,6 @@ PERFORM_QUERY_SUCCESS_MESSAGE = 'Successfully performed SQL query'
 
 EXECUTE_NOTEBOOK_SUCCESS_MESSAGE = 'Successfully executed notebook'
 
-EXECUTE_NOTEBOOK_SUCCESS_MESSAGE = 'Successfully executed notebook'
-
 DATABRICKS_ERROR_CODE_UNAVAILABLE = 'Unavailable'
 DATABRICKS_ERROR_MESSAGE_UNAVAILABLE = 'Unavailable. Please check the asset configuration and|or the action parameters.'
 
