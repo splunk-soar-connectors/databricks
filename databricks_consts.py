@@ -19,10 +19,12 @@ MISSING_AUTHENTICATION_ERROR_MESSAGE = \
 
 TEST_CONNECTIVITY_SUCCESS_MESSAGE = 'Test connectivity passed'
 TEST_CONNECTIVITY_ERROR_MESSAGE = 'Test connectivity failed'
-TEST_CONNECTIVITY_PROGRESS_MESSAGE = "Connecting to Databricks host"
+TEST_CONNECTIVITY_PROGRESS_MESSAGE = 'Connecting to Databricks host'
+TEST_CONNECTIVITY_FILE_PATH = 'dbfs:/'
 
 CREATE_ALERT_SUCCESS_MESSAGE = 'Successfully created alert'
 DELETE_ALERT_SUCCESS_MESSAGE = 'Successfully deleted alert'
+LIST_ALERTS_SUCCESS_MESSAGE = 'Successfully listed alerts'
 
 PERFORM_QUERY_SUCCESS_MESSAGE = 'Successfully performed SQL query'
 

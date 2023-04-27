@@ -19,7 +19,7 @@ import traceback
 
 import phantom.app as phantom
 import requests
-from databricks_cli.sdk import JobsService
+from databricks_cli.sdk import DbfsService, JobsService
 from databricks_cli.sdk.api_client import ApiClient
 from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
@@ -98,7 +98,10 @@ class DatabricksConnector(BaseConnector):
         action_result = self.add_action_result(ActionResult(dict(param)))
 
         try:
-            # TODO
+            api_client = self._get_api_client()
+            dbfs_service = DbfsService(api_client)
+            dbfs_service.get_status(consts.TEST_CONNECTIVITY_FILE_PATH)
+
             self.save_progress(consts.TEST_CONNECTIVITY_SUCCESS_MESSAGE)
             return action_result.set_status(phantom.APP_SUCCESS)
         except Exception as e:
@@ -134,6 +137,23 @@ class DatabricksConnector(BaseConnector):
 
         summary = {
             'status': consts.CREATE_ALERT_SUCCESS_MESSAGE,
+        }
+        action_result.update_summary(summary)
+
+        return action_result.set_status(phantom.APP_SUCCESS)
+
+    def _handle_list_alerts(self, param):
+        self.debug_print(f'In action handler for: {self.get_action_identifier()}')
+
+        action_result = self.add_action_result(ActionResult(dict(param)))
+        api_client = self._get_api_client()
+
+        api_info = DatabricksEndpoint.LIST_ALERTS.api_info_with_interpolation()
+        result = api_client.perform_query(**api_info)
+        action_result.add_data(result)
+
+        summary = {
+            'status': consts.LIST_ALERTS_SUCCESS_MESSAGE,
         }
         action_result.update_summary(summary)
 
@@ -235,6 +255,8 @@ class DatabricksConnector(BaseConnector):
         try:
             if action_id == 'test_connectivity':
                 ret_val = self._handle_test_connectivity(param)
+            elif action_id == 'list_alerts':
+                ret_val = self._handle_list_alerts(param)
             elif action_id == 'create_alert':
                 ret_val = self._handle_create_alert(param)
             elif action_id == 'delete_alert':
