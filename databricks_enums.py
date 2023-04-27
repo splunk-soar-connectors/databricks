@@ -18,6 +18,7 @@ from enum import Enum
 
 
 class DatabricksEndpoint(Enum):
+    LIST_ALERTS = ('GET', '/preview/sql/alerts')
     CREATE_ALERT = ('POST', '/preview/sql/alerts')
     DELETE_ALERT = ('DELETE', '/preview/sql/alerts/{alert_id}')
     PERFORM_QUERY = ('POST', '/sql/statements')
