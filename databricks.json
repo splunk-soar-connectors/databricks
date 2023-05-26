@@ -57,6 +57,459 @@
             "versions": "EQ(*)"
         },
         {
+            "action": "list alerts",
+            "description": "List alerts",
+            "type": "generic",
+            "identifier": "list_alerts",
+            "read_only": true,
+            "parameters": {},
+            "output": [],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "list clusters",
+            "description": "List clusters",
+            "type": "generic",
+            "identifier": "list_clusters",
+            "read_only": true,
+            "parameters": {},
+            "output": [
+                {
+                    "data_path": "action_result.data.*.clusters.*.cluster_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "0424-172834-62g8ca83"
+                    ],
+                    "column_name": "Cluster Id",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.cluster_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "Ryan Russell's Personal Compute Cluster"
+                    ],
+                    "column_name": "Cluster Name",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.state",
+                    "data_type": "string",
+                    "example_values": [
+                        "RUNNING",
+                        "PENDING",
+                        "TERMINATED"
+                    ],
+                    "column_name": "State",
+                    "column_order": 2
+                },
+                {   "data_path": "action_result.data.*.clusters.*.state_message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Finding instances for new nodes, acquiring more instances if necessary",
+                        "Inactive cluster terminated (inactive for 4320 minutes)."
+                    ],
+                    "column_name": "State Message",
+                    "column_order": 3
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.driver.node_id",
+                    "data_type": "string",
+                    "contains": [
+                        "md5"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.driver.private_ip",
+                    "data_type": "string",
+                    "example_values": [
+                        "10.26.211.213"
+                    ],
+                    "contains": [
+                        "ip"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.driver.instance_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "i-091d43c81afd467b8"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.driver.host_private_ip",
+                    "data_type": "string",
+                    "example_values": [
+                        "10.26.215.174"
+                    ],
+                    "contains": [
+                        "ip"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.driver.node_attributes.is_spot",
+                    "data_type": "numeric",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.driver.start_timestamp",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1684533823792
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.driver.node_aws_attributes.is_spot",
+                    "data_type": "numeric",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.jdbc_port",
+                    "data_type": "numeric",
+                    "example_values": [
+                        10000
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.policy_id",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.spark_conf.spark.master",
+                    "data_type": "string",
+                    "example_values": [
+                        "local[*, 4]"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.spark_conf.spark.databricks.cluster.profile",
+                    "data_type": "string",
+                    "example_values": [
+                        "singleNode"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.start_time",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1682357315089
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.custom_tags.ResourceClass",
+                    "data_type": "string",
+                    "example_values": [
+                        "SingleNode"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.num_workers",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.default_tags.Vendor",
+                    "data_type": "string",
+                    "example_values": [
+                        "Databricks"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.default_tags.Creator",
+                    "data_type": "string",
+                    "example_values": [
+                        "rrussell@splunk.com"
+                    ],
+                    "contains": [
+                        "email"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.default_tags.ClusterId",
+                    "data_type": "string",
+                    "example_values": [
+                        "0424-172834-62g8ca83"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.default_tags.ClusterName",
+                    "data_type": "string",
+                    "example_values": [
+                        "Ryan Russell's Personal Compute Cluster"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.node_type_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "i3.xlarge"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.cluster_cores",
+                    "data_type": "numeric",
+                    "example_values": [
+                        4
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.spark_version",
+                    "data_type": "string",
+                    "example_values": [
+                        "13.0.x-cpu-ml-scala2.12"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.aws_attributes.zone_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "auto"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.aws_attributes.availability",
+                    "data_type": "string",
+                    "example_values": [
+                        "ON_DEMAND"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.aws_attributes.first_on_demand",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.aws_attributes.spot_bid_price_percent",
+                    "data_type": "numeric",
+                    "example_values": [
+                        100
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.cluster_source",
+                    "data_type": "string",
+                    "example_values": [
+                        "UI"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.driver_healthy",
+                    "data_type": "numeric",
+                    "example_values": [
+                        true
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.runtime_engine",
+                    "data_type": "string",
+                    "example_values": [
+                        "STANDARD"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.instance_source.node_type_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "i3.xlarge"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.single_user_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "rrussell@splunk.com"
+                    ],
+                    "contains": [
+                        "email"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.spark_context_id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        6926303405002259405,
+                        6376353339409838992
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.cluster_memory_mb",
+                    "data_type": "numeric",
+                    "example_values": [
+                        31232
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.creator_user_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "rrussell@splunk.com"
+                    ],
+                    "contains": [
+                        "email"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.data_security_mode",
+                    "data_type": "string",
+                    "example_values": [
+                        "LEGACY_SINGLE_USER_STANDARD"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.last_activity_time",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1684533890371,
+                        1682549244222
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.driver_node_type_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "i3.xlarge"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.enable_elastic_disk",
+                    "data_type": "numeric",
+                    "example_values": [
+                        true
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.last_restarted_time",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1684533934310,
+                        1684533666939,
+                        1682357560761
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.last_state_loss_time",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1684533934276,
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.driver_instance_source.node_type_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "i3.xlarge"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.init_scripts_safe_mode",
+                    "data_type": "numeric",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.autotermination_minutes",
+                    "data_type": "numeric",
+                    "example_values": [
+                        4320
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.effective_spark_version",
+                    "data_type": "string",
+                    "example_values": [
+                        "13.0.x-cpu-ml-scala2.12"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.enable_local_disk_encryption",
+                    "data_type": "numeric",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Status: Successfully listed clusters"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "Successfully listed clusters"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.terminated_time",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1682808455601
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.termination_reason.code",
+                    "data_type": "string",
+                    "example_values": [
+                        "INACTIVITY"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.termination_reason.type",
+                    "data_type": "string",
+                    "example_values": [
+                        "SUCCESS"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.clusters.*.termination_reason.parameters.inactivity_duration_min",
+                    "data_type": "string",
+                    "example_values": [
+                        "4320"
+                    ]
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
             "action": "create alert",
             "description": "Create a new alert for Splunk SOAR to poll",
             "type": "generic",
@@ -954,110 +1407,85 @@
         }
     ],
     "pip_dependencies": {
-        "wheel": [
+        "pypi": [
             {
-                "module": "PyJWT",
-                "input_file": "wheels/py3/PyJWT-2.4.0-py3-none-any.whl"
+                "module": "PyJWT"
             },
             {
-                "module": "certifi",
-                "input_file": "wheels/py3/certifi-2022.12.7-py3-none-any.whl"
+                "module": "certifi"
             },
             {
-                "module": "charset_normalizer",
-                "input_file": "wheels/py3/charset_normalizer-2.0.12-py3-none-any.whl"
+                "module": "charset_normalizer"
             },
             {
-                "module": "click",
-                "input_file": "wheels/py3/click-8.0.4-py3-none-any.whl"
+                "module": "click"
             },
             {
-                "module": "databricks_cli",
-                "input_file": "wheels/py3/databricks_cli-0.17.6-py3-none-any.whl"
+                "module": "databricks_cli"
             },
             {
-                "module": "idna",
-                "input_file": "wheels/py3/idna-3.4-py3-none-any.whl"
+                "module": "idna"
             },
             {
-                "module": "importlib_metadata",
-                "input_file": "wheels/py3/importlib_metadata-4.8.3-py3-none-any.whl"
+                "module": "importlib_metadata"
             },
             {
-                "module": "oauthlib",
-                "input_file": "wheels/py3/oauthlib-3.2.2-py3-none-any.whl"
+                "module": "oauthlib"
             },
             {
-                "module": "requests",
-                "input_file": "wheels/shared/requests-2.27.1-py2.py3-none-any.whl"
+                "module": "requests"
             },
             {
-                "module": "six",
-                "input_file": "wheels/shared/six-1.16.0-py2.py3-none-any.whl"
+                "module": "six"
             },
             {
-                "module": "tabulate",
-                "input_file": "wheels/py3/tabulate-0.8.10-py3-none-any.whl"
+                "module": "tabulate"
             },
             {
-                "module": "typing_extensions",
-                "input_file": "wheels/py3/typing_extensions-4.1.1-py3-none-any.whl"
+                "module": "typing_extensions"
             },
             {
-                "module": "urllib3",
-                "input_file": "wheels/shared/urllib3-1.26.15-py2.py3-none-any.whl"
+                "module": "urllib3"
             },
             {
-                "module": "zipp",
-                "input_file": "wheels/py3/zipp-3.6.0-py3-none-any.whl"
+                "module": "zipp"
             }
         ]
     },
     "pip39_dependencies": {
-        "wheel": [
+        "pypi": [
             {
-                "module": "PyJWT",
-                "input_file": "wheels/py3/PyJWT-2.6.0-py3-none-any.whl"
+                "module": "PyJWT"
             },
             {
-                "module": "certifi",
-                "input_file": "wheels/py3/certifi-2022.12.7-py3-none-any.whl"
+                "module": "certifi"
             },
             {
-                "module": "charset_normalizer",
-                "input_file": "wheels/py39/charset_normalizer-3.1.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+                "module": "charset_normalizer"
             },
             {
-                "module": "click",
-                "input_file": "wheels/py3/click-8.1.3-py3-none-any.whl"
+                "module": "click"
             },
             {
-                "module": "databricks_cli",
-                "input_file": "wheels/py3/databricks_cli-0.17.6-py3-none-any.whl"
+                "module": "databricks_cli"
             },
             {
-                "module": "idna",
-                "input_file": "wheels/py3/idna-3.4-py3-none-any.whl"
+                "module": "idna"
             },
             {
-                "module": "oauthlib",
-                "input_file": "wheels/py3/oauthlib-3.2.2-py3-none-any.whl"
+                "module": "oauthlib"
             },
             {
-                "module": "requests",
-                "input_file": "wheels/py3/requests-2.28.2-py3-none-any.whl"
+                "module": "requests"
             },
             {
-                "module": "six",
-                "input_file": "wheels/shared/six-1.16.0-py2.py3-none-any.whl"
+                "module": "six"
             },
             {
-                "module": "tabulate",
-                "input_file": "wheels/py3/tabulate-0.9.0-py3-none-any.whl"
+                "module": "tabulate"
             },
             {
-                "module": "urllib3",
-                "input_file": "wheels/shared/urllib3-1.26.15-py2.py3-none-any.whl"
+                "module": "urllib3"
             }
         ]
     }
