@@ -63,7 +63,464 @@
             "identifier": "list_alerts",
             "read_only": true,
             "parameters": {},
-            "output": [],
+            "output": [
+                {
+                    "data_path": "action_result.data.*.*.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "1ad424e7-323e-4c78-875a-d1c29831160c"
+                    ],
+                    "contains": [
+                        "databricks alert id"
+                    ],
+                    "column_name": "Alert Id",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.data.*.*.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "my new test alert"
+                    ],
+                    "column_name": "Alert Name",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.data.*.*.user.id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        7499675406330167
+                    ],
+                    "column_name": "User Id",
+                    "column_order": 2
+                },
+                {
+                    "data_path": "action_result.data.*.*.user.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "Ryan Russell"
+                    ],
+                    "column_name": "User Name",
+                    "column_order": 3
+                },
+                {
+                    "data_path": "action_result.data.*.*.user.email",
+                    "data_type": "string",
+                    "example_values": [
+                        "rrussell@splunk.com"
+                    ],
+                    "contains": [
+                        "email"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "738f7950-c5f7-4c75-b364-47eac73439dd"
+                    ],
+                    "column_name": "Query Id",
+                    "column_order": 4
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "Total Trips"
+                    ],
+                    "column_name": "Query Name",
+                    "column_order": 5
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.tags",
+                    "data_type": "string",
+                    "example_values": [
+                        "Sample"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.query",
+                    "data_type": "string",
+                    "example_values": [
+                        "USE CATALOG SAMPLES;\n\nSELECT\n  count(*) as total_trips\nFROM\n  `samples`.`nyctaxi`.`trips`\nWHERE\n  tpep_pickup_datetime BETWEEN TIMESTAMP '{{ pickup_date.start }}'\n  AND TIMESTAMP '{{ pickup_date.end }}'\n  AND pickup_zip IN ({{ pickupzip }})"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.is_safe",
+                    "data_type": "numeric",
+                    "example_values": [
+                        true
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.options.parent",
+                    "data_type": "string",
+                    "example_values": [
+                        "folders/3494881372287936"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.options.parameters.*.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "pickup_date"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.options.parameters.*.type",
+                    "data_type": "string",
+                    "example_values": [
+                        "datetime-range"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.options.parameters.*.title",
+                    "data_type": "string",
+                    "example_values": [
+                        "Data Range"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.options.parameters.*.value.end",
+                    "data_type": "string",
+                    "example_values": [
+                        "2016-01-16 12:07"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.options.parameters.*.value.start",
+                    "data_type": "string",
+                    "example_values": [
+                        "2016-01-01 12:07"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.options.parameters.*.parentWidgetId",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.options.parameters.*.value",
+                    "data_type": "string",
+                    "example_values": [
+                        "10001"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.options.parameters.*.global",
+                    "data_type": "numeric",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.options.parameters.*.enumOptions",
+                    "data_type": "string",
+                    "example_values": [
+                        "10154\n10065\n10014\n10029\n10019\n10152\n11222\n11221\n10006\n10460\n10028\n10007\n10271\n10009\n11103\n10278\n11106\n10044\n11373\n11102\n10452\n10199\n11231\n11238\n10119\n11215\n11237\n10022\n10112\n10020\n10013\n10026\n11372\n11417\n11235\n11422\n10005\n10115\n11435\n11207\n10002\n10016\n10171\n11210\n11430\n10025\n10032\n10111\n10031\n11230\n10021\n10003\n11377\n10001\n11370\n10454\n10038\n11216\n11105\n10017\n10035\n10153\n10463\n10110\n10282\n10027\n10012\n10023\n10011\n10167\n11104\n10037\n10162\n11201\n11205\n11371\n11226\n10018\n11101\n11206\n10034\n10103\n11217\n10280\n10069\n11211\n10030\n11225\n7002\n10039\n7030\n10468\n11209\n11109\n7310\n11436\n7737\n11375\n11369\n11223\n7087\n11224\n10502\n10451\n11220\n10474\n11424\n11420\n11212\n7311\n11356\n7114\n11368\n10470\n7086\n10024\n11418\n10305\n7718\n11233\n11378\n11003\n11423\n11355\n11208\n11218\n7974\n8876"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.options.parameters.*.multiValuesOptions.prefix",
+                    "data_type": "string",
+                    "example_values": [
+                        ""
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.options.parameters.*.multiValuesOptions.suffix",
+                    "data_type": "string",
+                    "example_values": [
+                        ""
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.options.parameters.*.multiValuesOptions.separator",
+                    "data_type": "string",
+                    "example_values": [
+                        ","
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.options.run_as_role",
+                    "data_type": "string",
+                    "example_values": [
+                        "viewer"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.options.apply_auto_limit",
+                    "data_type": "numeric",
+                    "example_values": [
+                        true
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.options.folder_node_status",
+                    "data_type": "string",
+                    "example_values": [
+                        "ACTIVE"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.options.folder_node_internal_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "tree/3494881372287938"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.user_id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        7499675406330167
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.version",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.is_draft",
+                    "data_type": "numeric",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.schedule",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.created_at",
+                    "data_type": "string",
+                    "example_values": [
+                        "2023-04-26T22:10:39Z"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.updated_at",
+                    "data_type": "string",
+                    "example_values": [
+                        "2023-04-26T22:10:39Z"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.description",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.is_archived",
+                    "data_type": "numeric",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.run_as_role",
+                    "data_type": "string",
+                    "example_values": [
+                        "viewer"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.warehouse_id",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.data_source_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "468e81e8-b8f4-49f6-a817-3aaa221f3b88"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.query.run_as_service_principal_id",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.*.rearm",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.*.state",
+                    "data_type": "string",
+                    "example_values": [
+                        "unknown"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.options.op",
+                    "data_type": "string",
+                    "example_values": [
+                        ">"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.options.muted",
+                    "data_type": "numeric",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.options.value",
+                    "data_type": "string",
+                    "example_values": [
+                        "1"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.options.column",
+                    "data_type": "string",
+                    "example_values": [
+                        "total_trips"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.options.parent",
+                    "data_type": "string",
+                    "example_values": [
+                        "folders/3042705489298866"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.options.query_plan",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.*.options.aggregation",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.*.options.display_column",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.*.options.empty_result_state",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.*.options.folder_node_status",
+                    "data_type": "string",
+                    "example_values": [
+                        "ACTIVE"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.options.folder_node_internal_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "tree/3494881372287944"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.user_id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        7499675406330167
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.conditions.op",
+                    "data_type": "string",
+                    "example_values": [
+                        ">"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.conditions.alert.column.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "total_trips"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.conditions.alert.column.display",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.*.conditions.alert.column.aggregation",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.*.conditions.threshold.value",
+                    "data_type": "string",
+                    "example_values": [
+                        "1"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.conditions.query_plan",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.*.created_at",
+                    "data_type": "string",
+                    "example_values": [
+                        "2023-04-27T00:00:52Z"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.updated_at",
+                    "data_type": "string",
+                    "example_values": [
+                        "2023-04-27T00:00:52Z"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.warehouse_id",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.*.subscriptions.*.user_id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        7499675406330167
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.*.last_triggered_at",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Status: Successfully listed alerts"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "Successfully listed alerts"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
             "render": {
                 "type": "table"
             },
@@ -106,7 +563,8 @@
                     "column_name": "State",
                     "column_order": 2
                 },
-                {   "data_path": "action_result.data.*.clusters.*.state_message",
+                {
+                    "data_path": "action_result.data.*.clusters.*.state_message",
                     "data_type": "string",
                     "example_values": [
                         "Finding instances for new nodes, acquiring more instances if necessary",
