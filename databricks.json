@@ -1447,7 +1447,10 @@
                     "description": "ID of the alert to delete",
                     "data_type": "string",
                     "required": true,
-                    "order": 0
+                    "order": 0,
+                    "contains": [
+                        "databricks alert id"
+                    ]
                 }
             },
             "output": [
