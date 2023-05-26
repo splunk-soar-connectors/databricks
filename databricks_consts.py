@@ -25,6 +25,7 @@ TEST_CONNECTIVITY_FILE_PATH = 'dbfs:/'
 CREATE_ALERT_SUCCESS_MESSAGE = 'Successfully created alert'
 DELETE_ALERT_SUCCESS_MESSAGE = 'Successfully deleted alert'
 LIST_ALERTS_SUCCESS_MESSAGE = 'Successfully listed alerts'
+LIST_CLUSTERS_SUCCESS_MESSAGE = 'Successfully listed clusters'
 
 PERFORM_QUERY_SUCCESS_MESSAGE = 'Successfully performed SQL query'
 

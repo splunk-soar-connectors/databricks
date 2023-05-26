@@ -159,6 +159,23 @@ class DatabricksConnector(BaseConnector):
 
         return action_result.set_status(phantom.APP_SUCCESS)
 
+    def _handle_list_clusters(self, param):
+        self.debug_print(f'In action handler for: {self.get_action_identifier()}')
+
+        action_result = self.add_action_result(ActionResult(dict(param)))
+        api_client = self._get_api_client()
+
+        api_info = DatabricksEndpoint.LIST_CLUSTERS.api_info_with_interpolation()
+        result = api_client.perform_query(**api_info)
+        action_result.add_data(result)
+
+        summary = {
+            'status': consts.LIST_CLUSTERS_SUCCESS_MESSAGE
+        }
+        action_result.update_summary(summary)
+
+        return action_result.set_status(phantom.APP_SUCCESS)
+
     def _handle_delete_alert(self, param):
         self.debug_print(f'In action handler for: {self.get_action_identifier()}')
 
@@ -257,6 +274,8 @@ class DatabricksConnector(BaseConnector):
                 ret_val = self._handle_test_connectivity(param)
             elif action_id == 'list_alerts':
                 ret_val = self._handle_list_alerts(param)
+            elif action_id == 'list_clusters':
+                ret_val = self._handle_list_clusters(param)
             elif action_id == 'create_alert':
                 ret_val = self._handle_create_alert(param)
             elif action_id == 'delete_alert':
