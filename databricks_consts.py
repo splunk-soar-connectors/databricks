@@ -23,15 +23,21 @@ TEST_CONNECTIVITY_PROGRESS_MESSAGE = 'Connecting to Databricks host'
 TEST_CONNECTIVITY_FILE_PATH = 'dbfs:/'
 
 CREATE_ALERT_SUCCESS_MESSAGE = 'Successfully created alert'
+CREATE_ALERT_ERROR_MESSAGE = 'Alert creation failed'
 DELETE_ALERT_SUCCESS_MESSAGE = 'Successfully deleted alert'
+DELETE_ALERT_ERROR_MESSAGE = 'Alert deletion failed'
 LIST_ALERTS_SUCCESS_MESSAGE = 'Successfully listed alerts'
+LIST_ALERTS_ERROR_MESSAGE = 'List alerts failed'
 LIST_CLUSTERS_SUCCESS_MESSAGE = 'Successfully listed clusters'
-
+LIST_CLUSTERS_ERROR_MESSAGE = 'List clusters failed'
+LIST_WAREHOUSES_SUCCESS_MESSAGE = 'Successfully listed warehouses'
+LIST_WAREHOUSES_ERROR_MESSAGE = 'List warehouses failed'
 PERFORM_QUERY_SUCCESS_MESSAGE = 'Successfully performed SQL query'
+PERFORM_QUERY_ERROR_MESSAGE = 'Failed to perform SQL query'
 
 EXECUTE_NOTEBOOK_SUCCESS_MESSAGE = 'Successfully executed notebook'
+EXECUTE_NOTEBOOK_ERROR_MESSAGE = 'Failed to execute notebook'
 
-DATABRICKS_ERROR_CODE_UNAVAILABLE = 'Unavailable'
 DATABRICKS_ERROR_MESSAGE_UNAVAILABLE = 'Unavailable. Please check the asset configuration and|or the action parameters.'
 
 UNHANDLED_ACTION_ID_ERROR_MESSAGE = 'Action ID {} does not have a code handler.'
