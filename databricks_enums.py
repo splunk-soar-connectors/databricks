@@ -23,6 +23,7 @@ class DatabricksEndpoint(Enum):
     CREATE_ALERT = ('POST', '/preview/sql/alerts')
     DELETE_ALERT = ('DELETE', '/preview/sql/alerts/{alert_id}')
     PERFORM_QUERY = ('POST', '/sql/statements')
+    LIST_WAREHOUSES = ('GET', '/sql/warehouses')
 
     def __init__(self, method, path):
         self.method = method
