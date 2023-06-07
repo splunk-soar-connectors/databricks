@@ -68,8 +68,8 @@ and limitations under the License.
                 <table class="phantom-table dataTable">
                     <thead>
                         <tr>
-                            {% for name in result.data.result.manifest.schema.columns %}
-                                <th class="widget-th">{{ name }}</th>
+                            {% for item in result.data.manifest.schema.columns %}
+                                <th class="widget-th">{{ item.name }}</th>
                             {% endfor %}
                         </tr>
                     </thead>
