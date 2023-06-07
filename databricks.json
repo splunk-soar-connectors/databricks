@@ -1971,7 +1971,11 @@
                 }
             ],
             "render": {
-                "type": "table"
+                "type": "custom",
+                "width": 10,
+                "height": 5,
+                "view": "databricks_view.display_query_results",
+                "title": "Perform Query"
             },
             "versions": "EQ(*)"
         },
