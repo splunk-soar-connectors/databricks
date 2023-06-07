@@ -254,8 +254,8 @@ class DatabricksConnector(BaseConnector):
             return action_result.set_status(phantom.APP_SUCCESS)
 
         except Exception as e:
-            self.save_progress(self._get_error_msg_from_exception(e))
-            return action_result.set_status(phantom.APP_ERROR, consts.PERFORM_QUERY_ERROR_MESSAGE)
+            error_message = self._get_error_msg_from_exception(e)
+            return action_result.set_status(phantom.APP_ERROR, consts.PERFORM_QUERY_ERROR_MESSAGE, error_message)
 
     def _handle_execute_notebook(self, param):
         self.debug_print(f'In action handler for: {self.get_action_identifier()}')
@@ -295,8 +295,8 @@ class DatabricksConnector(BaseConnector):
             return action_result.set_status(phantom.APP_SUCCESS)
 
         except Exception as e:
-            self.save_progress(self._get_error_msg_from_exception(e))
-            return action_result.set_status(phantom.APP_ERROR, consts.EXECUTE_NOTEBOOK_ERROR_MESSAGE)
+            error_message = self._get_error_msg_from_exception(e)
+            return action_result.set_status(phantom.APP_ERROR, consts.EXECUTE_NOTEBOOK_ERROR_MESSAGE, error_message)
 
     def _handle_list_warehouses(self, param):
         self.debug_print(f'In action handler for: {self.get_action_identifier()}')
