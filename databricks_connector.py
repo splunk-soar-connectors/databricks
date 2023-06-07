@@ -16,6 +16,7 @@
 
 import json
 import traceback
+from datetime import datetime
 
 import phantom.app as phantom
 import requests
@@ -207,20 +208,30 @@ class DatabricksConnector(BaseConnector):
         self.debug_print(f'In action handler for: {self.get_action_identifier()}')
 
         action_result = self.add_action_result(ActionResult(dict(param)))
-        api_client = self._get_api_client()
 
-        alert_id = param['alert_id']
+        try:
+            api_client = self._get_api_client()
 
-        api_info = DatabricksEndpoint.DELETE_ALERT.api_info_with_interpolation(alert_id=alert_id)
-        result = api_client.perform_query(**api_info)
-        action_result.add_data(result)
+            alert_id = param['alert_id']
 
-        summary = {
-            'status': consts.DELETE_ALERT_SUCCESS_MESSAGE,
-        }
-        action_result.update_summary(summary)
+            api_info = DatabricksEndpoint.DELETE_ALERT.api_info_with_interpolation(alert_id=alert_id)
+            result = api_client.perform_query(**api_info)
+            action_result.add_data(result)
 
-        return action_result.set_status(phantom.APP_SUCCESS)
+            summary = {
+                'status': consts.DELETE_ALERT_SUCCESS_MESSAGE,
+            }
+            action_result.update_summary(summary)
+
+            # also remove from state file if present
+            if 'alerts' in self._state and alert_id in self._state['alerts']:
+                del self._state['alerts'][alert_id]
+
+            return action_result.set_status(phantom.APP_SUCCESS)
+
+        except Exception as e:
+            error_message = self._get_error_msg_from_exception(e)
+            return action_result.set_status(phantom.APP_ERROR, consts.DELETE_ALERT_ERROR_MESSAGE, error_message)
 
     def _handle_perform_query(self, param):
         self.debug_print(f'In action handler for: {self.get_action_identifier()}')
@@ -326,12 +337,17 @@ class DatabricksConnector(BaseConnector):
             error_message = self._get_error_msg_from_exception(e)
             return action_result.set_status(phantom.APP_ERROR, consts.LIST_WAREHOUSES_ERROR_MESSAGE, error_message)
 
+    def _date_compare(self, alert_triggered_date, last_triggered_date):
+        if datetime.strptime(alert_triggered_date, consts.DATETIME_FORMAT) > datetime.strptime(last_triggered_date, consts.DATETIME_FORMAT):
+            return True
+        else:
+            return False
+
     def _handle_on_poll(self, param):
         self.debug_print(f'In action handler for: {self.get_action_identifier()}')
 
         if self.is_poll_now():
             self.debug_print("Starting polling now")
-            # return self._handle_poll_now(param)
             pass
 
         # config = self.get_config()
@@ -342,22 +358,29 @@ class DatabricksConnector(BaseConnector):
         api_info = DatabricksEndpoint.LIST_ALERTS.api_info_with_interpolation()
         result = api_client.perform_query(**api_info)
 
-        action_result.add_data(result)
-
-        if result:
-            pass
-
-        # state_alerts = self._state.get("alerts")
+        # get list of alerts from state to compare to current list of alerts
+        state_alerts = self._state.get("alerts", {})
 
         for alert in result:
-            if 'last_triggered_at' in alert and alert['last_triggered_at']:
-                self.debug_print('got here')
-                # and id in state_alerts:
+            last_triggered_at = alert.get('last_triggered_at')
+            if not last_triggered_at:
+                continue
 
-            container = dict()
-            container['name'] = alert.get('name', 'Databricks Alert')
-            container['artifacts'] = [{'cef': alert }]
-            self.save_container(container)
+            alert_id = alert.get('id')
+
+            # check to see if the latest alert trigger date is later than the last time it triggered
+            if alert_id:
+                if alert_id in state_alerts and not self._date_compare(last_triggered_at, state_alerts[alert_id]):
+                    continue
+
+                state_alerts[alert_id] = last_triggered_at
+
+                container = dict()
+                container['name'] = alert.get('name', 'Databricks Alert')
+                container['artifacts'] = [{'cef': alert }]
+                self.save_container(container)
+
+                self._state['alerts'] = state_alerts
 
         return action_result.set_status(phantom.APP_SUCCESS)
 

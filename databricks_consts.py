@@ -14,6 +14,8 @@
 # and limitations under the License.
 #
 
+DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
+
 MISSING_AUTHENTICATION_ERROR_MESSAGE = \
     'Either username/password or an authentication token must be specified in the app configuration'
 
