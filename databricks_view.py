@@ -23,7 +23,8 @@ def get_ctx_result(result):
     ctx_result['param'] = param
 
     if data:
-        ctx_result['data'] = data[0]
+        ctx_result['headers'] = data[0].get('manifest', {}).get('schema', {}).get('columns', {})
+        ctx_result['data'] = data[0].get('result', {}).get('data_array', {})
 
     if summary:
         ctx_result['summary'] = summary
