@@ -68,13 +68,13 @@ and limitations under the License.
                 <table class="phantom-table dataTable">
                     <thead>
                         <tr>
-                            {% for item in result.data.manifest.schema.columns %}
+                            {% for item in result.headers %}
                                 <th class="widget-th">{{ item.name }}</th>
                             {% endfor %}
                         </tr>
                     </thead>
                     <tbody>
-                        {% for row in result.data.result.data_array %}
+                        {% for row in result.data %}
                             <tr>
                                 {% for cell in row %}
                                     <td class="widget-td">{{ cell }}</td>
