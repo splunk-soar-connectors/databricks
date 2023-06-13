@@ -12,11 +12,11 @@
     "product_vendor": "Databricks",
     "product_name": "Databricks",
     "product_version_regex": ".*",
-    "min_phantom_version": "5.4.0",
+    "min_phantom_version": "5.5.0",
     "python_version": "3",
     "fips_compliant": true,
     "latest_tested_versions": [
-        "Cloud API, November 17, 2022"
+        "Cloud API, June 8, 2023"
     ],
     "logo": "logo_databricks.svg",
     "logo_dark": "logo_databricks_dark.svg",
@@ -104,16 +104,6 @@
                     "column_order": 3
                 },
                 {
-                    "data_path": "action_result.data.*.user.email",
-                    "data_type": "string",
-                    "example_values": [
-                        "rrussell@splunk.com"
-                    ],
-                    "contains": [
-                        "email"
-                    ]
-                },
-                {
                     "data_path": "action_result.data.*.query.id",
                     "data_type": "string",
                     "example_values": [
@@ -133,6 +123,16 @@
                     ],
                     "column_name": "Query Name",
                     "column_order": 5
+                },
+                {
+                    "data_path": "action_result.data.*.user.email",
+                    "data_type": "string",
+                    "example_values": [
+                        "rrussell@splunk.com"
+                    ],
+                    "contains": [
+                        "email"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.query.tags",
@@ -930,7 +930,7 @@
         },
         {
             "action": "create alert",
-            "description": "Create a new alert for Splunk SOAR to poll",
+            "description": "Create a new alert",
             "type": "generic",
             "identifier": "create_alert",
             "read_only": false,
@@ -1405,7 +1405,7 @@
         },
         {
             "action": "delete alert",
-            "description": "Remove alert for Splunk SOAR to poll",
+            "description": "Delete an alert",
             "type": "generic",
             "identifier": "delete_alert",
             "read_only": false,
@@ -1700,7 +1700,7 @@
         },
         {
             "action": "perform query",
-            "description": "Perform a SQL query on your Databricks instance",
+            "description": "Perform a SQL query",
             "type": "generic",
             "identifier": "perform_query",
             "read_only": false,
