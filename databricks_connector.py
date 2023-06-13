@@ -337,7 +337,7 @@ class DatabricksConnector(BaseConnector):
             sleep(consts.EXECUTE_NOTEBOOK_SLEEP_TIME_IN_SECONDS)
 
             if 'run_id' in result:
-               ret_val, response = self._handle_get_job_status(result['run_id'], action_result)
+               ret_val, response = self._get_job_status(result['run_id'], action_result)
             else:
                 return action_result.set_status(phantom.APP_ERROR, 'Failed to retrieve run_id: {}'.format(result['run_id']))
 
