@@ -17,6 +17,7 @@
 import json
 import traceback
 from datetime import datetime
+from time import sleep
 
 import phantom.app as phantom
 import requests
@@ -27,6 +28,11 @@ from phantom.base_connector import BaseConnector
 
 import databricks_consts as consts
 from databricks_enums import DatabricksEndpoint
+
+
+class RetVal(tuple):
+    def __new__(cls, val1, val2=None):
+        return tuple.__new__(RetVal, (val1, val2))
 
 
 class DatabricksConnector(BaseConnector):
@@ -268,6 +274,21 @@ class DatabricksConnector(BaseConnector):
             error_message = self._get_error_msg_from_exception(e)
             return action_result.set_status(phantom.APP_ERROR, consts.PERFORM_QUERY_ERROR_MESSAGE, error_message)
 
+    def _handle_get_job_status(self, run_id, action_result):
+        self.debug_print('Getting job status')
+
+        try:
+            api_client = self._get_api_client()
+            api_info = DatabricksEndpoint.JOB_RUN_OUTPUT.api_info_with_interpolation(run_id=run_id)
+            result = api_client.perform_query(**api_info)
+
+        except Exception as e:
+            error_msg = self._get_error_message_from_exception(e)
+
+            return RetVal(action_result.set_status(phantom.APP_ERROR, 'Job status error: {}'.format(error_msg)), None)
+
+        return RetVal(phantom.APP_SUCCESS, result)
+
     def _handle_execute_notebook(self, param):
         self.debug_print(f'In action handler for: {self.get_action_identifier()}')
 
@@ -297,7 +318,26 @@ class DatabricksConnector(BaseConnector):
             self._set_key_if_param_defined(run_info, param, 'access_control_list', is_json=True)
 
             result = jobs_service.submit_run(**run_info)
-            action_result.add_data(result)
+
+            sleep(consts.EXECUTE_NOTEBOOK_SLEEP_TIME_IN_SECONDS)
+
+            if 'run_id' in result:
+               ret_val, response = self._handle_get_job_status(result['run_id'], action_result)
+            else:
+                return action_result.set_status(phantom.APP_ERROR, 'Failed to retrieve run_id: {}'.format(result['run_id']))
+
+            action_result.add_data(response)
+
+            result_state = response.get('state', {}).get('result_state', {})
+            state_message = response.get('state', {}).get('state_message', {})
+
+            if result_state == 'FAILED':
+
+                summary = {
+                    'status': consts.EXECUTE_NOTEBOOK_ERROR_MESSAGE
+                }
+                action_result.update_summary(summary)
+                return action_result.set_status(phantom.APP_ERROR, state_message)
 
             summary = {
                 'status': consts.EXECUTE_NOTEBOOK_SUCCESS_MESSAGE

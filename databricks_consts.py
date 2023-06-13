@@ -39,6 +39,7 @@ PERFORM_QUERY_ERROR_MESSAGE = 'Failed to perform SQL query'
 
 EXECUTE_NOTEBOOK_SUCCESS_MESSAGE = 'Successfully executed notebook'
 EXECUTE_NOTEBOOK_ERROR_MESSAGE = 'Failed to execute notebook'
+EXECUTE_NOTEBOOK_SLEEP_TIME_IN_SECONDS = 10
 
 DATABRICKS_ERROR_MESSAGE_UNAVAILABLE = 'Unavailable. Please check the asset configuration and|or the action parameters.'
 
