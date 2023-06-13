@@ -57,6 +57,25 @@
             "versions": "EQ(*)"
         },
         {
+            "action": "get job status",
+            "description": "Get job status",
+            "type": "generic",
+            "identifier": "get_job_status",
+            "read_only": true,
+            "parameters": {
+                "run_id": {
+                    "data_type": "numeric",
+                    "description": "Job run id",
+                    "order": 0
+                }
+            },
+            "output": [],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
             "action": "list alerts",
             "description": "List alerts",
             "type": "generic",
