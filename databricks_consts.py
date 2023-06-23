@@ -41,8 +41,8 @@ EXECUTE_NOTEBOOK_SUCCESS_MESSAGE = 'Successfully executed notebook'
 EXECUTE_NOTEBOOK_ERROR_MESSAGE = 'Failed to execute notebook'
 EXECUTE_NOTEBOOK_SLEEP_TIME_IN_SECONDS = 10
 
-GET_JOB_STATUS_SUCCESS_MESSAGE = 'Successfully retrieved job status'
-GET_JOB_STATUS_ERROR_MESSAGE = 'Failed to retrieve job status'
+GET_JOB_RUN_SUCCESS_MESSAGE = 'Successfully retrieved job run'
+GET_JOB_RUN_ERROR_MESSAGE = 'Failed to retrieve job run'
 
 DATABRICKS_ERROR_MESSAGE_UNAVAILABLE = 'Unavailable. Please check the asset configuration and|or the action parameters.'
 

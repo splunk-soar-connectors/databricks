@@ -24,7 +24,8 @@ class DatabricksEndpoint(Enum):
     DELETE_ALERT = ('DELETE', '/preview/sql/alerts/{alert_id}')
     PERFORM_QUERY = ('POST', '/sql/statements')
     LIST_WAREHOUSES = ('GET', '/sql/warehouses')
-    JOB_RUN_OUTPUT = ('GET', '/jobs/runs/get?run_id={run_id}')
+    JOB_RUN = ('GET', '/jobs/runs/get?run_id={run_id}')
+    JOB_RUN_OUTPUT = ('GET', '/jobs/runs/get-output?run_id={run_id}')
 
     def __init__(self, method, path):
         self.method = method

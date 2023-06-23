@@ -274,14 +274,14 @@ class DatabricksConnector(BaseConnector):
             error_message = self._get_error_msg_from_exception(e)
             return action_result.set_status(phantom.APP_ERROR, consts.PERFORM_QUERY_ERROR_MESSAGE, error_message)
 
-    def _handle_get_job_status(self, param):
+    def _handle_get_job_run(self, param):
         self.debug_print(f'In action handler for: {self.get_action_identifier()}')
 
         action_result = self.add_action_result(ActionResult(dict(param)))
 
         run_id = param.get('run_id')
 
-        ret_val, response = self._get_job_status(run_id, action_result)
+        ret_val, response = self._get_job_run(run_id, action_result)
         action_result.add_data(response)
 
         if phantom.is_fail(ret_val):
@@ -289,8 +289,27 @@ class DatabricksConnector(BaseConnector):
 
         return action_result.set_status(phantom.APP_SUCCESS)
 
-    def _get_job_status(self, run_id, action_result):
-        self.debug_print('Getting job status')
+    def _get_job_run(self, run_id, action_result):
+        self.debug_print('Getting job run')
+
+        try:
+            api_client = self._get_api_client()
+            api_info = DatabricksEndpoint.JOB_RUN.api_info_with_interpolation(run_id=run_id)
+            result = api_client.perform_query(**api_info)
+
+        except Exception as e:
+            error_msg = self._get_error_msg_from_exception(e)
+
+            return RetVal(action_result.set_status(phantom.APP_ERROR, 'Job run error: {}'.format(error_msg)), None)
+
+        return RetVal(phantom.APP_SUCCESS, result)
+
+    def _handle_get_job_output(self, param):
+        self.debug_print(f'In action handler for: {self.get_action_identifier()}')
+
+        action_result = self.add_action_result(ActionResult(dict(param)))
+
+        run_id = param.get('run_id')
 
         try:
             api_client = self._get_api_client()
@@ -300,9 +319,10 @@ class DatabricksConnector(BaseConnector):
         except Exception as e:
             error_msg = self._get_error_msg_from_exception(e)
 
-            return RetVal(action_result.set_status(phantom.APP_ERROR, 'Job status error: {}'.format(error_msg)), None)
+            return RetVal(action_result.set_status(phantom.APP_ERROR, 'Job run output error: {}'.format(error_msg)), None)
 
-        return RetVal(phantom.APP_SUCCESS, result)
+        action_result.add_data(result)
+        return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_execute_notebook(self, param):
         self.debug_print(f'In action handler for: {self.get_action_identifier()}')
@@ -337,7 +357,7 @@ class DatabricksConnector(BaseConnector):
             sleep(consts.EXECUTE_NOTEBOOK_SLEEP_TIME_IN_SECONDS)
 
             if 'run_id' in result:
-               ret_val, response = self._get_job_status(result['run_id'], action_result)
+               ret_val, response = self._get_job_run(result['run_id'], action_result)
             else:
                 return action_result.set_status(phantom.APP_ERROR, 'Failed to retrieve run_id: {}'.format(result['run_id']))
 
@@ -456,8 +476,10 @@ class DatabricksConnector(BaseConnector):
                 ret_val = self._handle_create_alert(param)
             elif action_id == 'delete_alert':
                 ret_val = self._handle_delete_alert(param)
-            elif action_id == 'get_job_status':
-                ret_val = self._handle_get_job_status(param)
+            elif action_id == 'get_job_run':
+                ret_val = self._handle_get_job_run(param)
+            elif action_id == 'get_job_output':
+                ret_val = self._handle_get_job_output(param)
             elif action_id == 'perform_query':
                 ret_val = self._handle_perform_query(param)
             elif action_id == 'execute_notebook':
