@@ -57,10 +57,10 @@
             "versions": "EQ(*)"
         },
         {
-            "action": "get job status",
-            "description": "Get job status",
+            "action": "get job run",
+            "description": "Get job run",
             "type": "generic",
-            "identifier": "get_job_status",
+            "identifier": "get_job_run",
             "read_only": true,
             "parameters": {
                 "run_id": {
@@ -69,209 +69,26 @@
                     "order": 0
                 }
             },
-            "output": [
-                {
-                    "data_path": "action_result.data.*.task.notebook_task.source",
-                    "data_type": "string",
-                    "example_values": [
-                        "WORKSPACE"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.task.notebook_task.notebook_path",
-                    "data_type": "string",
-                    "example_values": [
-                        "/Users/herman@phantomengineering.onmicrosoft.com/bad notebook"
-                    ]
-                },
-                {
-                    "data_path": "action_result.parameter.run_id",
+            "output": [],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "get job output",
+            "description": "Get job run output",
+            "type": "generic",
+            "identifier": "get_job_output",
+            "read_only": true,
+            "parameters": {
+                "run_id": {
                     "data_type": "numeric",
-                    "example_values": [
-                        42047
-                    ],
-                    "column_name":"Run Id",
-                    "column_order": 0
-                },
-                {
-                    "data_path": "action_result.data.*.state.state_message",
-                    "data_type": "string",
-                    "example_values": [
-                        "Notebook not found: /Users/herman@phantomengineering.onmicrosoft.com/bad notebook"
-                    ],
-                    "column_name": "State Message",
-                    "column_order": 1
-                },
-                {
-                    "data_path": "action_result.data.*.state.result_state",
-                    "data_type": "string",
-                    "example_values": [
-                        "FAILED"
-                    ],
-                    "column_name": "Result State",
-                    "column_order": 2
-                },
-                {
-                    "data_path": "action_result.data.*.state.life_cycle_state",
-                    "data_type": "string",
-                    "example_values": [
-                        "INTERNAL_ERROR"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.state.user_cancelled_or_timedout",
-                    "data_type": "numeric",
-                    "example_values": [
-                        false
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.format",
-                    "data_type": "string",
-                    "example_values": [
-                        "SINGLE_TASK"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.job_id",
-                    "data_type": "numeric",
-                    "example_values": [
-                        811180908204366
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.run_id",
-                    "data_type": "numeric",
-                    "example_values": [
-                        42047
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.end_time",
-                    "data_type": "numeric",
-                    "example_values": [
-                        1686616037448
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.run_name",
-                    "data_type": "string",
-                    "example_values": [
-                        "Untitled"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.run_type",
-                    "data_type": "string",
-                    "example_values": [
-                        "SUBMIT_RUN"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.start_time",
-                    "data_type": "numeric",
-                    "example_values": [
-                        1686616034649
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.cluster_spec.existing_cluster_id",
-                    "data_type": "string",
-                    "example_values": [
-                        "0424-172834-62g8ca83"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.run_page_url",
-                    "data_type": "string",
-                    "example_values": [
-                        "https://dbc-c55200f9-1497.cloud.databricks.com/?o=3910739429888807#job/811180908204366/run/42047"
-                    ],
-                    "contains": [
-                        "url"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.number_in_job",
-                    "data_type": "numeric",
-                    "example_values": [
-                        42047
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.attempt_number",
-                    "data_type": "numeric",
-                    "example_values": [
-                        0
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.setup_duration",
-                    "data_type": "numeric",
-                    "example_values": [
-                        0
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.cleanup_duration",
-                    "data_type": "numeric",
-                    "example_values": [
-                        2000
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.cluster_instance.cluster_id",
-                    "data_type": "string",
-                    "example_values": [
-                        "0424-172834-62g8ca83"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.creator_user_name",
-                    "data_type": "string",
-                    "example_values": [
-                        "herman@phantomengineering.onmicrosoft.com"
-                    ],
-                    "contains": [
-                        "email"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.execution_duration",
-                    "data_type": "numeric",
-                    "example_values": [
-                        0
-                    ]
-                },
-                {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "success"
-                    ]
-                },
-                {
-                    "data_path": "action_result.message",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
-                },
-                {
-                    "data_path": "summary.total_objects",
-                    "data_type": "numeric",
-                    "example_values": [
-                        1
-                    ]
-                },
-                {
-                    "data_path": "summary.total_objects_successful",
-                    "data_type": "numeric",
-                    "example_values": [
-                        1
-                    ]
+                    "description": "Job run id",
+                    "order": 0
                 }
-            ],
+            },
+            "output": [],
             "render": {
                 "type": "table"
             },
@@ -1235,6 +1052,9 @@
                     "data_type": "string",
                     "example_values": [
                         "fc833528-33e6-4f6f-8ea8-3625cf1e778e"
+                    ],
+                    "contains": [
+                        "databricks alert id"
                     ]
                 },
                 {
