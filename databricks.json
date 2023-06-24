@@ -1779,7 +1779,7 @@
                     "data_path": "action_result.data.*.odbc_params.hostname",
                     "data_type": "string",
                     "example_values": [
-                        "dbc-c55200f9-1497.cloud.databricks.com"
+                        "dbc-c99900f9-9999.cloud.databricks.com"
                     ],
                     "contains": [
                         "host name"
@@ -1806,7 +1806,7 @@
                     "data_path": "action_result.data.*.creator_name",
                     "data_type": "string",
                     "example_values": [
-                        "rrussell@splunk.com"
+                        "testuser@test.com"
                     ],
                     "contains": [
                         "email"

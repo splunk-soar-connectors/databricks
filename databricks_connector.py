@@ -116,8 +116,8 @@ class DatabricksConnector(BaseConnector):
             self.save_progress(consts.TEST_CONNECTIVITY_SUCCESS_MESSAGE)
             return action_result.set_status(phantom.APP_SUCCESS)
         except Exception as e:
-            error_msg = self._get_error_msg_from_exception(e)
-            self.save_progress(error_msg)
+            error_message = self._get_error_msg_from_exception(e)
+            self.save_progress(error_message)
             return action_result.set_status(phantom.APP_ERROR, consts.TEST_CONNECTIVITY_ERROR_MESSAGE)
 
     def _handle_create_alert(self, param):
@@ -154,8 +154,9 @@ class DatabricksConnector(BaseConnector):
             return action_result.set_status(phantom.APP_SUCCESS)
 
         except Exception as e:
-            self.save_progress(self._get_error_msg_from_exception(e))
-            return action_result.set_status(phantom.APP_ERROR, consts.CREATE_ALERT_ERROR_MESSAGE)
+            error_message = self._get_error_msg_from_exception(e)
+            self.save_progress(error_message)
+            return action_result.set_status(phantom.APP_ERROR, consts.CREATE_ALERT_ERROR_MESSAGE, error_message)
 
     def _handle_list_alerts(self, param):
         self.debug_print(f'In action handler for: {self.get_action_identifier()}')
@@ -180,6 +181,7 @@ class DatabricksConnector(BaseConnector):
 
         except Exception as e:
             error_message = self._get_error_msg_from_exception(e)
+            self.save_progress(error_message)
             return action_result.set_status(phantom.APP_ERROR, consts.LIST_ALERTS_ERROR_MESSAGE, error_message)
 
     def _handle_list_clusters(self, param):
@@ -208,6 +210,7 @@ class DatabricksConnector(BaseConnector):
 
         except Exception as e:
             error_message = self._get_error_msg_from_exception(e)
+            self.save_progress(error_message)
             return action_result.set_status(phantom.APP_ERROR, consts.LIST_CLUSTERS_ERROR_MESSAGE, error_message)
 
     def _handle_delete_alert(self, param):
@@ -237,6 +240,7 @@ class DatabricksConnector(BaseConnector):
 
         except Exception as e:
             error_message = self._get_error_msg_from_exception(e)
+            self.save_progress(error_message)
             return action_result.set_status(phantom.APP_ERROR, consts.DELETE_ALERT_ERROR_MESSAGE, error_message)
 
     def _handle_perform_query(self, param):
@@ -410,6 +414,7 @@ class DatabricksConnector(BaseConnector):
 
         except Exception as e:
             error_message = self._get_error_msg_from_exception(e)
+            self.save_progress(error_message)
             return action_result.set_status(phantom.APP_ERROR, consts.LIST_WAREHOUSES_ERROR_MESSAGE, error_message)
 
     def _date_compare(self, alert_triggered_date, last_triggered_date):
