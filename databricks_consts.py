@@ -44,8 +44,8 @@ EXECUTE_NOTEBOOK_SLEEP_TIME_IN_SECONDS = 10
 GET_JOB_RUN_SUCCESS_MESSAGE = 'Successfully retrieved job run'
 GET_JOB_RUN_ERROR_MESSAGE = 'Failed to retrieve job run'
 
-GET_JOB_RUN_OUTPUT_SUCCESS_MESSAGE = 'Successfully retrieved job run'
-GET_JOB_RUN_OUTPUT_ERROR_MESSAGE = 'Failed to retrieve job run'
+GET_JOB_OUTPUT_SUCCESS_MESSAGE = 'Successfully retrieved job run output'
+GET_JOB_OUTPUT_ERROR_MESSAGE = 'Failed to retrieve job run output'
 
 GET_QUERY_STATUS_SUCCESS_MESSAGE = 'Successfully retrieved query status'
 GET_QUERY_STATUS_ERROR_MESSAGE = 'Failed to retrieve query status'
