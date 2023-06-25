@@ -339,6 +339,10 @@ class DatabricksConnector(BaseConnector):
 
         ret_val, response = self._get_job_run(run_id, action_result)
         action_result.add_data(response)
+        summary = {
+            'status': consts.GET_JOB_RUN_SUCCESS_MESSAGE,
+        }
+        action_result.update_summary(summary)
 
         if phantom.is_fail(ret_val):
             return ret_val
@@ -346,19 +350,19 @@ class DatabricksConnector(BaseConnector):
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def _get_job_run(self, run_id, action_result):
-        self.debug_print('Getting job run')
+        self.debug_print('Getting job run details')
 
         try:
             api_client = self._get_api_client()
             api_info = DatabricksEndpoint.JOB_RUN.api_info_with_interpolation(run_id=run_id)
             result = api_client.perform_query(**api_info)
 
+            return action_result.set_status(phantom.APP_SUCCESS), result
+
         except Exception as e:
-            error_msg = self._get_error_msg_from_exception(e)
-
-            return RetVal(action_result.set_status(phantom.APP_ERROR, 'Job run error: {}'.format(error_msg)), None)
-
-        return RetVal(phantom.APP_SUCCESS, result)
+            error_message = self._get_error_msg_from_exception(e)
+            self.save_progress(error_message)
+            return action_result.set_status(phantom.APP_ERROR, consts.GET_JOB_RUN_ERROR_MESSAGE, error_message)
 
     def _handle_get_job_output(self, param):
         self.debug_print(f'In action handler for: {self.get_action_identifier()}')
@@ -371,11 +375,12 @@ class DatabricksConnector(BaseConnector):
             api_client = self._get_api_client()
             api_info = DatabricksEndpoint.JOB_RUN_OUTPUT.api_info_with_interpolation(run_id=run_id)
             result = api_client.perform_query(**api_info)
+            action_result.add_data(result)
 
         except Exception as e:
-            error_msg = self._get_error_msg_from_exception(e)
-
-            return RetVal(action_result.set_status(phantom.APP_ERROR, 'Job run output error: {}'.format(error_msg)), None)
+            error_message = self._get_error_msg_from_exception(e)
+            self.save_progress(error_message)
+            return action_result.set_status(phantom.APP_ERROR, consts.GET_JOB_RUN_OUTPUT_ERROR_MESSAGE, error_message)
 
         action_result.add_data(result)
         return action_result.set_status(phantom.APP_SUCCESS)
@@ -479,11 +484,11 @@ class DatabricksConnector(BaseConnector):
         self.debug_print(f'In action handler for: {self.get_action_identifier()}')
 
         if self.is_poll_now():
-            self.debug_print("Starting polling now")
-            pass
+            self.save_progress("Starting polling now")
+            self.save_progress("Ignoring maximum number of containers and artifacts during poll now")
 
-        # config = self.get_config()
         action_result = self.add_action_result(ActionResult(dict(param)))
+        # config = self.get_config()
 
         api_client = self._get_api_client()
 
