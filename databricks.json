@@ -93,14 +93,6 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.data.*.state.life_cycle_state",
-                    "data_type": "string",
-                    "example_values": [
-                        "RUNNING",
-                        "TERMINATED"
-                    ]
-                },
-                {
                     "data_path": "action_result.data.*.state.user_cancelled_or_timedout",
                     "data_type": "numeric",
                     "example_values": [
@@ -115,18 +107,32 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.data.*.job_id",
-                    "data_type": "numeric",
-                    "example_values": [
-                        166555938500924
-                    ]
-                },
-                {
                     "data_path": "action_result.data.*.run_id",
                     "data_type": "numeric",
                     "example_values": [
                         68227
-                    ]
+                    ],
+                    "column_name": "Run Id",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.data.*.job_id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        166555938500924
+                    ],
+                    "column_name": "Job Id",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.data.*.state.life_cycle_state",
+                    "data_type": "string",
+                    "example_values": [
+                        "RUNNING",
+                        "TERMINATED"
+                    ],
+                    "column_name": "Life Cycle State",
+                    "column_order": 2
                 },
                 {
                     "data_path": "action_result.data.*.end_time",
@@ -239,7 +245,9 @@
                     "data_type": "string",
                     "example_values": [
                         "success"
-                    ]
+                    ],
+                    "column_name": "Status",
+                    "column_order": 3
                 },
                 {
                     "data_path": "action_result.message",
@@ -325,13 +333,6 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.data.*.metadata.state.life_cycle_state",
-                    "data_type": "string",
-                    "example_values": [
-                        "TERMINATED"
-                    ]
-                },
-                {
                     "data_path": "action_result.data.*.metadata.state.user_cancelled_or_timedout",
                     "data_type": "numeric",
                     "example_values": [
@@ -346,18 +347,31 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.data.*.metadata.job_id",
-                    "data_type": "numeric",
-                    "example_values": [
-                        166555938500924
-                    ]
-                },
-                {
                     "data_path": "action_result.data.*.metadata.run_id",
                     "data_type": "numeric",
                     "example_values": [
                         68227
-                    ]
+                    ],
+                    "column_name": "Run Id",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.data.*.metadata.job_id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        166555938500924
+                    ],
+                    "column_name": "Job Id",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.data.*.metadata.state.life_cycle_state",
+                    "data_type": "string",
+                    "example_values": [
+                        "TERMINATED"
+                    ],
+                    "column_name": "Life Cycle State",
+                    "column_order": 2
                 },
                 {
                     "data_path": "action_result.data.*.metadata.end_time",
@@ -482,7 +496,9 @@
                     "data_type": "string",
                     "example_values": [
                         "success"
-                    ]
+                    ],
+                    "column_name": "Status",
+                    "column_order": 3
                 },
                 {
                     "data_path": "action_result.message",
