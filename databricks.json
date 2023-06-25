@@ -69,7 +69,214 @@
                     "order": 0
                 }
             },
-            "output": [],
+            "output": [
+                {
+                    "data_path": "action_result.data.*.task.notebook_task.source",
+                    "data_type": "string",
+                    "example_values": [
+                        "WORKSPACE"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.task.notebook_task.notebook_path",
+                    "data_type": "string",
+                    "example_values": [
+                        "/Users/herman@phantomengineering.onmicrosoft.com/HE Notebook 1"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.state.state_message",
+                    "data_type": "string",
+                    "example_values": [
+                        "In run",
+                        ""
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.state.life_cycle_state",
+                    "data_type": "string",
+                    "example_values": [
+                        "RUNNING",
+                        "TERMINATED"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.state.user_cancelled_or_timedout",
+                    "data_type": "numeric",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.format",
+                    "data_type": "string",
+                    "example_values": [
+                        "SINGLE_TASK"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.job_id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        166555938500924
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.run_id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        68227
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.end_time",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0,
+                        1687659346388
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.run_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "i ran a test"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.run_type",
+                    "data_type": "string",
+                    "example_values": [
+                        "SUBMIT_RUN"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.start_time",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1687659091160
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.cluster_spec.existing_cluster_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "0624-224055-efbqpghm"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.run_page_url",
+                    "data_type": "string",
+                    "example_values": [
+                        "https://dbc-c55200f9-1497.cloud.databricks.com/?o=3910739429888807#job/166555938500924/run/68227"
+                    ],
+                    "contains": [
+                        "url"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.number_in_job",
+                    "data_type": "numeric",
+                    "example_values": [
+                        68227
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.attempt_number",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.setup_duration",
+                    "data_type": "numeric",
+                    "example_values": [
+                        236000
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.cleanup_duration",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.cluster_instance.cluster_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "0624-224055-efbqpghm"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.cluster_instance.spark_context_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "8191206118150829076"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.creator_user_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "herman@phantomengineering.onmicrosoft.com"
+                    ],
+                    "contains": [
+                        "email"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.execution_duration",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0,
+                        19000
+                    ]
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        ""
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.run_id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        68227
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.state.result_state",
+                    "data_type": "string",
+                    "example_values": [
+                        "SUCCESS"
+                    ]
+                }
+            ],
             "render": {
                 "type": "table"
             },
@@ -88,7 +295,224 @@
                     "order": 0
                 }
             },
-            "output": [],
+            "output": [
+                {
+                    "data_path": "action_result.data.*.metadata.task.notebook_task.source",
+                    "data_type": "string",
+                    "example_values": [
+                        "WORKSPACE"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.metadata.task.notebook_task.notebook_path",
+                    "data_type": "string",
+                    "example_values": [
+                        "/Users/herman@phantomengineering.onmicrosoft.com/HE Notebook 1"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.metadata.state.result_state",
+                    "data_type": "string",
+                    "example_values": [
+                        "SUCCESS"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.metadata.state.state_message",
+                    "data_type": "string",
+                    "example_values": [
+                        ""
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.metadata.state.life_cycle_state",
+                    "data_type": "string",
+                    "example_values": [
+                        "TERMINATED"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.metadata.state.user_cancelled_or_timedout",
+                    "data_type": "numeric",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.metadata.format",
+                    "data_type": "string",
+                    "example_values": [
+                        "SINGLE_TASK"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.metadata.job_id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        166555938500924
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.metadata.run_id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        68227
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.metadata.end_time",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1687659346388
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.metadata.run_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "i ran a test"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.metadata.run_type",
+                    "data_type": "string",
+                    "example_values": [
+                        "SUBMIT_RUN"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.metadata.start_time",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1687659091160
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.metadata.cluster_spec.existing_cluster_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "0624-224055-efbqpghm"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.metadata.run_page_url",
+                    "data_type": "string",
+                    "example_values": [
+                        "https://dbc-c55200f9-1497.cloud.databricks.com/?o=3910739429888807#job/166555938500924/run/68227"
+                    ],
+                    "contains": [
+                        "url"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.metadata.number_in_job",
+                    "data_type": "numeric",
+                    "example_values": [
+                        68227
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.metadata.attempt_number",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.metadata.setup_duration",
+                    "data_type": "numeric",
+                    "example_values": [
+                        236000
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.metadata.cleanup_duration",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.metadata.cluster_instance.cluster_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "0624-224055-efbqpghm"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.metadata.cluster_instance.spark_context_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "8191206118150829076"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.metadata.creator_user_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "herman@phantomengineering.onmicrosoft.com"
+                    ],
+                    "contains": [
+                        "email"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.metadata.execution_duration",
+                    "data_type": "numeric",
+                    "example_values": [
+                        19000
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.notebook_output.result",
+                    "data_type": "string",
+                    "example_values": [
+                        "{\"a\": 1, \"b\": 2, \"c\": 3, \"d\": \"test notebook return value\", \"current_time\": \"02:15:39\"}"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.notebook_output.truncated",
+                    "data_type": "numeric",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        ""
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.run_id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        68227
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
             "render": {
                 "type": "table"
             },
