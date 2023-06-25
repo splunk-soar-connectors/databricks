@@ -376,13 +376,16 @@ class DatabricksConnector(BaseConnector):
             api_info = DatabricksEndpoint.JOB_RUN_OUTPUT.api_info_with_interpolation(run_id=run_id)
             result = api_client.perform_query(**api_info)
             action_result.add_data(result)
+            summary = {
+                'status': consts.GET_JOB_OUTPUT_SUCCESS_MESSAGE,
+            }
+            action_result.update_summary(summary)
 
         except Exception as e:
             error_message = self._get_error_msg_from_exception(e)
             self.save_progress(error_message)
-            return action_result.set_status(phantom.APP_ERROR, consts.GET_JOB_RUN_OUTPUT_ERROR_MESSAGE, error_message)
+            return action_result.set_status(phantom.APP_ERROR, consts.GET_JOB_OUTPUT_ERROR_MESSAGE, error_message)
 
-        action_result.add_data(result)
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_execute_notebook(self, param):
