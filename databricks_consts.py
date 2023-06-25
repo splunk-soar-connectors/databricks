@@ -44,6 +44,12 @@ EXECUTE_NOTEBOOK_SLEEP_TIME_IN_SECONDS = 10
 GET_JOB_RUN_SUCCESS_MESSAGE = 'Successfully retrieved job run'
 GET_JOB_RUN_ERROR_MESSAGE = 'Failed to retrieve job run'
 
+GET_QUERY_STATUS_SUCCESS_MESSAGE = 'Successfully retrieved query status'
+GET_QUERY_STATUS_ERROR_MESSAGE = 'Failed to retrieve query status'
+
+CANCEL_QUERY_SUCCESS_MESSAGE = 'Successfully submitted query cancellation request'
+CANCEL_QUERY_ERROR_MESSAGE = 'Failed to submit query cancellation request'
+
 DATABRICKS_ERROR_MESSAGE_UNAVAILABLE = 'Unavailable. Please check the asset configuration and|or the action parameters.'
 
 UNHANDLED_ACTION_ID_ERROR_MESSAGE = 'Action ID {} does not have a code handler.'
