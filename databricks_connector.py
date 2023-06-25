@@ -254,15 +254,18 @@ class DatabricksConnector(BaseConnector):
             data['statement'] = param['statement']
             data['warehouse_id'] = param['warehouse_id']
 
-            if 'wait_timeout' in param:
-                data['wait_timeout'] = f'{param["wait_timeout"]}s'
-
             self._set_key_if_param_defined(data, param, 'byte_limit')
             self._set_key_if_param_defined(data, param, 'catalog')
             self._set_key_if_param_defined(data, param, 'disposition')
             self._set_key_if_param_defined(data, param, 'format')
             self._set_key_if_param_defined(data, param, 'on_wait_timeout')
             self._set_key_if_param_defined(data, param, 'schema')
+
+            # 'on_wait_timeout' cannot be set if call is asynchronous
+            if 'wait_timeout' in param:
+                data['wait_timeout'] = f'{param["wait_timeout"]}s'
+                if param['wait_timeout'] == 0:
+                    data.pop('on_wait_timeout', None)
 
             result = api_client.perform_query(**DatabricksEndpoint.PERFORM_QUERY.api_info, data=data)
             action_result.add_data(result)
@@ -276,7 +279,56 @@ class DatabricksConnector(BaseConnector):
 
         except Exception as e:
             error_message = self._get_error_msg_from_exception(e)
+            self.save_progress(error_message)
             return action_result.set_status(phantom.APP_ERROR, consts.PERFORM_QUERY_ERROR_MESSAGE, error_message)
+
+    def _handle_get_query_status(self, param):
+        self.debug_print(f'In action handler for: {self.get_action_identifier()}')
+
+        action_result = self.add_action_result(ActionResult(dict(param)))
+
+        statement_id = param['statement_id']
+
+        try:
+            api_client = self._get_api_client()
+            result = api_client.perform_query(**DatabricksEndpoint.GET_QUERY_STATUS.api_info_with_interpolation(statement_id=statement_id))
+            action_result.add_data(result)
+
+            summary = {
+                'status': consts.GET_QUERY_STATUS_SUCCESS_MESSAGE,
+            }
+            action_result.update_summary(summary)
+
+            return action_result.set_status(phantom.APP_SUCCESS)
+
+        except Exception as e:
+            error_message = self._get_error_msg_from_exception(e)
+            self.save_progress(error_message)
+            return action_result.set_status(phantom.APP_ERROR, consts.GET_QUERY_STATUS_ERROR_MESSAGE, error_message)
+
+    def _handle_cancel_query(self, param):
+        self.debug_print(f'In action handler for: {self.get_action_identifier()}')
+
+        action_result = self.add_action_result(ActionResult(dict(param)))
+
+        statement_id = param['statement_id']
+
+        try:
+            api_client = self._get_api_client()
+            result = api_client.perform_query(**DatabricksEndpoint.CANCEL_QUERY.api_info_with_interpolation(statement_id=statement_id))
+            action_result.add_data(result)
+
+            summary = {
+                'status': consts.CANCEL_QUERY_SUCCESS_MESSAGE,
+            }
+            action_result.update_summary(summary)
+
+            return action_result.set_status(phantom.APP_SUCCESS)
+
+        except Exception as e:
+            error_message = self._get_error_msg_from_exception(e)
+            self.save_progress(error_message)
+            return action_result.set_status(phantom.APP_ERROR, consts.CANCEL_QUERY_ERROR_MESSAGE, error_message)
 
     def _handle_get_job_run(self, param):
         self.debug_print(f'In action handler for: {self.get_action_identifier()}')
@@ -487,6 +539,10 @@ class DatabricksConnector(BaseConnector):
                 ret_val = self._handle_get_job_output(param)
             elif action_id == 'perform_query':
                 ret_val = self._handle_perform_query(param)
+            elif action_id == 'get_query_status':
+                ret_val = self._handle_get_query_status(param)
+            elif action_id == 'cancel_query':
+                ret_val = self._handle_cancel_query(param)
             elif action_id == 'execute_notebook':
                 ret_val = self._handle_execute_notebook(param)
             elif action_id == 'list_warehouses':

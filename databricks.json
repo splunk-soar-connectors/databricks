@@ -1924,6 +1924,148 @@
             "versions": "EQ(*)"
         },
         {
+            "action": "cancel query",
+            "description": "Request that an executing SQL statement be cancelled. Callers must poll for a status of the end state",
+            "type": "generic",
+            "identifier": "cancel_query",
+            "read_only": false,
+            "parameters": {
+                "statement_id": {
+                    "description": "SQL statement id",
+                    "data_type": "string",
+                    "required": true
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Status: Successfully submitted query cancellation request"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "Successfully submitted query cancellation request"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.statement_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "01ee12f4-9030-1477-a80d-a3b4c1e3f3e7"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "get query status",
+            "description": "Get status, manifest, and result first chunk of a SQL query",
+            "type": "generic",
+            "identifier": "get_query_status",
+            "read_only": true,
+            "parameters": {
+                "statement_id": {
+                    "description": "SQL statement id",
+                    "data_type": "string",
+                    "required": true
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.data.*.status.state",
+                    "data_type": "string",
+                    "example_values": [
+                        "CLOSED"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.statement_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "01ee12f1-aa7b-14e9-b686-c2de7022706d"
+                    ]
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Status: Successfully retrieved query status"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "Successfully retrieved query status"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.statement_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "01ee12f1-aa7b-14e9-b686-c2de7022706d"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "render": {
+                "type": "custom",
+                "width": 10,
+                "height": 5,
+                "view": "databricks_view.display_query_results",
+                "title": "Perform Query"
+            },
+            "versions": "EQ(*)"
+        },
+        {
             "action": "perform query",
             "description": "Perform a SQL query",
             "type": "generic",
