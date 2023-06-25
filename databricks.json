@@ -1952,18 +1952,25 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.summary.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "Successfully submitted query cancellation request"
-                    ]
-                },
-                {
                     "data_path": "action_result.parameter.statement_id",
                     "data_type": "string",
                     "example_values": [
                         "01ee12f4-9030-1477-a80d-a3b4c1e3f3e7"
-                    ]
+                    ],
+                    "contains": [
+                        "databricks statement id"
+                    ],
+                    "column_name": "Statement Id",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.summary.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "Successfully submitted query cancellation request"
+                    ],
+                    "column_name": "Status",
+                    "column_order": 1
                 },
                 {
                     "data_path": "summary.total_objects",
