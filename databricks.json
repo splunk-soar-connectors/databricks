@@ -48,7 +48,7 @@
         {
             "action": "test connectivity",
             "description": "Verify connectivity using the configured credentials",
-            "verbose": "Checks that the provided bot token is valid and grabs information about the configured bot user.",
+            "verbose": "Checks that the token is valid and tests connectivity to the DBFS service.",
             "type": "test",
             "identifier": "test_connectivity",
             "read_only": true,
@@ -58,7 +58,7 @@
         },
         {
             "action": "get job run",
-            "description": "Get job run",
+            "description": "Get a single job run",
             "type": "generic",
             "identifier": "get_job_run",
             "read_only": true,
@@ -81,15 +81,14 @@
                     "data_path": "action_result.data.*.task.notebook_task.notebook_path",
                     "data_type": "string",
                     "example_values": [
-                        "/Users/herman@phantomengineering.onmicrosoft.com/HE Notebook 1"
+                        "/Users/testuser@example.com/Notebook 1"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.state.state_message",
                     "data_type": "string",
                     "example_values": [
-                        "In run",
-                        ""
+                        "In run"
                     ]
                 },
                 {
@@ -110,7 +109,8 @@
                     "data_path": "action_result.data.*.run_id",
                     "data_type": "numeric",
                     "example_values": [
-                        68227
+                        68227,
+                        86328
                     ],
                     "column_name": "Run Id",
                     "column_order": 0
@@ -119,7 +119,8 @@
                     "data_path": "action_result.data.*.job_id",
                     "data_type": "numeric",
                     "example_values": [
-                        166555938500924
+                        166555938500924,
+                        713374513094130
                     ],
                     "column_name": "Job Id",
                     "column_order": 1
@@ -139,14 +140,16 @@
                     "data_type": "numeric",
                     "example_values": [
                         0,
-                        1687659346388
+                        1687659346388,
+                        1687745422414
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.run_name",
                     "data_type": "string",
                     "example_values": [
-                        "i ran a test"
+                        "i ran a test",
+                        "sample job from test playbook"
                     ]
                 },
                 {
@@ -160,7 +163,8 @@
                     "data_path": "action_result.data.*.start_time",
                     "data_type": "numeric",
                     "example_values": [
-                        1687659091160
+                        1687659091160,
+                        1687745413368
                     ]
                 },
                 {
@@ -174,7 +178,8 @@
                     "data_path": "action_result.data.*.run_page_url",
                     "data_type": "string",
                     "example_values": [
-                        "https://dbc-c55200f9-1497.cloud.databricks.com/?o=3910739429888807#job/166555938500924/run/68227"
+                        "https://example.cloud.databricks.com/?o=3910739429888807#job/166555938500924/run/68227",
+                        "https://example.cloud.databricks.com/?o=3910739429888807#job/713374513094130/run/86328"
                     ],
                     "contains": [
                         "url"
@@ -184,7 +189,8 @@
                     "data_path": "action_result.data.*.number_in_job",
                     "data_type": "numeric",
                     "example_values": [
-                        68227
+                        68227,
+                        86328
                     ]
                 },
                 {
@@ -198,7 +204,8 @@
                     "data_path": "action_result.data.*.setup_duration",
                     "data_type": "numeric",
                     "example_values": [
-                        236000
+                        236000,
+                        0
                     ]
                 },
                 {
@@ -219,14 +226,15 @@
                     "data_path": "action_result.data.*.cluster_instance.spark_context_id",
                     "data_type": "string",
                     "example_values": [
-                        "8191206118150829076"
+                        "8191206118150829076",
+                        "5808117308087458174"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.creator_user_name",
                     "data_type": "string",
                     "example_values": [
-                        "herman@phantomengineering.onmicrosoft.com"
+                        "testuser@example.com"
                     ],
                     "contains": [
                         "email"
@@ -237,7 +245,8 @@
                     "data_type": "numeric",
                     "example_values": [
                         0,
-                        19000
+                        19000,
+                        9000
                     ]
                 },
                 {
@@ -253,14 +262,15 @@
                     "data_path": "action_result.message",
                     "data_type": "string",
                     "example_values": [
-                        ""
+                        "Status: Successfully retrieved job run"
                     ]
                 },
                 {
                     "data_path": "action_result.parameter.run_id",
                     "data_type": "numeric",
                     "example_values": [
-                        68227
+                        68227,
+                        86328
                     ]
                 },
                 {
@@ -282,6 +292,13 @@
                     "data_type": "string",
                     "example_values": [
                         "SUCCESS"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "Successfully retrieved job run"
                     ]
                 }
             ],
@@ -315,7 +332,7 @@
                     "data_path": "action_result.data.*.metadata.task.notebook_task.notebook_path",
                     "data_type": "string",
                     "example_values": [
-                        "/Users/herman@phantomengineering.onmicrosoft.com/HE Notebook 1"
+                        "/Users/testuser@example.com/sample notebook"
                     ]
                 },
                 {
@@ -327,10 +344,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.metadata.state.state_message",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.metadata.state.user_cancelled_or_timedout",
@@ -350,7 +364,8 @@
                     "data_path": "action_result.data.*.metadata.run_id",
                     "data_type": "numeric",
                     "example_values": [
-                        68227
+                        68227,
+                        86328
                     ],
                     "column_name": "Run Id",
                     "column_order": 0
@@ -359,7 +374,8 @@
                     "data_path": "action_result.data.*.metadata.job_id",
                     "data_type": "numeric",
                     "example_values": [
-                        166555938500924
+                        166555938500924,
+                        713374513094130
                     ],
                     "column_name": "Job Id",
                     "column_order": 1
@@ -377,14 +393,16 @@
                     "data_path": "action_result.data.*.metadata.end_time",
                     "data_type": "numeric",
                     "example_values": [
-                        1687659346388
+                        1687659346388,
+                        1687745422414
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.metadata.run_name",
                     "data_type": "string",
                     "example_values": [
-                        "i ran a test"
+                        "i ran a test",
+                        "sample job from test playbook"
                     ]
                 },
                 {
@@ -398,7 +416,8 @@
                     "data_path": "action_result.data.*.metadata.start_time",
                     "data_type": "numeric",
                     "example_values": [
-                        1687659091160
+                        1687659091160,
+                        1687745413368
                     ]
                 },
                 {
@@ -412,7 +431,8 @@
                     "data_path": "action_result.data.*.metadata.run_page_url",
                     "data_type": "string",
                     "example_values": [
-                        "https://dbc-c55200f9-1497.cloud.databricks.com/?o=3910739429888807#job/166555938500924/run/68227"
+                        "https://example.cloud.databricks.com/?o=3910739429888807#job/166555938500924/run/68227",
+                        "https://example.cloud.databricks.com/?o=3910739429888807#job/713374513094130/run/86328"
                     ],
                     "contains": [
                         "url"
@@ -422,7 +442,8 @@
                     "data_path": "action_result.data.*.metadata.number_in_job",
                     "data_type": "numeric",
                     "example_values": [
-                        68227
+                        68227,
+                        86328
                     ]
                 },
                 {
@@ -436,7 +457,8 @@
                     "data_path": "action_result.data.*.metadata.setup_duration",
                     "data_type": "numeric",
                     "example_values": [
-                        236000
+                        236000,
+                        0
                     ]
                 },
                 {
@@ -457,14 +479,15 @@
                     "data_path": "action_result.data.*.metadata.cluster_instance.spark_context_id",
                     "data_type": "string",
                     "example_values": [
-                        "8191206118150829076"
+                        "8191206118150829076",
+                        "5808117308087458174"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.metadata.creator_user_name",
                     "data_type": "string",
                     "example_values": [
-                        "herman@phantomengineering.onmicrosoft.com"
+                        "testuser@example.com"
                     ],
                     "contains": [
                         "email"
@@ -474,14 +497,16 @@
                     "data_path": "action_result.data.*.metadata.execution_duration",
                     "data_type": "numeric",
                     "example_values": [
-                        19000
+                        19000,
+                        9000
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.notebook_output.result",
                     "data_type": "string",
                     "example_values": [
-                        "{\"a\": 1, \"b\": 2, \"c\": 3, \"d\": \"test notebook return value\", \"current_time\": \"02:15:39\"}"
+                        "{\"a\": 1, \"b\": 2, \"c\": 3, \"d\": \"test notebook return value\", \"current_time\": \"02:15:39\"}",
+                        "{\"a\": 1, \"b\": 2, \"c\": 3, \"d\": \"test notebook return value\", \"current_time\": \"02:10:18\"}"
                     ]
                 },
                 {
@@ -504,14 +529,15 @@
                     "data_path": "action_result.message",
                     "data_type": "string",
                     "example_values": [
-                        ""
+                        "Status: Successfully retrieved job run output"
                     ]
                 },
                 {
                     "data_path": "action_result.parameter.run_id",
                     "data_type": "numeric",
                     "example_values": [
-                        68227
+                        68227,
+                        86328
                     ]
                 },
                 {
@@ -526,6 +552,13 @@
                     "data_type": "numeric",
                     "example_values": [
                         1
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "Successfully retrieved job run output"
                     ]
                 }
             ],
@@ -546,7 +579,8 @@
                     "data_path": "action_result.data.*.id",
                     "data_type": "string",
                     "example_values": [
-                        "1ad424e7-323e-4c78-875a-d1c29831160c"
+                        "1ad424e7-323e-4c78-875a-d1c29831160c",
+                        "1d7a3867-8a7d-45a7-8fd5-904724167067"
                     ],
                     "contains": [
                         "databricks alert id"
@@ -567,7 +601,8 @@
                     "data_path": "action_result.data.*.user.id",
                     "data_type": "numeric",
                     "example_values": [
-                        7499675406330167
+                        7499675406330167,
+                        1392537950520258
                     ],
                     "column_name": "User Id",
                     "column_order": 2
@@ -576,7 +611,8 @@
                     "data_path": "action_result.data.*.user.name",
                     "data_type": "string",
                     "example_values": [
-                        "Ryan Russell"
+                        "Test User",
+                        "John Smith"
                     ],
                     "column_name": "User Name",
                     "column_order": 3
@@ -606,7 +642,7 @@
                     "data_path": "action_result.data.*.user.email",
                     "data_type": "string",
                     "example_values": [
-                        "rrussell@splunk.com"
+                        "testuser@example.com"
                     ],
                     "contains": [
                         "email"
@@ -637,7 +673,7 @@
                     "data_path": "action_result.data.*.query.options.parent",
                     "data_type": "string",
                     "example_values": [
-                        "folders/3494881372287936"
+                        "folders/3494881372287999"
                     ]
                 },
                 {
@@ -677,7 +713,8 @@
                 },
                 {
                     "data_path": "action_result.data.*.query.options.parameters.*.parentWidgetId",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": []
                 },
                 {
                     "data_path": "action_result.data.*.query.options.parameters.*.value",
@@ -702,18 +739,10 @@
                 },
                 {
                     "data_path": "action_result.data.*.query.options.parameters.*.multiValuesOptions.prefix",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
-                },
+                    "data_type": "string"                },
                 {
                     "data_path": "action_result.data.*.query.options.parameters.*.multiValuesOptions.suffix",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
-                },
+                    "data_type": "string"               },
                 {
                     "data_path": "action_result.data.*.query.options.parameters.*.multiValuesOptions.separator",
                     "data_type": "string",
@@ -746,7 +775,7 @@
                     "data_path": "action_result.data.*.query.options.folder_node_internal_name",
                     "data_type": "string",
                     "example_values": [
-                        "tree/3494881372287938"
+                        "tree/3494881372287999"
                     ]
                 },
                 {
@@ -772,7 +801,8 @@
                 },
                 {
                     "data_path": "action_result.data.*.query.schedule",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": []
                 },
                 {
                     "data_path": "action_result.data.*.query.created_at",
@@ -790,7 +820,8 @@
                 },
                 {
                     "data_path": "action_result.data.*.query.description",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": []
                 },
                 {
                     "data_path": "action_result.data.*.query.is_archived",
@@ -808,7 +839,10 @@
                 },
                 {
                     "data_path": "action_result.data.*.query.warehouse_id",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": [
+                        "4790cbabexample"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.query.data_source_id",
@@ -819,17 +853,22 @@
                 },
                 {
                     "data_path": "action_result.data.*.query.run_as_service_principal_id",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": []
                 },
                 {
                     "data_path": "action_result.data.*.rearm",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": [
+                        5
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.state",
                     "data_type": "string",
                     "example_values": [
-                        "unknown"
+                        "unknown",
+                        "triggered"
                     ]
                 },
                 {
@@ -843,7 +882,8 @@
                     "data_path": "action_result.data.*.options.muted",
                     "data_type": "numeric",
                     "example_values": [
-                        false
+                        false,
+                        true
                     ]
                 },
                 {
@@ -864,24 +904,31 @@
                     "data_path": "action_result.data.*.options.parent",
                     "data_type": "string",
                     "example_values": [
-                        "folders/3042705489298866"
+                        "folders/3042705489298866",
+                        "folders/4082822538617174"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.options.query_plan",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": []
                 },
                 {
                     "data_path": "action_result.data.*.options.aggregation",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": []
                 },
                 {
                     "data_path": "action_result.data.*.options.display_column",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": []
                 },
                 {
                     "data_path": "action_result.data.*.options.empty_result_state",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": [
+                        "triggered"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.options.folder_node_status",
@@ -894,14 +941,16 @@
                     "data_path": "action_result.data.*.options.folder_node_internal_name",
                     "data_type": "string",
                     "example_values": [
-                        "tree/3494881372287944"
+                        "tree/3494881372287944",
+                        "tree/2359672984925037"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.user_id",
                     "data_type": "numeric",
                     "example_values": [
-                        7499675406330167
+                        7499675406330167,
+                        1392537950520258
                     ]
                 },
                 {
@@ -920,11 +969,13 @@
                 },
                 {
                     "data_path": "action_result.data.*.conditions.alert.column.display",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": []
                 },
                 {
                     "data_path": "action_result.data.*.conditions.alert.column.aggregation",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": []
                 },
                 {
                     "data_path": "action_result.data.*.conditions.threshold.value",
@@ -935,36 +986,46 @@
                 },
                 {
                     "data_path": "action_result.data.*.conditions.query_plan",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": []
                 },
                 {
                     "data_path": "action_result.data.*.created_at",
                     "data_type": "string",
                     "example_values": [
-                        "2023-04-27T00:00:52Z"
+                        "2023-04-27T00:00:52Z",
+                        "2023-06-24T21:54:47Z"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.updated_at",
                     "data_type": "string",
                     "example_values": [
-                        "2023-04-27T00:00:52Z"
+                        "2023-04-27T00:00:52Z",
+                        "2023-06-26T02:10:10Z"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.warehouse_id",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": [
+                        "d4a60a32example"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.subscriptions.*.user_id",
                     "data_type": "numeric",
                     "example_values": [
-                        7499675406330167
+                        7499675406330167,
+                        1392537950520258
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.last_triggered_at",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": [
+                        "2023-06-26T02:10:10Z"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.options.schedule_failures",
@@ -975,20 +1036,25 @@
                 },
                 {
                     "data_path": "action_result.data.*.conditions.empty_result_state",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": [
+                        "triggered"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.refresh_schedules.*.id",
                     "data_type": "string",
                     "example_values": [
-                        "2f96a108-b0f4-44d5-9354-a357ae03de41"
+                        "2f96a108-b0f4-44d5-9354-a357ae03de41",
+                        "1e926f5a-02b8-4643-9643-954ed15d3d2d"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.refresh_schedules.*.cron",
                     "data_type": "string",
                     "example_values": [
-                        "0 */10 * * * ?"
+                        "0 */10 * * * ?",
+                        "0 */2 * * * ?"
                     ]
                 },
                 {
@@ -996,13 +1062,17 @@
                     "data_type": "string",
                     "contains": [
                         "sha1"
+                    ],
+                    "example_values": [
+                        "856bb8f97877eb2example5aaf81fe8599aa2b9"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.refresh_schedules.*.data_source_id",
                     "data_type": "string",
                     "example_values": [
-                        "468e81e8-b8f4-49f6-a817-3aaa221f3b88"
+                        "468e81e8-b8f4-49f6-a817-3aaa221f3b88",
+                        "2ba2bc63-65a5-46f6-adc8-1ab83039e7aa"
                     ]
                 },
                 {
@@ -1016,7 +1086,7 @@
                     "data_path": "action_result.message",
                     "data_type": "string",
                     "example_values": [
-                        "Status: Successfully listed alerts"
+                        "Status: Successfully listed alerts, Total alerts: 2"
                     ]
                 },
                 {
@@ -1039,6 +1109,27 @@
                     "example_values": [
                         1
                     ]
+                },
+                {
+                    "data_path": "action_result.data.*.options.custom_body",
+                    "data_type": "string",
+                    "example_values": [
+                        "This is a custom body"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.options.custom_subject",
+                    "data_type": "string",
+                    "example_values": [
+                        "This is a custom subject"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.Total alerts",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
                 }
             ],
             "render": {
@@ -1058,7 +1149,8 @@
                     "data_path": "action_result.data.*.cluster_id",
                     "data_type": "string",
                     "example_values": [
-                        "0424-172834-62g8ca83"
+                        "0424-172834-62g8ca99",
+                        "0624-224055-efbqpg99"
                     ],
                     "contains": [
                         "databricks cluster id"
@@ -1070,7 +1162,8 @@
                     "data_path": "action_result.data.*.cluster_name",
                     "data_type": "string",
                     "example_values": [
-                        "Ryan Russell's Personal Compute Cluster"
+                        "Test User's Personal Compute Cluster",
+                        "Test User's Cluster"
                     ],
                     "column_name": "Cluster Name",
                     "column_order": 1
@@ -1079,7 +1172,8 @@
                     "data_path": "action_result.data.*.state",
                     "data_type": "string",
                     "example_values": [
-                        "TERMINATED"
+                        "TERMINATED",
+                        "RUNNING"
                     ],
                     "column_name": "State",
                     "column_order": 2
@@ -1088,7 +1182,8 @@
                     "data_path": "action_result.data.*.state_message",
                     "data_type": "string",
                     "example_values": [
-                        "Inactive cluster terminated (inactive for 4320 minutes)."
+                        "Inactive cluster terminated (inactive for 4320 minutes).",
+                        ""
                     ],
                     "column_name": "State Message",
                     "column_order": 3
@@ -1115,7 +1210,8 @@
                     "data_path": "action_result.data.*.start_time",
                     "data_type": "numeric",
                     "example_values": [
-                        1682357315089
+                        1682357315089,
+                        1687646455924
                     ]
                 },
                 {
@@ -1143,7 +1239,7 @@
                     "data_path": "action_result.data.*.default_tags.Creator",
                     "data_type": "string",
                     "example_values": [
-                        "rrussell@splunk.com"
+                        "testuser@example.com"
                     ],
                     "contains": [
                         "email"
@@ -1153,14 +1249,16 @@
                     "data_path": "action_result.data.*.default_tags.ClusterId",
                     "data_type": "string",
                     "example_values": [
-                        "0424-172834-62g8ca83"
+                        "0424-172834-62g8ca99",
+                        "0624-224055-efbqpg99"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.default_tags.ClusterName",
                     "data_type": "string",
                     "example_values": [
-                        "Ryan Russell's Personal Compute Cluster"
+                        "Test User's Personal Compute Cluster",
+                        "John Smith's Cluster"
                     ]
                 },
                 {
@@ -1174,7 +1272,8 @@
                     "data_path": "action_result.data.*.spark_version",
                     "data_type": "string",
                     "example_values": [
-                        "13.0.x-cpu-ml-scala2.12"
+                        "13.0.x-cpu-ml-scala2.12",
+                        "12.2.x-scala2.12"
                     ]
                 },
                 {
@@ -1188,14 +1287,16 @@
                     "data_path": "action_result.data.*.aws_attributes.availability",
                     "data_type": "string",
                     "example_values": [
-                        "ON_DEMAND"
+                        "ON_DEMAND",
+                        "SPOT_WITH_FALLBACK"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.aws_attributes.first_on_demand",
                     "data_type": "numeric",
                     "example_values": [
-                        0
+                        0,
+                        1
                     ]
                 },
                 {
@@ -1223,7 +1324,8 @@
                     "data_path": "action_result.data.*.runtime_engine",
                     "data_type": "string",
                     "example_values": [
-                        "STANDARD"
+                        "STANDARD",
+                        "PHOTON"
                     ]
                 },
                 {
@@ -1244,7 +1346,7 @@
                     "data_path": "action_result.data.*.single_user_name",
                     "data_type": "string",
                     "example_values": [
-                        "rrussell@splunk.com"
+                        "testuser@example.com"
                     ],
                     "contains": [
                         "email"
@@ -1254,14 +1356,15 @@
                     "data_path": "action_result.data.*.spark_context_id",
                     "data_type": "numeric",
                     "example_values": [
-                        4218622610576032053
+                        4218622610576032053,
+                        5808117308087458174
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.creator_user_name",
                     "data_type": "string",
                     "example_values": [
-                        "rrussell@splunk.com"
+                        "testuser@example.com"
                     ],
                     "contains": [
                         "email"
@@ -1278,7 +1381,8 @@
                     "data_path": "action_result.data.*.last_activity_time",
                     "data_type": "numeric",
                     "example_values": [
-                        1685733831059
+                        1685733831059,
+                        1687745241253
                     ]
                 },
                 {
@@ -1320,14 +1424,16 @@
                     "data_path": "action_result.data.*.last_restarted_time",
                     "data_type": "numeric",
                     "example_values": [
-                        1685721657951
+                        1685721657951,
+                        1687733852263
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.last_state_loss_time",
                     "data_type": "numeric",
                     "example_values": [
-                        1685721657913
+                        1685721657913,
+                        1687733852234
                     ]
                 },
                 {
@@ -1348,14 +1454,16 @@
                     "data_path": "action_result.data.*.autotermination_minutes",
                     "data_type": "numeric",
                     "example_values": [
-                        4320
+                        4320,
+                        120
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.effective_spark_version",
                     "data_type": "string",
                     "example_values": [
-                        "13.0.x-cpu-ml-scala2.12"
+                        "13.0.x-cpu-ml-scala2.12",
+                        "12.2.x-photon-scala2.12"
                     ]
                 },
                 {
@@ -1376,7 +1484,7 @@
                     "data_path": "action_result.message",
                     "data_type": "string",
                     "example_values": [
-                        "Status: Successfully listed clusters"
+                        "Status: Successfully listed clusters, Total clusters: 1"
                     ]
                 },
                 {
@@ -1395,6 +1503,113 @@
                 },
                 {
                     "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.driver.node_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "081ac1a81449example9383abef5514"
+                    ],
+                    "contains": [
+                        "md5"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.driver.private_ip",
+                    "data_type": "string",
+                    "example_values": [
+                        "10.26.193.115"
+                    ],
+                    "contains": [
+                        "ip"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.driver.instance_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "i-0ab7bd9b85477a279"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.driver.host_private_ip",
+                    "data_type": "string",
+                    "example_values": [
+                        "10.26.208.44"
+                    ],
+                    "contains": [
+                        "ip"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.driver.node_attributes.is_spot",
+                    "data_type": "numeric",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.driver.start_timestamp",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1687733773425
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.driver.node_aws_attributes.is_spot",
+                    "data_type": "numeric",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.disk_spec.disk_count",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.jdbc_port",
+                    "data_type": "numeric",
+                    "example_values": [
+                        10000
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.cluster_cores",
+                    "data_type": "numeric",
+                    "example_values": [
+                        4
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.aws_attributes.ebs_volume_count",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.spark_env_vars.PYSPARK_PYTHON",
+                    "data_type": "string",
+                    "example_values": [
+                        "/databricks/python3/bin/python3"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.cluster_memory_mb",
+                    "data_type": "numeric",
+                    "example_values": [
+                        31232
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.Total Clusters",
                     "data_type": "numeric",
                     "example_values": [
                         1
@@ -1491,7 +1706,9 @@
                     "data_path": "action_result.data.*.id",
                     "data_type": "string",
                     "example_values": [
-                        "1d7a3867-8a7d-45a7-8fd5-904724167067"
+                        "1d7a3867-8a7d-45a7-8fd5-904724167067",
+                        "6bb3ad87-01b7-438b-ae1b-38515d5435f6",
+                        "0440b52c-9deb-4de7-b7a1-bdb3e2170da6"
                     ],
                     "contains": [
                         "databricks alert id"
@@ -1503,7 +1720,8 @@
                     "data_path": "action_result.data.*.name",
                     "data_type": "string",
                     "example_values": [
-                        "Test alert for Pytest"
+                        "Test alert",
+                        "test playbook alert"
                     ],
                     "column_name": "Alert Name",
                     "column_order": 1
@@ -1519,14 +1737,14 @@
                     "data_path": "action_result.data.*.user.name",
                     "data_type": "string",
                     "example_values": [
-                        "Herman Edwards"
+                        "Test User"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.user.email",
                     "data_type": "string",
                     "example_values": [
-                        "herman@phantomengineering.onmicrosoft.com"
+                        "testuser@example.com"
                     ],
                     "contains": [
                         "email"
@@ -1647,17 +1865,11 @@
                 },
                 {
                     "data_path": "action_result.data.*.query.options.parameters.*.multiValuesOptions.prefix",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.query.options.parameters.*.multiValuesOptions.suffix",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.query.options.parameters.*.multiValuesOptions.separator",
@@ -1717,7 +1929,8 @@
                 },
                 {
                     "data_path": "action_result.data.*.query.schedule",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": []
                 },
                 {
                     "data_path": "action_result.data.*.query.created_at",
@@ -1735,7 +1948,8 @@
                 },
                 {
                     "data_path": "action_result.data.*.query.description",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": []
                 },
                 {
                     "data_path": "action_result.data.*.query.is_archived",
@@ -1773,7 +1987,8 @@
                     "data_path": "action_result.data.*.rearm",
                     "data_type": "numeric",
                     "example_values": [
-                        5
+                        5,
+                        10
                     ]
                 },
                 {
@@ -1787,7 +2002,8 @@
                     "data_path": "action_result.data.*.parent",
                     "data_type": "string",
                     "example_values": [
-                        "folders/4082822538617174"
+                        "folders/4082822538617174",
+                        "folders/3042705489298866"
                     ]
                 },
                 {
@@ -1822,29 +2038,34 @@
                     "data_path": "action_result.data.*.options.parent",
                     "data_type": "string",
                     "example_values": [
-                        "folders/4082822538617174"
+                        "folders/4082822538617174",
+                        "folders/3042705489298866"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.options.query_plan",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": []
                 },
                 {
                     "data_path": "action_result.data.*.options.aggregation",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": []
                 },
                 {
                     "data_path": "action_result.data.*.options.custom_body",
                     "data_type": "string",
                     "example_values": [
-                        "This is a custom body"
+                        "This is a custom body",
+                        "custom alert body"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.options.custom_subject",
                     "data_type": "string",
                     "example_values": [
-                        "This is a custom subject"
+                        "This is a custom subject",
+                        "custom alert subject"
                     ]
                 },
                 {
@@ -1866,7 +2087,9 @@
                     "data_path": "action_result.data.*.options.folder_node_internal_name",
                     "data_type": "string",
                     "example_values": [
-                        "tree/2359672984925037"
+                        "tree/2359672984925037",
+                        "tree/2561867671938993",
+                        "tree/2561867671938997"
                     ]
                 },
                 {
@@ -1911,13 +2134,16 @@
                 },
                 {
                     "data_path": "action_result.data.*.conditions.empty_result_state",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": []
                 },
                 {
                     "data_path": "action_result.data.*.created_at",
                     "data_type": "string",
                     "example_values": [
-                        "2023-06-24T21:54:47Z"
+                        "2023-06-24T21:54:47Z",
+                        "2023-06-26T02:10:12Z",
+                        "2023-06-26T02:36:39Z"
                     ],
                     "column_name": "Created At",
                     "column_order": 4
@@ -1926,7 +2152,9 @@
                     "data_path": "action_result.data.*.updated_at",
                     "data_type": "string",
                     "example_values": [
-                        "2023-06-24T21:54:47Z"
+                        "2023-06-24T21:54:47Z",
+                        "2023-06-26T02:10:12Z",
+                        "2023-06-26T02:36:39Z"
                     ]
                 },
                 {
@@ -1938,7 +2166,8 @@
                 },
                 {
                     "data_path": "action_result.data.*.warehouse_id",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": []
                 },
                 {
                     "data_path": "action_result.data.*.subscriptions.*.user_id",
@@ -1956,7 +2185,8 @@
                 },
                 {
                     "data_path": "action_result.data.*.last_triggered_at",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": []
                 },
                 {
                     "data_path": "action_result.status",
@@ -1985,7 +2215,8 @@
                     "data_path": "action_result.parameter.name",
                     "data_type": "string",
                     "example_values": [
-                        "Test alert for Pytest"
+                        "Test alert for Pytest",
+                        "test playbook alert"
                     ]
                 },
                 {
@@ -1999,7 +2230,8 @@
                     "data_path": "action_result.parameter.rearm",
                     "data_type": "numeric",
                     "example_values": [
-                        5
+                        5,
+                        10
                     ]
                 },
                 {
@@ -2027,21 +2259,26 @@
                     "data_path": "action_result.parameter.query_id",
                     "data_type": "string",
                     "example_values": [
-                        "738f7950-c5f7-4c75-b364-47eac73439dd"
+                        "738f7950-c5f7-4c75-EXAMPLE-47eac73439dd"
+                    ],
+                    "contains": [
+                        "databricks query id"
                     ]
                 },
                 {
                     "data_path": "action_result.parameter.custom_body",
                     "data_type": "string",
                     "example_values": [
-                        "This is a custom body"
+                        "This is a custom body",
+                        "custom alert body"
                     ]
                 },
                 {
                     "data_path": "action_result.parameter.custom_subject",
                     "data_type": "string",
                     "example_values": [
-                        "This is a custom subject"
+                        "This is a custom subject",
+                        "custom alert subject"
                     ]
                 },
                 {
@@ -2056,6 +2293,27 @@
                     "data_type": "numeric",
                     "example_values": [
                         1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.options.schedule_failures",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.schedule_failures",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.parent",
+                    "data_type": "string",
+                    "example_values": [
+                        "folders/3042705489298866"
                     ]
                 }
             ],
@@ -2104,7 +2362,8 @@
                     "data_path": "action_result.parameter.alert_id",
                     "data_type": "string",
                     "example_values": [
-                        "fc833528-33e6-4f6f-8ea8-3625cf1e778e"
+                        "fc833528-33e6-4f6f-8ea8-3625cf1e778e",
+                        "6bb3ad87-01b7-438b-ae1b-38515d5435f6"
                     ],
                     "contains": [
                         "databricks alert id"
@@ -2120,6 +2379,20 @@
                     ],
                     "column_name": "Status",
                     "column_order": 1
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 }
             ],
             "render": {
@@ -2142,13 +2415,17 @@
                         "databricks warehouse id"
                     ],
                     "column_name": "Warehouse Id",
-                    "column_order": 0
+                    "column_order": 0,
+                    "example_values": [
+                        "d4a60a32example"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.name",
                     "data_type": "string",
                     "example_values": [
-                        "Starter Warehouse"
+                        "Starter Warehouse",
+                        "HE SQL WHS"
                     ],
                     "column_name": "Warehouse Name",
                     "column_order": 1
@@ -2157,7 +2434,8 @@
                     "data_path": "action_result.data.*.size",
                     "data_type": "string",
                     "example_values": [
-                        "SMALL"
+                        "SMALL",
+                        "XXSMALL"
                     ],
                     "column_name": "Size",
                     "column_order": 2
@@ -2184,14 +2462,16 @@
                     "data_path": "action_result.data.*.jdbc_url",
                     "data_type": "string",
                     "example_values": [
-                        "jdbc:spark://dbc-c55200f9-1497.cloud.databricks.com:443/default;transportMode=http;ssl=1;AuthMech=3;httpPath=/sql/1.0/warehouses/4790cb1ab98bd522;"
+                        "jdbc:spark://example.cloud.databricks.com:443/default;transportMode=http;ssl=1;AuthMech=3;httpPath=/sql/1.0/warehouses/4790cb1ab98bd522;",
+                        "jdbc:spark://example.cloud.databricks.com:443/default;transportMode=http;ssl=1;AuthMech=3;httpPath=/sql/1.0/warehouses/d4a60a3223b685ff;"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.creator_id",
                     "data_type": "numeric",
                     "example_values": [
-                        7499675406330167
+                        7499675406330167,
+                        1392537950520258
                     ]
                 },
                 {
@@ -2205,7 +2485,8 @@
                     "data_path": "action_result.data.*.odbc_params.path",
                     "data_type": "string",
                     "example_values": [
-                        "/sql/1.0/warehouses/4790cb1ab98bd522"
+                        "/sql/1.0/warehouses/4790cb1ab98bd522",
+                        "/sql/1.0/warehouses/d4a60a3223b685ff"
                     ]
                 },
                 {
@@ -2219,7 +2500,8 @@
                     "data_path": "action_result.data.*.odbc_params.hostname",
                     "data_type": "string",
                     "example_values": [
-                        "dbc-c99900f9-9999.cloud.databricks.com"
+                        "example.cloud.databricks.com",
+                        "example.cloud.databricks.com"
                     ],
                     "contains": [
                         "host name"
@@ -2239,14 +2521,16 @@
                     "data_path": "action_result.data.*.cluster_size",
                     "data_type": "string",
                     "example_values": [
-                        "Small"
+                        "Small",
+                        "2X-Small"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.creator_name",
                     "data_type": "string",
                     "example_values": [
-                        "testuser@test.com"
+                        "testuser@test.com",
+                        "herman@phantomengineering.onmicrosoft.com"
                     ],
                     "contains": [
                         "email"
@@ -2270,7 +2554,8 @@
                     "data_path": "action_result.data.*.auto_stop_mins",
                     "data_type": "numeric",
                     "example_values": [
-                        60
+                        60,
+                        10
                     ]
                 },
                 {
@@ -2326,7 +2611,8 @@
                     "data_path": "action_result.message",
                     "data_type": "string",
                     "example_values": [
-                        "Status: Successfully listed warehouses, Total warehouses: 1"
+                        "Status: Successfully listed warehouses, Total warehouses: 1",
+                        "Status: Successfully listed warehouses, Total warehouses: 2"
                     ]
                 },
                 {
@@ -2340,7 +2626,8 @@
                     "data_path": "action_result.summary.total warehouses",
                     "data_type": "numeric",
                     "example_values": [
-                        1
+                        1,
+                        2
                     ]
                 },
                 {
@@ -2355,6 +2642,13 @@
                     "data_type": "numeric",
                     "example_values": [
                         1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.channel.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "CHANNEL_NAME_CURRENT"
                     ]
                 }
             ],
@@ -2373,6 +2667,9 @@
                 "statement_id": {
                     "description": "SQL statement id",
                     "data_type": "string",
+                    "contains": [
+                        "databricks statement id"
+                    ],
                     "required": true
                 }
             },
@@ -2395,7 +2692,8 @@
                     "data_path": "action_result.parameter.statement_id",
                     "data_type": "string",
                     "example_values": [
-                        "01ee12f4-9030-1477-a80d-a3b4c1e3f3e7"
+                        "01ee12f4-9030-1477-a80d-a3b4c1e3f3e7",
+                        "01ee13c6-9c9a-1584-b94a-4e952d5288bd"
                     ],
                     "contains": [
                         "databricks statement id"
@@ -2416,14 +2714,16 @@
                     "data_path": "summary.total_objects",
                     "data_type": "numeric",
                     "example_values": [
-                        1
+                        1,
+                        2
                     ]
                 },
                 {
                     "data_path": "summary.total_objects_successful",
                     "data_type": "numeric",
                     "example_values": [
-                        1
+                        1,
+                        2
                     ]
                 }
             ],
@@ -2442,6 +2742,9 @@
                 "statement_id": {
                     "description": "SQL statement id",
                     "data_type": "string",
+                    "contains": [
+                        "databricks statement id"
+                    ],
                     "required": true
                 }
             },
@@ -2457,7 +2760,8 @@
                     "data_path": "action_result.data.*.statement_id",
                     "data_type": "string",
                     "example_values": [
-                        "01ee12f1-aa7b-14e9-b686-c2de7022706d"
+                        "01ee12f1-aa7b-14e9-b686-c2de7022706d",
+                        "01ee13c6-9c11-147d-9eeb-8e34c64915bc"
                     ]
                 },
                 {
@@ -2485,21 +2789,27 @@
                     "data_path": "action_result.parameter.statement_id",
                     "data_type": "string",
                     "example_values": [
-                        "01ee12f1-aa7b-14e9-b686-c2de7022706d"
+                        "01ee12f1-aa7b-14e9-b686-c2de7022706d",
+                        "01ee13c6-9c11-147d-9eeb-8e34c64915bc"
+                    ],
+                    "contains": [
+                        "databricks statement id"
                     ]
                 },
                 {
                     "data_path": "summary.total_objects",
                     "data_type": "numeric",
                     "example_values": [
-                        1
+                        1,
+                        2
                     ]
                 },
                 {
                     "data_path": "summary.total_objects_successful",
                     "data_type": "numeric",
                     "example_values": [
-                        1
+                        1,
+                        2
                     ]
                 }
             ],
@@ -2590,7 +2900,8 @@
                     "data_path": "action_result.data.*.result.row_count",
                     "data_type": "numeric",
                     "example_values": [
-                        1000
+                        1000,
+                        5
                     ]
                 },
                 {
@@ -2625,7 +2936,8 @@
                     "data_path": "action_result.data.*.manifest.chunks.*.row_count",
                     "data_type": "numeric",
                     "example_values": [
-                        1000
+                        1000,
+                        5
                     ]
                 },
                 {
@@ -2653,7 +2965,8 @@
                     "data_path": "action_result.data.*.manifest.schema.columns.*.name",
                     "data_type": "string",
                     "example_values": [
-                        "route"
+                        "route",
+                        "tpep_pickup_datetime"
                     ]
                 },
                 {
@@ -2667,28 +2980,32 @@
                     "data_path": "action_result.data.*.manifest.schema.columns.*.type_name",
                     "data_type": "string",
                     "example_values": [
-                        "STRING"
+                        "STRING",
+                        "TIMESTAMP"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.manifest.schema.columns.*.type_text",
                     "data_type": "string",
                     "example_values": [
-                        "STRING"
+                        "STRING",
+                        "TIMESTAMP"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.manifest.schema.column_count",
                     "data_type": "numeric",
                     "example_values": [
-                        2
+                        2,
+                        6
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.manifest.total_row_count",
                     "data_type": "numeric",
                     "example_values": [
-                        1000
+                        1000,
+                        5
                     ]
                 },
                 {
@@ -2702,7 +3019,8 @@
                     "data_path": "action_result.data.*.statement_id",
                     "data_type": "string",
                     "example_values": [
-                        "01edd5a1-16c6-136e-9b1e-95fc566d511f"
+                        "01edd5a1-16c6-136e-9b1e-95fc566d511f",
+                        "01ee13c6-9c11-147d-9eeb-8e34c64915bc"
                     ]
                 },
                 {
@@ -2737,28 +3055,32 @@
                     "data_path": "action_result.parameter.statement",
                     "data_type": "string",
                     "example_values": [
-                        "SELECT concat(pickup_zip, '-', dropoff_zip) as route, AVG(fare_amount) as average_fare FROM `samples`.`nyctaxi`.`trips` GROUP BY 1 ORDER BY 2 DESC LIMIT 1000"
+                        "SELECT concat(pickup_zip, '-', dropoff_zip) as route, AVG(fare_amount) as average_fare FROM `samples`.`nyctaxi`.`trips` GROUP BY 1 ORDER BY 2 DESC LIMIT 1000",
+                        "select * from trips limit 5;"
                     ]
                 },
                 {
                     "data_path": "action_result.parameter.warehouse_id",
                     "data_type": "string",
                     "example_values": [
-                        "0123456789abcdef"
+                        "01234567example",
+                        "d4a60a32example"
                     ]
                 },
                 {
                     "data_path": "action_result.parameter.wait_timeout",
                     "data_type": "numeric",
                     "example_values": [
-                        60
+                        60,
+                        50
                     ]
                 },
                 {
                     "data_path": "action_result.parameter.on_wait_timeout",
                     "data_type": "string",
                     "example_values": [
-                        "CANCEL"
+                        "CANCEL",
+                        "CONTINUE"
                     ]
                 },
                 {
@@ -2770,17 +3092,51 @@
                 },
                 {
                     "data_path": "action_result.parameter.catalog",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": [
+                        "samples"
+                    ]
                 },
                 {
                     "data_path": "action_result.parameter.schema",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": [
+                        "nyctaxi"
+                    ]
                 },
                 {
                     "data_path": "action_result.parameter.disposition",
                     "data_type": "string",
                     "example_values": [
                         "INLINE"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.result.data_array.*",
+                    "data_type": "string",
+                    "example_values": [
+                        "10282"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.manifest.truncated",
+                    "data_type": "numeric",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
                     ]
                 }
             ],
@@ -2853,7 +3209,8 @@
                     "data_path": "action_result.data.*.run_id",
                     "data_type": "numeric",
                     "example_values": [
-                        6794
+                        6794,
+                        86328
                     ],
                     "column_name": "Run Id",
                     "column_order": 0
@@ -2862,7 +3219,9 @@
                     "data_path": "action_result.parameter.run_name",
                     "data_type": "string",
                     "example_values": [
-                        "Test Run 1"
+                        "Test Run 1",
+                        "sample job from test playbook",
+                        "Untitled"
                     ],
                     "column_name": "Run Name",
                     "column_order": 1
@@ -2871,7 +3230,8 @@
                     "data_path": "action_result.status",
                     "data_type": "string",
                     "example_values": [
-                        "success"
+                        "success",
+                        "failed"
                     ],
                     "column_name": "Status",
                     "column_order": 2
@@ -2880,7 +3240,8 @@
                     "data_path": "action_result.message",
                     "data_type": "string",
                     "example_values": [
-                        "Status: Successfully executed notebook"
+                        "Status: Successfully executed notebook",
+                        "Failed to execute notebook. Error string: 'Error Message: 400 Client Error: Bad Request for url: https://example.cloud.databricks.com/api/2.0/jobs/runs/submit\n Response from server: \n { 'error_code': 'INVALID_PARAMETER_VALUE',\n  'message': 'One of job_cluster_key, new_cluster, or existing_cluster_id must '\n             'be specified.'}'"
                     ]
                 },
                 {
@@ -2894,14 +3255,17 @@
                     "data_path": "action_result.parameter.notebook_path",
                     "data_type": "string",
                     "example_values": [
-                        "/Users/rrussell@splunk.com/sample notebook"
+                        "/Users/testuser@example.com/sample notebook",
+                        "/Users/testuser@example.com/Notebook 1",
+                        "test_dbks_notebook"
                     ]
                 },
                 {
                     "data_path": "action_result.parameter.existing_cluster_id",
                     "data_type": "string",
                     "example_values": [
-                        "0605-223706-e81g2mac"
+                        "0605-223706-e81g2mac",
+                        "0624-224055-efbqpghm"
                     ]
                 },
                 {
@@ -2915,7 +3279,196 @@
                     "data_path": "summary.total_objects_successful",
                     "data_type": "numeric",
                     "example_values": [
-                        1
+                        1,
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.task.notebook_task.source",
+                    "data_type": "string",
+                    "example_values": [
+                        "WORKSPACE"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.task.notebook_task.notebook_path",
+                    "data_type": "string",
+                    "example_values": [
+                        "/Users/testuser@example.com/Notebook 1"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.state.result_state",
+                    "data_type": "string",
+                    "example_values": [
+                        "SUCCESS"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.state.state_message",
+                    "data_type": "string",
+                    "example_values": [
+                        ""
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.state.life_cycle_state",
+                    "data_type": "string",
+                    "example_values": [
+                        "TERMINATED"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.state.user_cancelled_or_timedout",
+                    "data_type": "numeric",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.format",
+                    "data_type": "string",
+                    "example_values": [
+                        "SINGLE_TASK"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.job_id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        713374513094130
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.end_time",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1687745422414
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.run_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "sample job from test playbook"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.run_type",
+                    "data_type": "string",
+                    "example_values": [
+                        "SUBMIT_RUN"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.start_time",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1687745413368
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.cluster_spec.existing_cluster_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "0624-224055-efbqpghm"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.run_page_url",
+                    "data_type": "string",
+                    "example_values": [
+                        "https://example.cloud.databricks.com/?o=3910739429888807#job/713374513094130/run/86328"
+                    ],
+                    "contains": [
+                        "url"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.number_in_job",
+                    "data_type": "numeric",
+                    "example_values": [
+                        86328
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.attempt_number",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.setup_duration",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.cleanup_duration",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.cluster_instance.cluster_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "0624-224055-efbqpghm"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.cluster_instance.spark_context_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "5808117308087458174"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.creator_user_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "herman@phantomengineering.onmicrosoft.com"
+                    ],
+                    "contains": [
+                        "email"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.execution_duration",
+                    "data_type": "numeric",
+                    "example_values": [
+                        9000
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.timeout_seconds",
+                    "data_type": "numeric",
+                    "example_values": [
+                        30
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.git_source",
+                    "data_type": "string",
+                    "example_values": [
+                        "{\"git_url\": \"https://github.com/examplerepo/dbks-test-repo\",\"git_provider\": \"GitHub\",\"git_branch\": \"main\"}"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.new_cluster",
+                    "data_type": "string",
+                    "example_values": [
+                        "{\"node_type_id\": \"r3.xlarge\",\"spark_version\": \"5.2.x-scala2.11\",\"num_workers\": 8,\"spark_conf\":{\"spark.databricks.delta.preview.enabled\": \"true\"},\"spark_env_vars\":{\"PYSPARK_PYTHON\": \"/databricks/python3/bin/python3\"},\"enable_elastic_disk\": false}"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.idempotency_token",
+                    "data_type": "string",
+                    "example_values": [
+                        "abc123"
                     ]
                 }
             ],
