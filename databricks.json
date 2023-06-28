@@ -1,7 +1,7 @@
 {
     "appid": "6dcc0a06-ceb4-4412-834e-b8576a7486a6",
     "name": "Databricks",
-    "description": "Integrate with Databricks",
+    "description": "This app supports investigative and data manipulation actions against Databricks",
     "publisher": "Splunk",
     "package_name": "phantom_databricks",
     "type": "information",
@@ -2134,8 +2134,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.conditions.empty_result_state",
-                    "data_type": "string",
-                    "example_values": []
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.created_at",
@@ -2166,8 +2165,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.warehouse_id",
-                    "data_type": "string",
-                    "example_values": []
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.subscriptions.*.user_id",
@@ -2185,8 +2183,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.last_triggered_at",
-                    "data_type": "string",
-                    "example_values": []
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.status",
@@ -2215,7 +2212,7 @@
                     "data_path": "action_result.parameter.name",
                     "data_type": "string",
                     "example_values": [
-                        "Test alert for Pytest",
+                        "Test alert",
                         "test playbook alert"
                     ]
                 },
@@ -2362,8 +2359,8 @@
                     "data_path": "action_result.parameter.alert_id",
                     "data_type": "string",
                     "example_values": [
-                        "fc833528-33e6-4f6f-8ea8-3625cf1e778e",
-                        "6bb3ad87-01b7-438b-ae1b-38515d5435f6"
+                        "fc833528-33e6-4f6f-8ea8-3625cf1e7799",
+                        "6bb3ad87-01b7-438b-ae1b-38515d543599"
                     ],
                     "contains": [
                         "databricks alert id"
@@ -2529,8 +2526,7 @@
                     "data_path": "action_result.data.*.creator_name",
                     "data_type": "string",
                     "example_values": [
-                        "testuser@test.com",
-                        "herman@phantomengineering.onmicrosoft.com"
+                        "testuser@example.com"
                     ],
                     "contains": [
                         "email"
@@ -2611,7 +2607,6 @@
                     "data_path": "action_result.message",
                     "data_type": "string",
                     "example_values": [
-                        "Status: Successfully listed warehouses, Total warehouses: 1",
                         "Status: Successfully listed warehouses, Total warehouses: 2"
                     ]
                 },
@@ -2692,8 +2687,8 @@
                     "data_path": "action_result.parameter.statement_id",
                     "data_type": "string",
                     "example_values": [
-                        "01ee12f4-9030-1477-a80d-a3b4c1e3f3e7",
-                        "01ee13c6-9c9a-1584-b94a-4e952d5288bd"
+                        "01ee12f4-9030-1477-a80d-a3b4c1e3f3e9",
+                        "01ee13c6-9c9a-1584-b94a-4e952d528899"
                     ],
                     "contains": [
                         "databricks statement id"
@@ -2760,8 +2755,8 @@
                     "data_path": "action_result.data.*.statement_id",
                     "data_type": "string",
                     "example_values": [
-                        "01ee12f1-aa7b-14e9-b686-c2de7022706d",
-                        "01ee13c6-9c11-147d-9eeb-8e34c64915bc"
+                        "01ee12f1-aa7b-14e9-b686-c2de70227099",
+                        "01ee13c6-9c11-147d-9eeb-8e34c6491599"
                     ]
                 },
                 {
@@ -2789,8 +2784,8 @@
                     "data_path": "action_result.parameter.statement_id",
                     "data_type": "string",
                     "example_values": [
-                        "01ee12f1-aa7b-14e9-b686-c2de7022706d",
-                        "01ee13c6-9c11-147d-9eeb-8e34c64915bc"
+                        "01ee12f1-aa7b-14e9-b686-c2de70227099",
+                        "01ee13c6-9c11-147d-9eeb-8e34c6491599"
                     ],
                     "contains": [
                         "databricks statement id"
@@ -3019,8 +3014,8 @@
                     "data_path": "action_result.data.*.statement_id",
                     "data_type": "string",
                     "example_values": [
-                        "01edd5a1-16c6-136e-9b1e-95fc566d511f",
-                        "01ee13c6-9c11-147d-9eeb-8e34c64915bc"
+                        "01edd5a1-16c6-136e-9b1e-95fc566d5199",
+                        "01ee13c6-9c11-147d-9eeb-8e34c6491599"
                     ]
                 },
                 {
@@ -3264,8 +3259,8 @@
                     "data_path": "action_result.parameter.existing_cluster_id",
                     "data_type": "string",
                     "example_values": [
-                        "0605-223706-e81g2mac",
-                        "0624-224055-efbqpghm"
+                        "0605-223706-e81g2mad",
+                        "0624-224055-efbqpghn"
                     ]
                 },
                 {
@@ -3416,7 +3411,7 @@
                     "data_path": "action_result.data.*.cluster_instance.cluster_id",
                     "data_type": "string",
                     "example_values": [
-                        "0624-224055-efbqpghm"
+                        "0624-224055-efbqpghn"
                     ]
                 },
                 {
@@ -3430,7 +3425,7 @@
                     "data_path": "action_result.data.*.creator_user_name",
                     "data_type": "string",
                     "example_values": [
-                        "herman@phantomengineering.onmicrosoft.com"
+                        "testuser@example.com"
                     ],
                     "contains": [
                         "email"
@@ -3502,7 +3497,7 @@
                 },
                 "container_count": {
                     "data_type": "numeric",
-                    "description": "Maximum number of containers to ingest on poll now",
+                    "description": "Parameter ignored in this app",
                     "order": 3
                 },
                 "artifact_count": {
