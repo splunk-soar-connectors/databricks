@@ -16,7 +16,7 @@
     "python_version": "3",
     "fips_compliant": true,
     "latest_tested_versions": [
-        "Cloud API, June 24, 2023"
+        "Cloud API, June 28, 2023"
     ],
     "logo": "logo_databricks.svg",
     "logo_dark": "logo_databricks_dark.svg",
@@ -3509,88 +3509,5 @@
             "output": [],
             "versions": "EQ(*)"
         }
-    ],
-    "pip_dependencies": {
-        "pypi": [
-            {
-                "module": "PyJWT"
-            },
-            {
-                "module": "certifi"
-            },
-            {
-                "module": "charset_normalizer"
-            },
-            {
-                "module": "click"
-            },
-            {
-                "module": "databricks_cli"
-            },
-            {
-                "module": "idna"
-            },
-            {
-                "module": "importlib_metadata"
-            },
-            {
-                "module": "oauthlib"
-            },
-            {
-                "module": "requests"
-            },
-            {
-                "module": "six"
-            },
-            {
-                "module": "tabulate"
-            },
-            {
-                "module": "typing_extensions"
-            },
-            {
-                "module": "urllib3"
-            },
-            {
-                "module": "zipp"
-            }
-        ]
-    },
-    "pip39_dependencies": {
-        "pypi": [
-            {
-                "module": "PyJWT"
-            },
-            {
-                "module": "certifi"
-            },
-            {
-                "module": "charset_normalizer"
-            },
-            {
-                "module": "click"
-            },
-            {
-                "module": "databricks_cli"
-            },
-            {
-                "module": "idna"
-            },
-            {
-                "module": "oauthlib"
-            },
-            {
-                "module": "requests"
-            },
-            {
-                "module": "six"
-            },
-            {
-                "module": "tabulate"
-            },
-            {
-                "module": "urllib3"
-            }
-        ]
-    }
+    ]
 }
