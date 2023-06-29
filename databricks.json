@@ -1,7 +1,7 @@
 {
     "appid": "6dcc0a06-ceb4-4412-834e-b8576a7486a6",
     "name": "Databricks",
-    "description": "This app supports investigative and data manipulation actions against Databricks",
+    "description": "This app supports investigative and data manipulation actions in Databricks",
     "publisher": "Splunk",
     "package_name": "phantom_databricks",
     "type": "information",
