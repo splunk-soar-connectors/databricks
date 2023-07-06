@@ -24,8 +24,8 @@ class DatabricksEndpoint(Enum):
     DELETE_ALERT = ('DELETE', '/preview/sql/alerts/{alert_id}')
     PERFORM_QUERY = ('POST', '/sql/statements')
     LIST_WAREHOUSES = ('GET', '/sql/warehouses')
-    JOB_RUN = ('GET', '/jobs/runs/get?run_id={run_id}')
-    JOB_RUN_OUTPUT = ('GET', '/jobs/runs/get-output?run_id={run_id}')
+    JOB_RUN = ('GET', '/jobs/runs/get')
+    JOB_RUN_OUTPUT = ('GET', '/jobs/runs/get-output')
     GET_QUERY_STATUS = ('GET', '/sql/statements/{statement_id}')
     CANCEL_QUERY = ('POST', '/sql/statements/{statement_id}/cancel')
 
