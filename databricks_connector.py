@@ -165,7 +165,7 @@ class DatabricksConnector(BaseConnector):
 
         try:
             api_client = self._get_api_client()
-            api_info = DatabricksEndpoint.LIST_ALERTS.api_info_with_interpolation()
+            api_info = DatabricksEndpoint.LIST_ALERTS.api_info
             result = api_client.perform_query(**api_info)
 
             for item in result:
@@ -191,7 +191,7 @@ class DatabricksConnector(BaseConnector):
 
         try:
             api_client = self._get_api_client()
-            api_info = DatabricksEndpoint.LIST_CLUSTERS.api_info_with_interpolation()
+            api_info = DatabricksEndpoint.LIST_CLUSTERS.api_info
             result = api_client.perform_query(**api_info)
             total_clusters = 0
 
@@ -218,10 +218,10 @@ class DatabricksConnector(BaseConnector):
 
         action_result = self.add_action_result(ActionResult(dict(param)))
 
+        alert_id = param['alert_id']
+
         try:
             api_client = self._get_api_client()
-
-            alert_id = param['alert_id']
 
             api_info = DatabricksEndpoint.DELETE_ALERT.api_info_with_interpolation(alert_id=alert_id)
             result = api_client.perform_query(**api_info)
@@ -248,24 +248,24 @@ class DatabricksConnector(BaseConnector):
 
         action_result = self.add_action_result(ActionResult(dict(param)))
 
+        data = {}
+        data['statement'] = param['statement']
+        data['warehouse_id'] = param['warehouse_id']
+
+        self._set_key_if_param_defined(data, param, 'byte_limit')
+        self._set_key_if_param_defined(data, param, 'catalog')
+        self._set_key_if_param_defined(data, param, 'disposition')
+        self._set_key_if_param_defined(data, param, 'format')
+        self._set_key_if_param_defined(data, param, 'wait_timeout')
+        self._set_key_if_param_defined(data, param, 'on_wait_timeout')
+        self._set_key_if_param_defined(data, param, 'schema')
+
+        # 'on_wait_timeout' cannot be set if call is asynchronous
+        if 'wait_timeout' in data and data['wait_timeout'] == 0:
+            data.pop('on_wait_timeout', None)
+
         try:
             api_client = self._get_api_client()
-            data = {}
-            data['statement'] = param['statement']
-            data['warehouse_id'] = param['warehouse_id']
-
-            self._set_key_if_param_defined(data, param, 'byte_limit')
-            self._set_key_if_param_defined(data, param, 'catalog')
-            self._set_key_if_param_defined(data, param, 'disposition')
-            self._set_key_if_param_defined(data, param, 'format')
-            self._set_key_if_param_defined(data, param, 'on_wait_timeout')
-            self._set_key_if_param_defined(data, param, 'schema')
-
-            # 'on_wait_timeout' cannot be set if call is asynchronous
-            if 'wait_timeout' in param:
-                data['wait_timeout'] = f'{param["wait_timeout"]}s'
-                if param['wait_timeout'] == 0:
-                    data.pop('on_wait_timeout', None)
 
             result = api_client.perform_query(**DatabricksEndpoint.PERFORM_QUERY.api_info, data=data)
             action_result.add_data(result)
@@ -335,7 +335,7 @@ class DatabricksConnector(BaseConnector):
 
         action_result = self.add_action_result(ActionResult(dict(param)))
 
-        run_id = param.get('run_id')
+        run_id = param['run_id']
 
         ret_val, response = self._get_job_run(run_id, action_result)
         action_result.add_data(response)
@@ -352,11 +352,12 @@ class DatabricksConnector(BaseConnector):
     def _get_job_run(self, run_id, action_result):
         self.debug_print('Getting job run details')
 
+        data = {}
+        data['run_id'] = run_id
+
         try:
             api_client = self._get_api_client()
-            api_info = DatabricksEndpoint.JOB_RUN.api_info_with_interpolation(run_id=run_id)
-            result = api_client.perform_query(**api_info)
-
+            result = api_client.perform_query(**DatabricksEndpoint.JOB_RUN.api_info, data=data)
             return action_result.set_status(phantom.APP_SUCCESS), result
 
         except Exception as e:
@@ -369,12 +370,12 @@ class DatabricksConnector(BaseConnector):
 
         action_result = self.add_action_result(ActionResult(dict(param)))
 
-        run_id = param.get('run_id')
+        data = {}
+        data['run_id'] = param['run_id']
 
         try:
             api_client = self._get_api_client()
-            api_info = DatabricksEndpoint.JOB_RUN_OUTPUT.api_info_with_interpolation(run_id=run_id)
-            result = api_client.perform_query(**api_info)
+            result = api_client.perform_query(**DatabricksEndpoint.JOB_RUN_OUTPUT.api_info, data=data)
             action_result.add_data(result)
             summary = {
                 'status': consts.GET_JOB_OUTPUT_SUCCESS_MESSAGE,
@@ -456,7 +457,7 @@ class DatabricksConnector(BaseConnector):
 
         try:
             api_client = self._get_api_client()
-            api_info = DatabricksEndpoint.LIST_WAREHOUSES.api_info_with_interpolation()
+            api_info = DatabricksEndpoint.LIST_WAREHOUSES.api_info
             result = api_client.perform_query(**api_info)
             total_warehouses = 0
 
@@ -478,11 +479,8 @@ class DatabricksConnector(BaseConnector):
             self.save_progress(error_message)
             return action_result.set_status(phantom.APP_ERROR, consts.LIST_WAREHOUSES_ERROR_MESSAGE, error_message)
 
-    def _date_compare(self, alert_triggered_date, last_triggered_date):
-        if datetime.strptime(alert_triggered_date, consts.DATETIME_FORMAT) > datetime.strptime(last_triggered_date, consts.DATETIME_FORMAT):
-            return True
-        else:
-            return False
+    def _is_later_date(self, alert_triggered_date, last_triggered_date):
+        return datetime.strptime(alert_triggered_date, consts.DATETIME_FORMAT) > datetime.strptime(last_triggered_date, consts.DATETIME_FORMAT)
 
     def _handle_on_poll(self, param):
         self.debug_print(f'In action handler for: {self.get_action_identifier()}')
@@ -492,11 +490,10 @@ class DatabricksConnector(BaseConnector):
             self.save_progress("Ignoring maximum number of containers and artifacts during poll now")
 
         action_result = self.add_action_result(ActionResult(dict(param)))
-        # config = self.get_config()
 
         api_client = self._get_api_client()
 
-        api_info = DatabricksEndpoint.LIST_ALERTS.api_info_with_interpolation()
+        api_info = DatabricksEndpoint.LIST_ALERTS.api_info
         result = api_client.perform_query(**api_info)
 
         # get list of alerts from state to compare to current list of alerts
@@ -511,7 +508,7 @@ class DatabricksConnector(BaseConnector):
 
             # check to see if the latest alert trigger date is later than the last time it triggered
             if alert_id:
-                if alert_id in state_alerts and not self._date_compare(last_triggered_at, state_alerts[alert_id]):
+                if alert_id in state_alerts and not self._is_later_date(last_triggered_at, state_alerts[alert_id]):
                     continue
 
                 state_alerts[alert_id] = last_triggered_at
