@@ -252,17 +252,18 @@ class DatabricksConnector(BaseConnector):
         data['statement'] = param['statement']
         data['warehouse_id'] = param['warehouse_id']
 
+        if 'wait_timeout' in param:
+            data['wait_timeout'] = f'{param["wait_timeout"]}s'
+
+            # 'on_wait_timeout' can only be set if call is synchronous
+            if param['wait_timeout'] != 0:
+                self._set_key_if_param_defined(data, param, 'on_wait_timeout')
+
         self._set_key_if_param_defined(data, param, 'byte_limit')
         self._set_key_if_param_defined(data, param, 'catalog')
         self._set_key_if_param_defined(data, param, 'disposition')
         self._set_key_if_param_defined(data, param, 'format')
-        self._set_key_if_param_defined(data, param, 'wait_timeout')
-        self._set_key_if_param_defined(data, param, 'on_wait_timeout')
         self._set_key_if_param_defined(data, param, 'schema')
-
-        # 'on_wait_timeout' cannot be set if call is asynchronous
-        if 'wait_timeout' in data and data['wait_timeout'] == 0:
-            data.pop('on_wait_timeout', None)
 
         try:
             api_client = self._get_api_client()
