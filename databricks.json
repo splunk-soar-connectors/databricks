@@ -4,7 +4,7 @@
     "description": "This app supports investigative and data manipulation actions in Databricks",
     "publisher": "Splunk",
     "package_name": "phantom_databricks",
-    "type": "information",
+    "type": "investigative",
     "license": "Copyright (c) 2023 Splunk Inc.",
     "main_module": "databricks_connector.py",
     "app_version": "1.0.0",
