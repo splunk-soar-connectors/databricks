@@ -1645,6 +1645,7 @@
                     "contains": [
                         "databricks query id"
                     ],
+                    "primary": true,
                     "order": 1
                 },
                 "column": {
@@ -2337,7 +2338,8 @@
                     "order": 0,
                     "contains": [
                         "databricks alert id"
-                    ]
+                    ],
+                    "primary": true
                 }
             },
             "output": [
@@ -2669,6 +2671,7 @@
                     "contains": [
                         "databricks statement id"
                     ],
+                    "primary": true,
                     "required": true
                 }
             },
@@ -2744,6 +2747,7 @@
                     "contains": [
                         "databricks statement id"
                     ],
+                    "primary": true,
                     "required": true
                 }
             },
