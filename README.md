@@ -476,7 +476,7 @@ action_result.data.\*.user.email | string |  `email`  |   testuser@example.com
 action_result.data.\*.query.id | string |  |   738f7950-c5f7-4c75-b364-47eac73439dd 
 action_result.data.\*.query.name | string |  |   Total Trips 
 action_result.data.\*.query.tags | string |  |   Sample 
-action_result.data.\*.query.query | string |  |   USE CATALOG SAMPLES;
+action_result.data.\*.query.query | string |  |   USE CATALOG SAMPLES\\;
 
 SELECT
   count(\*) as total_trips
