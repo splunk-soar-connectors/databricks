@@ -163,16 +163,7 @@ action_result.data.\*.query.id | string |  `databricks query id`  |   738f7950-c
 action_result.data.\*.query.name | string |  |   Total Trips 
 action_result.data.\*.user.email | string |  `email`  |   testuser@example.com 
 action_result.data.\*.query.tags | string |  |   Sample 
-action_result.data.\*.query.query | string |  |   USE CATALOG SAMPLES;
-
-SELECT
-  count(\*) as total_trips
-FROM
-  `samples`.`nyctaxi`.`trips`
-WHERE
-  tpep_pickup_datetime BETWEEN TIMESTAMP '{{ pickup_date.start }}'
-  AND TIMESTAMP '{{ pickup_date.end }}'
-  AND pickup_zip IN ({{ pickupzip }}) 
+action_result.data.\*.query.query | string |  |   USE CATALOG SAMPLES; SELECT count(\*) as total_trips FROM `samples`.`nyctaxi`.`trips` WHERE tpep_pickup_datetime BETWEEN TIMESTAMP '{{ pickup_date.start }}' AND TIMESTAMP '{{ pickup_date.end }}' AND pickup_zip IN ({{ pickupzip }}) 
 action_result.data.\*.query.is_safe | numeric |  |   True 
 action_result.data.\*.query.options.parent | string |  |   folders/3494881372287999 
 action_result.data.\*.query.options.parameters.\*.name | string |  |   pickup_date 
@@ -476,16 +467,7 @@ action_result.data.\*.user.email | string |  `email`  |   testuser@example.com
 action_result.data.\*.query.id | string |  |   738f7950-c5f7-4c75-b364-47eac73439dd 
 action_result.data.\*.query.name | string |  |   Total Trips 
 action_result.data.\*.query.tags | string |  |   Sample 
-action_result.data.\*.query.query | string |  |   USE CATALOG SAMPLES\\;
-
-SELECT
-  count(\*) as total_trips
-FROM
-  `samples`.`nyctaxi`.`trips`
-WHERE
-  tpep_pickup_datetime BETWEEN TIMESTAMP '{{ pickup_date.start }}'
-  AND TIMESTAMP '{{ pickup_date.end }}'
-  AND pickup_zip IN ({{ pickupzip }}) 
+action_result.data.\*.query.query | string |  |   USE CATALOG SAMPLES; SELECT count(\*) as total_trips FROM `samples`.`nyctaxi`.`trips` WHERE tpep_pickup_datetime BETWEEN TIMESTAMP '{{ pickup_date.start }}' AND TIMESTAMP '{{ pickup_date.end }}' AND pickup_zip IN ({{ pickupzip }}) 
 action_result.data.\*.query.parent | string |  |   folders/3494881372287936 
 action_result.data.\*.query.is_safe | numeric |  |   True 
 action_result.data.\*.query.options.parent | string |  |   folders/3494881372287936 
@@ -883,11 +865,7 @@ DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
 action_result.data.\*.run_id | numeric |  |   6794  86328 
 action_result.parameter.run_name | string |  |   Test Run 1  sample job from test playbook  Untitled 
 action_result.status | string |  |   success  failed 
-action_result.message | string |  |   Status: Successfully executed notebook  Failed to execute notebook. Error string: 'Error Message: 400 Client Error: Bad Request for url: https://example.cloud.databricks.com/api/2.0/jobs/runs/submit
- Response from server: 
- { 'error_code': 'INVALID_PARAMETER_VALUE',
-  'message': 'One of job_cluster_key, new_cluster, or existing_cluster_id must '
-             'be specified.'}' 
+action_result.message | string |  |   Status: Successfully executed notebook 
 action_result.summary.status | string |  |   Successfully executed notebook 
 action_result.parameter.notebook_path | string |  |   /Users/testuser@example.com/sample notebook  /Users/testuser@example.com/Notebook 1  test_dbks_notebook 
 action_result.parameter.existing_cluster_id | string |  |   0605-223706-e81g2mad  0624-224055-efbqpghn 
