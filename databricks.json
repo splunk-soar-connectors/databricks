@@ -661,7 +661,7 @@
                     "data_path": "action_result.data.*.query.query",
                     "data_type": "string",
                     "example_values": [
-                        "USE CATALOG SAMPLES;\n\nSELECT\n  count(*) as total_trips\nFROM\n  `samples`.`nyctaxi`.`trips`\nWHERE\n  tpep_pickup_datetime BETWEEN TIMESTAMP '{{ pickup_date.start }}'\n  AND TIMESTAMP '{{ pickup_date.end }}'\n  AND pickup_zip IN ({{ pickupzip }})"
+                        "USE CATALOG SAMPLES; SELECT count(*) as total_trips FROM `samples`.`nyctaxi`.`trips` WHERE tpep_pickup_datetime BETWEEN TIMESTAMP '{{ pickup_date.start }}' AND TIMESTAMP '{{ pickup_date.end }}' AND pickup_zip IN ({{ pickupzip }})"
                     ]
                 },
                 {
@@ -1784,7 +1784,8 @@
                     "data_path": "action_result.data.*.query.query",
                     "data_type": "string",
                     "example_values": [
-                        "USE CATALOG SAMPLES\\;\n\nSELECT\n  count(*) as total_trips\nFROM\n  `samples`.`nyctaxi`.`trips`\nWHERE\n  tpep_pickup_datetime BETWEEN TIMESTAMP '{{ pickup_date.start }}'\n  AND TIMESTAMP '{{ pickup_date.end }}'\n  AND pickup_zip IN ({{ pickupzip }})"
+                        "USE CATALOG SAMPLES; SELECT count(*) as total_trips FROM `samples`.`nyctaxi`.`trips` WHERE tpep_pickup_datetime BETWEEN TIMESTAMP '{{ pickup_date.start }}' AND TIMESTAMP '{{ pickup_date.end }}' AND pickup_zip IN ({{ pickupzip }})"
+
                     ]
                 },
                 {
@@ -3243,8 +3244,7 @@
                     "data_path": "action_result.message",
                     "data_type": "string",
                     "example_values": [
-                        "Status: Successfully executed notebook",
-                        "Failed to execute notebook. Error string: 'Error Message: 400 Client Error: Bad Request for url: https://example.cloud.databricks.com/api/2.0/jobs/runs/submit\n Response from server: \n { 'error_code': 'INVALID_PARAMETER_VALUE',\n  'message': 'One of job_cluster_key, new_cluster, or existing_cluster_id must '\n             'be specified.'}'"
+                        "Status: Successfully executed notebook"
                     ]
                 },
                 {
