@@ -1784,7 +1784,7 @@
                     "data_path": "action_result.data.*.query.query",
                     "data_type": "string",
                     "example_values": [
-                        "USE CATALOG SAMPLES;\n\nSELECT\n  count(*) as total_trips\nFROM\n  `samples`.`nyctaxi`.`trips`\nWHERE\n  tpep_pickup_datetime BETWEEN TIMESTAMP '{{ pickup_date.start }}'\n  AND TIMESTAMP '{{ pickup_date.end }}'\n  AND pickup_zip IN ({{ pickupzip }})"
+                        "USE CATALOG SAMPLES\\;\n\nSELECT\n  count(*) as total_trips\nFROM\n  `samples`.`nyctaxi`.`trips`\nWHERE\n  tpep_pickup_datetime BETWEEN TIMESTAMP '{{ pickup_date.start }}'\n  AND TIMESTAMP '{{ pickup_date.end }}'\n  AND pickup_zip IN ({{ pickupzip }})"
                     ]
                 },
                 {
