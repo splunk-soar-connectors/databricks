@@ -5,14 +5,14 @@
     "publisher": "Splunk",
     "package_name": "phantom_databricks",
     "type": "investigative",
-    "license": "Copyright (c) 2023 Splunk Inc.",
+    "license": "Copyright (c) 2024 Splunk Inc.",
     "main_module": "databricks_connector.py",
     "app_version": "1.0.0",
     "utctime_updated": "2022-02-04T18:14:51.000000Z",
     "product_vendor": "Databricks",
     "product_name": "Databricks",
     "product_version_regex": ".*",
-    "min_phantom_version": "6.0.0",
+    "min_phantom_version": "6.2.0",
     "python_version": "3",
     "fips_compliant": true,
     "latest_tested_versions": [
@@ -1785,7 +1785,6 @@
                     "data_type": "string",
                     "example_values": [
                         "USE CATALOG SAMPLES; SELECT count(*) as total_trips FROM `samples`.`nyctaxi`.`trips` WHERE tpep_pickup_datetime BETWEEN TIMESTAMP '{{ pickup_date.start }}' AND TIMESTAMP '{{ pickup_date.end }}' AND pickup_zip IN ({{ pickupzip }})"
-
                     ]
                 },
                 {
@@ -2667,6 +2666,7 @@
             "read_only": false,
             "parameters": {
                 "statement_id": {
+                    "order": 0,
                     "description": "SQL statement id",
                     "data_type": "string",
                     "contains": [
@@ -2743,6 +2743,7 @@
             "read_only": true,
             "parameters": {
                 "statement_id": {
+                    "order": 0,
                     "description": "SQL statement id",
                     "data_type": "string",
                     "contains": [
@@ -3483,7 +3484,7 @@
         {
             "action": "on poll",
             "description": "Ingest tickets from Databricks",
-            "verbose": "The action will ingest alerts that have been triggered within Databricks",
+            "verbose": "The action will ingest alerts that have been triggered within Databricks.",
             "type": "ingest",
             "identifier": "on_poll",
             "read_only": true,
@@ -3573,40 +3574,28 @@
     "pip39_dependencies": {
         "wheel": [
             {
-                "module": "PyJWT",
-                "input_file": "wheels/py3/PyJWT-2.7.0-py3-none-any.whl"
+                "module": "cachetools",
+                "input_file": "wheels/py3/cachetools-5.3.3-py3-none-any.whl"
             },
             {
-                "module": "certifi",
-                "input_file": "wheels/py3/certifi-2023.5.7-py3-none-any.whl"
+                "module": "databricks_sdk",
+                "input_file": "wheels/py3/databricks_sdk-0.27.0-py3-none-any.whl"
             },
             {
-                "module": "charset_normalizer",
-                "input_file": "wheels/py39/charset_normalizer-3.1.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+                "module": "google_auth",
+                "input_file": "wheels/shared/google_auth-2.29.0-py2.py3-none-any.whl"
             },
             {
-                "module": "click",
-                "input_file": "wheels/py3/click-8.1.4-py3-none-any.whl"
+                "module": "pyasn1",
+                "input_file": "wheels/shared/pyasn1-0.6.0-py2.py3-none-any.whl"
             },
             {
-                "module": "databricks_cli",
-                "input_file": "wheels/py3/databricks_cli-0.17.7-py3-none-any.whl"
+                "module": "pyasn1_modules",
+                "input_file": "wheels/py3/pyasn1_modules-0.4.0-py3-none-any.whl"
             },
             {
-                "module": "idna",
-                "input_file": "wheels/py3/idna-3.4-py3-none-any.whl"
-            },
-            {
-                "module": "oauthlib",
-                "input_file": "wheels/py3/oauthlib-3.2.2-py3-none-any.whl"
-            },
-            {
-                "module": "six",
-                "input_file": "wheels/shared/six-1.16.0-py2.py3-none-any.whl"
-            },
-            {
-                "module": "tabulate",
-                "input_file": "wheels/py3/tabulate-0.9.0-py3-none-any.whl"
+                "module": "rsa",
+                "input_file": "wheels/py3/rsa-4.9-py3-none-any.whl"
             }
         ]
     }
