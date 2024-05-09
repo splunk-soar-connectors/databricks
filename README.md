@@ -6,13 +6,9 @@ Connector Version: 1.0.0
 Product Vendor: Databricks  
 Product Name: Databricks  
 Product Version Supported (regex): ".\*"  
-Minimum Product Version: 6.0.0  
+Minimum Product Version: 6.2.0  
 
 This app supports investigative and data manipulation actions in Databricks
-
-
-
-
 
 ### Configuration Variables
 The below configuration variables are required for this Connector to operate.  These variables are specified when configuring a Databricks asset in SOAR.
@@ -650,7 +646,7 @@ Ingest tickets from Databricks
 Type: **ingest**  
 Read only: **True**
 
-The action will ingest alerts that have been triggered within Databricks
+The action will ingest alerts that have been triggered within Databricks.
 
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
