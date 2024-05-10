@@ -27,14 +27,14 @@ from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
 
 import databricks_consts as consts
-from databricks.sdk.service.compute import ClusterSpec, Library
-from databricks.sdk.service.iam import AccessControlRequest
-from databricks.sdk.service.jobs import GitSource, NotebookTask, Run, RunResultState, SubmitTask
 
 deps_path = Path(__file__).parent.joinpath("dependencies")
 sys.path.insert(0, deps_path.as_posix())
 
 from databricks.sdk import WorkspaceClient  # noqa
+from databricks.sdk.service.compute import ClusterSpec, Library  # noqa
+from databricks.sdk.service.iam import AccessControlRequest  # noqa
+from databricks.sdk.service.jobs import GitSource, NotebookTask, Run, RunResultState, SubmitTask  # noqa
 from databricks.sdk.service.sql import AlertOptions, Disposition, ExecuteStatementRequestOnWaitTimeout, Format  # noqa
 
 
