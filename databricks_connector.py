@@ -270,22 +270,19 @@ class DatabricksConnector(BaseConnector):
             # 'on_wait_timeout' can only be set if call is synchronous
             if param["wait_timeout"] != 0:
                 on_wait_timeout = param.get("on_wait_timeout")
-                if on_wait_timeout in ExecuteStatementRequestOnWaitTimeout:
-                    data["on_wait_timeout"] = ExecuteStatementRequestOnWaitTimeout[
-                        on_wait_timeout
-                    ]
+                data["on_wait_timeout"] = ExecuteStatementRequestOnWaitTimeout[
+                    on_wait_timeout
+                ]
 
         self._set_key_if_param_defined(data, param, "byte_limit")
         self._set_key_if_param_defined(data, param, "catalog")
         self._set_key_if_param_defined(data, param, "schema")
 
         result_format = param.get("format")
-        if result_format in Format:
-            data["format"] = Format[result_format]
+        data["format"] = Format[result_format]
 
         disposition = param.get("disposition")
-        if disposition in Disposition:
-            data["disposition"] = Disposition[disposition]
+        data["disposition"] = Disposition[disposition]
 
         try:
             api_client = self._get_api_client()
