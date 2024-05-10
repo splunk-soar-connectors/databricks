@@ -38,7 +38,6 @@ PERFORM_QUERY_ERROR_MESSAGE = "Failed to perform SQL query"
 
 EXECUTE_NOTEBOOK_SUCCESS_MESSAGE = "Successfully executed notebook"
 EXECUTE_NOTEBOOK_ERROR_MESSAGE = "Failed to execute notebook"
-EXECUTE_NOTEBOOK_SLEEP_TIME_IN_SECONDS = 10
 
 GET_JOB_RUN_SUCCESS_MESSAGE = "Successfully retrieved job run"
 GET_JOB_RUN_ERROR_MESSAGE = "Failed to retrieve job run"

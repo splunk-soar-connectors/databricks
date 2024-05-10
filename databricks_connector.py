@@ -19,7 +19,6 @@ import sys
 import traceback
 from datetime import datetime
 from pathlib import Path
-from time import sleep
 from typing import Optional
 
 import phantom.app as phantom
@@ -28,6 +27,9 @@ from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
 
 import databricks_consts as consts
+from databricks.sdk.service.compute import ClusterSpec, Library
+from databricks.sdk.service.iam import AccessControlRequest
+from databricks.sdk.service.jobs import GitSource, NotebookTask, Run, RunResultState, SubmitTask
 
 deps_path = Path(__file__).parent.joinpath("dependencies")
 sys.path.insert(0, deps_path.as_posix())
@@ -421,57 +423,61 @@ class DatabricksConnector(BaseConnector):
         try:
             api_client = self._get_api_client()
 
-            task_info = {}
             # Task key needs to be unique per parent job and can be used to set a dependency order
             # within a job. However, for the purposes of this action we always create a one time job
             # with a single task, so we can hardcode a readable value instead of exposing this detail
             # to the user.
-            task_info["task_key"] = "soar_execute_notebook_action"
-            task_info["notebook_task"] = {}
-            task_info["notebook_task"]["notebook_path"] = param["notebook_path"]
-            self._set_key_if_param_defined(
-                task_info, param, "new_cluster", is_json=True
+            task_info = SubmitTask(
+                task_key="soar_execute_notebook_action",
+                notebook_task=NotebookTask(notebook_path=param["notebook_path"]),
             )
-            self._set_key_if_param_defined(task_info, param, "existing_cluster_id")
-            self._set_key_if_param_defined(task_info, param, "libraries", is_json=True)
+            if "new_cluster" in param:
+                cluster_json = json.loads(param["new_cluster"])
+                task_info.new_cluster = ClusterSpec.from_dict(cluster_json)
+            if "existing_cluster_id" in param:
+                task_info.existing_cluster_id = param["existing_cluster_id"]
+            if "libraries" in param:
+                libraries_json = json.loads(param["libraries"])
+                task_info.libraries = [Library.from_dict(d) for d in libraries_json]
 
             run_info = {}
             run_info["tasks"] = [task_info]
-            self._set_key_if_param_defined(run_info, param, "git_source", is_json=True)
+            if "git_source" in param:
+                git_json = json.loads(param["git_source"])
+                run_info["git_source"] = GitSource.from_dict(git_json)
+            if "access_control_list" in param:
+                acl_json = json.loads(param["access_control_list"])
+                run_info["access_control_list"] = [
+                    AccessControlRequest.from_dict(d) for d in acl_json
+                ]
             self._set_key_if_param_defined(run_info, param, "timeout_seconds")
             self._set_key_if_param_defined(run_info, param, "run_name")
             self._set_key_if_param_defined(run_info, param, "idempotency_token")
-            self._set_key_if_param_defined(
-                run_info, param, "access_control_list", is_json=True
-            )
 
-            result = api_client.jobs.submit(**run_info).result().as_dict()
+            def callback(run: Run):
+                action_result.add_data(run.as_dict())
 
-            sleep(consts.EXECUTE_NOTEBOOK_SLEEP_TIME_IN_SECONDS)
+                if run.state is None:
+                    return action_result.set_status(
+                        action_result.set_status(
+                            phantom.APP_ERROR, "Failed to get execution status"
+                        )
+                    )
 
-            if "run_id" in result:
-                ret_val, response = self._get_job_run(result["run_id"], action_result)
-            else:
-                return action_result.set_status(
-                    phantom.APP_ERROR,
-                    "Failed to retrieve run_id: {}".format(result["run_id"]),
+                if run.state.result_state == RunResultState.FAILED:
+                    action_result.update_summary(
+                        {"status": consts.EXECUTE_NOTEBOOK_ERROR_MESSAGE}
+                    )
+                    return action_result.set_status(
+                        phantom.APP_ERROR, run.state.state_message
+                    )
+
+                action_result.update_summary(
+                    {"status": consts.EXECUTE_NOTEBOOK_SUCCESS_MESSAGE}
                 )
+                return action_result.set_status(phantom.APP_SUCCESS)
 
-            action_result.add_data(response)
-
-            result_state = response.get("state", {}).get("result_state", {})
-            state_message = response.get("state", {}).get("state_message", {})
-
-            if result_state == "FAILED":
-
-                summary = {"status": consts.EXECUTE_NOTEBOOK_ERROR_MESSAGE}
-                action_result.update_summary(summary)
-                return action_result.set_status(phantom.APP_ERROR, state_message)
-
-            summary = {"status": consts.EXECUTE_NOTEBOOK_SUCCESS_MESSAGE}
-            action_result.update_summary(summary)
-            return action_result.set_status(phantom.APP_SUCCESS)
-
+            api_client.jobs.submit(**run_info).result(callback=callback)
         except Exception as e:
             error_message = self._get_error_msg_from_exception(e)
             return action_result.set_status(
