@@ -33,7 +33,7 @@ deps_path = Path(__file__).parent.joinpath("dependencies")
 sys.path.insert(0, deps_path.as_posix())
 
 from databricks.sdk import WorkspaceClient  # noqa
-from databricks.sdk.service.sql import AlertOptions  # noqa
+from databricks.sdk.service.sql import AlertOptions, Disposition, ExecuteStatementRequestOnWaitTimeout, Format  # noqa
 
 
 class RetVal(tuple):
@@ -269,13 +269,23 @@ class DatabricksConnector(BaseConnector):
 
             # 'on_wait_timeout' can only be set if call is synchronous
             if param["wait_timeout"] != 0:
-                self._set_key_if_param_defined(data, param, "on_wait_timeout")
+                on_wait_timeout = param.get("on_wait_timeout")
+                if on_wait_timeout in ExecuteStatementRequestOnWaitTimeout:
+                    data["on_wait_timeout"] = ExecuteStatementRequestOnWaitTimeout[
+                        on_wait_timeout
+                    ]
 
         self._set_key_if_param_defined(data, param, "byte_limit")
         self._set_key_if_param_defined(data, param, "catalog")
-        self._set_key_if_param_defined(data, param, "disposition")
-        self._set_key_if_param_defined(data, param, "format")
         self._set_key_if_param_defined(data, param, "schema")
+
+        result_format = param.get("format")
+        if result_format in Format:
+            data["format"] = Format[result_format]
+
+        disposition = param.get("disposition")
+        if disposition in Disposition:
+            data["disposition"] = Disposition[disposition]
 
         try:
             api_client = self._get_api_client()
