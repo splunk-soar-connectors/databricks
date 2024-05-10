@@ -399,8 +399,17 @@ class DatabricksConnector(BaseConnector):
 
         try:
             api_client = self._get_api_client()
-            result = api_client.jobs.get_run_output(run_id)
-            action_result.add_data(result.as_dict())
+            job_run = api_client.jobs.get_run(run_id)
+
+            if job_run.tasks is None:
+                return action_result.set_status(
+                    phantom.APP_ERROR, "This job run contains no task runs"
+                )
+
+            for task_run in job_run.tasks:
+                if task_run.run_id is not None:
+                    task_output = api_client.jobs.get_run_output(task_run.run_id)
+                    action_result.add_data(task_output.as_dict())
             summary = {
                 "status": consts.GET_JOB_OUTPUT_SUCCESS_MESSAGE,
             }
