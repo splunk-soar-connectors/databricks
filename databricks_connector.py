@@ -28,7 +28,6 @@ from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
 
 import databricks_consts as consts
-from databricks_enums import DatabricksEndpoint
 
 deps_path = Path(__file__).parent.joinpath("dependencies")
 sys.path.insert(0, deps_path.as_posix())
@@ -158,7 +157,7 @@ class DatabricksConnector(BaseConnector):
         try:
             api_client = self._get_api_client()
             result = api_client.alerts.create(**kwargs_alert)
-            action_result.add_data(result)
+            action_result.add_data(result.as_dict())
             summary = {
                 "status": consts.CREATE_ALERT_SUCCESS_MESSAGE,
             }
@@ -182,7 +181,7 @@ class DatabricksConnector(BaseConnector):
             result = list(api_client.alerts.list())
 
             for item in result:
-                action_result.add_data(item)
+                action_result.add_data(item.as_dict())
 
             summary = {
                 "status": consts.LIST_ALERTS_SUCCESS_MESSAGE,
@@ -210,7 +209,7 @@ class DatabricksConnector(BaseConnector):
             total_clusters = len(result)
 
             for cluster in result:
-                action_result.add_data(cluster)
+                action_result.add_data(cluster.as_dict())
 
             summary = {
                 "status": consts.LIST_CLUSTERS_SUCCESS_MESSAGE,
@@ -236,8 +235,7 @@ class DatabricksConnector(BaseConnector):
 
         try:
             api_client = self._get_api_client()
-            result = api_client.alerts.delete(alert_id)
-            action_result.add_data(result)
+            api_client.alerts.delete(alert_id)
 
             summary = {
                 "status": consts.DELETE_ALERT_SUCCESS_MESSAGE,
@@ -282,7 +280,7 @@ class DatabricksConnector(BaseConnector):
         try:
             api_client = self._get_api_client()
             result = api_client.statement_execution.execute_statement(**data)
-            action_result.add_data(result)
+            action_result.add_data(result.as_dict())
 
             summary = {
                 "status": consts.PERFORM_QUERY_SUCCESS_MESSAGE,
@@ -308,7 +306,7 @@ class DatabricksConnector(BaseConnector):
         try:
             api_client = self._get_api_client()
             result = api_client.statement_execution.get_statement(statement_id)
-            action_result.add_data(result)
+            action_result.add_data(result.as_dict())
 
             summary = {
                 "status": consts.GET_QUERY_STATUS_SUCCESS_MESSAGE,
@@ -333,8 +331,7 @@ class DatabricksConnector(BaseConnector):
 
         try:
             api_client = self._get_api_client()
-            result = api_client.statement_execution.cancel_execution(statement_id)
-            action_result.add_data(result)
+            api_client.statement_execution.cancel_execution(statement_id)
 
             summary = {
                 "status": consts.CANCEL_QUERY_SUCCESS_MESSAGE,
@@ -375,7 +372,7 @@ class DatabricksConnector(BaseConnector):
         try:
             api_client = self._get_api_client()
             result = api_client.jobs.get_run(run_id)
-            return action_result.set_status(phantom.APP_SUCCESS), result
+            return action_result.set_status(phantom.APP_SUCCESS), result.as_dict()
 
         except Exception as e:
             error_message = self._get_error_msg_from_exception(e)
@@ -394,7 +391,7 @@ class DatabricksConnector(BaseConnector):
         try:
             api_client = self._get_api_client()
             result = api_client.jobs.get_run_output(run_id)
-            action_result.add_data(result)
+            action_result.add_data(result.as_dict())
             summary = {
                 "status": consts.GET_JOB_OUTPUT_SUCCESS_MESSAGE,
             }
@@ -441,7 +438,7 @@ class DatabricksConnector(BaseConnector):
                 run_info, param, "access_control_list", is_json=True
             )
 
-            result = api_client.jobs.submit(**run_info)
+            result = api_client.jobs.submit(**run_info).result().as_dict()
 
             sleep(consts.EXECUTE_NOTEBOOK_SLEEP_TIME_IN_SECONDS)
 
@@ -481,14 +478,12 @@ class DatabricksConnector(BaseConnector):
 
         try:
             api_client = self._get_api_client()
-            api_info = DatabricksEndpoint.LIST_WAREHOUSES.api_info
-            result = api_client.perform_query(**api_info)
+            result = api_client.warehouses.list()
             total_warehouses = 0
 
-            if "warehouses" in result:
-                for warehouse in result["warehouses"]:
-                    action_result.add_data(warehouse)
-                total_warehouses = len(result["warehouses"])
+            for warehouse in result:
+                action_result.add_data(warehouse.as_dict())
+                total_warehouses += 1
 
             summary = {
                 "status": consts.LIST_WAREHOUSES_SUCCESS_MESSAGE,
@@ -522,19 +517,17 @@ class DatabricksConnector(BaseConnector):
         action_result = self.add_action_result(ActionResult(dict(param)))
 
         api_client = self._get_api_client()
-
-        api_info = DatabricksEndpoint.LIST_ALERTS.api_info
-        result = api_client.perform_query(**api_info)
+        result = api_client.alerts.list()
 
         # get list of alerts from state to compare to current list of alerts
         state_alerts = self._state.get("alerts", {})
 
         for alert in result:
-            last_triggered_at = alert.get("last_triggered_at")
+            last_triggered_at = alert.last_triggered_at
             if not last_triggered_at:
                 continue
 
-            alert_id = alert.get("id")
+            alert_id = alert.id
 
             # check to see if the latest alert trigger date is later than the last time it triggered
             if alert_id:
@@ -546,8 +539,10 @@ class DatabricksConnector(BaseConnector):
                 state_alerts[alert_id] = last_triggered_at
 
                 container = dict()
-                container["name"] = alert.get("name", "Databricks Alert")
-                container["artifacts"] = [{"cef": alert}]
+                container["name"] = (
+                    alert.name if alert.name is not None else "Databricks Alert"
+                )
+                container["artifacts"] = [{"cef": alert.as_dict()}]
                 self.save_container(container)
 
                 self._state["alerts"] = state_alerts
