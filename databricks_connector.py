@@ -434,8 +434,8 @@ class DatabricksConnector(BaseConnector):
 
             # Task key needs to be unique per parent job and can be used to set a dependency order
             # within a job. However, for the purposes of this action we always create a one time job
-            # with a single task, so we can hardcode a readable value instead of exposing this detail
-            # to the user.
+            # with a single task, so we can hardcode a readable value instead of exposing this
+            # detail to the user.
             task_info = SubmitTask(
                 task_key="soar_execute_notebook_action",
                 notebook_task=NotebookTask(notebook_path=param["notebook_path"]),
