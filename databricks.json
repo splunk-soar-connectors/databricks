@@ -3579,7 +3579,7 @@
             },
             {
                 "module": "databricks_sdk",
-                "input_file": "wheels/py3/databricks_sdk-0.27.0-py3-none-any.whl"
+                "input_file": "wheels/py3/databricks_sdk-0.27.1-py3-none-any.whl"
             },
             {
                 "module": "google_auth",
