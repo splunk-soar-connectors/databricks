@@ -83,7 +83,7 @@ DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
 action_result.data.\*.task.notebook_task.source | string |  |   WORKSPACE 
 action_result.data.\*.task.notebook_task.notebook_path | string |  |   /Users/testuser@example.com/Notebook 1 
 action_result.data.\*.state.state_message | string |  |   In run 
-action_result.data.\*.state.user_cancelled_or_timedout | numeric |  |   False 
+action_result.data.\*.state.user_cancelled_or_timedout | boolean |  |   False 
 action_result.data.\*.format | string |  |   SINGLE_TASK 
 action_result.data.\*.run_id | numeric |  |   68227  86328 
 action_result.data.\*.job_id | numeric |  |   166555938500924  713374513094130 
@@ -128,7 +128,7 @@ action_result.data.\*.metadata.task.notebook_task.source | string |  |   WORKSPA
 action_result.data.\*.metadata.task.notebook_task.notebook_path | string |  |   /Users/testuser@example.com/sample notebook 
 action_result.data.\*.metadata.state.result_state | string |  |   SUCCESS 
 action_result.data.\*.metadata.state.state_message | string |  |  
-action_result.data.\*.metadata.state.user_cancelled_or_timedout | numeric |  |   False 
+action_result.data.\*.metadata.state.user_cancelled_or_timedout | boolean |  |   False 
 action_result.data.\*.metadata.format | string |  |   SINGLE_TASK 
 action_result.data.\*.metadata.run_id | numeric |  |   68227  86328 
 action_result.data.\*.metadata.job_id | numeric |  |   166555938500924  713374513094130 
@@ -148,7 +148,7 @@ action_result.data.\*.metadata.cluster_instance.spark_context_id | string |  |  
 action_result.data.\*.metadata.creator_user_name | string |  `email`  |   testuser@example.com 
 action_result.data.\*.metadata.execution_duration | numeric |  |   19000  9000 
 action_result.data.\*.notebook_output.result | string |  |   {"a": 1, "b": 2, "c": 3, "d": "test notebook return value", "current_time": "02:15:39"}  {"a": 1, "b": 2, "c": 3, "d": "test notebook return value", "current_time": "02:10:18"} 
-action_result.data.\*.notebook_output.truncated | numeric |  |   False 
+action_result.data.\*.notebook_output.truncated | boolean |  |   False 
 action_result.status | string |  |   success 
 action_result.message | string |  |   Status: Successfully retrieved job run output 
 action_result.parameter.run_id | numeric |  |   68227  86328 
@@ -186,23 +186,23 @@ action_result.data.\*.query.options.parameters.\*.value.end | string |  |   2016
 action_result.data.\*.query.options.parameters.\*.value.start | string |  |   2016-01-01 12:07 
 action_result.data.\*.query.options.parameters.\*.parentWidgetId | string |  |  
 action_result.data.\*.query.options.parameters.\*.value | string |  |   10001 
-action_result.data.\*.query.options.parameters.\*.global | numeric |  |   False 
+action_result.data.\*.query.options.parameters.\*.global | boolean |  |   False 
 action_result.data.\*.query.options.parameters.\*.enumOptions | string |  |   10154 
 action_result.data.\*.query.options.parameters.\*.multiValuesOptions.prefix | string |  |  
 action_result.data.\*.query.options.parameters.\*.multiValuesOptions.suffix | string |  |  
 action_result.data.\*.query.options.parameters.\*.multiValuesOptions.separator | string |  |   , 
 action_result.data.\*.query.options.run_as_role | string |  |   viewer 
-action_result.data.\*.query.options.apply_auto_limit | numeric |  |   True 
+action_result.data.\*.query.options.apply_auto_limit | boolean |  |   True 
 action_result.data.\*.query.options.folder_node_status | string |  |   ACTIVE 
 action_result.data.\*.query.options.folder_node_internal_name | string |  |   tree/3494881372287999 
 action_result.data.\*.query.user_id | numeric |  |   7499675406330167 
 action_result.data.\*.query.version | numeric |  |   1 
-action_result.data.\*.query.is_draft | numeric |  |   False 
+action_result.data.\*.query.is_draft | boolean |  |   False 
 action_result.data.\*.query.schedule | string |  |  
 action_result.data.\*.query.created_at | string |  |   2023-04-26T22:10:39Z 
 action_result.data.\*.query.updated_at | string |  |   2023-04-26T22:10:39Z 
 action_result.data.\*.query.description | string |  |  
-action_result.data.\*.query.is_archived | numeric |  |   False 
+action_result.data.\*.query.is_archived | boolean |  |   False 
 action_result.data.\*.query.run_as_role | string |  |   viewer 
 action_result.data.\*.query.warehouse_id | string |  |   4790cbabexample 
 action_result.data.\*.query.data_source_id | string |  |   468e81e8-b8f4-49f6-a817-3aaa221f3b88 
@@ -210,7 +210,7 @@ action_result.data.\*.query.run_as_service_principal_id | string |  |
 action_result.data.\*.rearm | string |  |   5 
 action_result.data.\*.state | string |  |   unknown  triggered 
 action_result.data.\*.options.op | string |  |   > 
-action_result.data.\*.options.muted | numeric |  |   False  True 
+action_result.data.\*.options.muted | boolean |  |   False  True 
 action_result.data.\*.options.value | string |  |   1 
 action_result.data.\*.options.column | string |  |   total_trips 
 action_result.data.\*.options.parent | string |  |   folders/3042705489298866  folders/4082822538617174 
@@ -297,10 +297,10 @@ action_result.data.\*.enable_elastic_disk | numeric |  |   True
 action_result.data.\*.last_restarted_time | numeric |  |   1685721657951  1687733852263 
 action_result.data.\*.last_state_loss_time | numeric |  |   1685721657913  1687733852234 
 action_result.data.\*.driver_instance_source.node_type_id | string |  |   i3.xlarge 
-action_result.data.\*.init_scripts_safe_mode | numeric |  |   False 
+action_result.data.\*.init_scripts_safe_mode | boolean |  |   False 
 action_result.data.\*.autotermination_minutes | numeric |  |   4320  120 
 action_result.data.\*.effective_spark_version | string |  |   13.0.x-cpu-ml-scala2.12  12.2.x-photon-scala2.12 
-action_result.data.\*.enable_local_disk_encryption | numeric |  |   False 
+action_result.data.\*.enable_local_disk_encryption | boolean |  |   False 
 action_result.status | string |  |   success 
 action_result.message | string |  |   Status: Successfully listed clusters, Total clusters: 1 
 action_result.summary.status | string |  |   Successfully listed clusters 
@@ -310,9 +310,9 @@ action_result.data.\*.driver.node_id | string |  `md5`  |   081ac1a81449example9
 action_result.data.\*.driver.private_ip | string |  `ip`  |   10.26.193.115 
 action_result.data.\*.driver.instance_id | string |  |   i-0ab7bd9b85477a279 
 action_result.data.\*.driver.host_private_ip | string |  `ip`  |   10.26.208.44 
-action_result.data.\*.driver.node_attributes.is_spot | numeric |  |   False 
+action_result.data.\*.driver.node_attributes.is_spot | boolean |  |   False 
 action_result.data.\*.driver.start_timestamp | numeric |  |   1687733773425 
-action_result.data.\*.driver.node_aws_attributes.is_spot | numeric |  |   False 
+action_result.data.\*.driver.node_aws_attributes.is_spot | boolean |  |   False 
 action_result.data.\*.disk_spec.disk_count | numeric |  |   0 
 action_result.data.\*.jdbc_port | numeric |  |   10000 
 action_result.data.\*.cluster_cores | numeric |  |   4 
@@ -355,7 +355,7 @@ action_result.data.\*.query.name | string |  |   Total Trips
 action_result.data.\*.query.tags | string |  |   Sample 
 action_result.data.\*.query.query | string |  |   USE CATALOG SAMPLES; SELECT count(\*) as total_trips FROM `samples`.`nyctaxi`.`trips` WHERE tpep_pickup_datetime BETWEEN TIMESTAMP '{{ pickup_date.start }}' AND TIMESTAMP '{{ pickup_date.end }}' AND pickup_zip IN ({{ pickupzip }}) 
 action_result.data.\*.query.parent | string |  |   folders/3494881372287936 
-action_result.data.\*.query.is_safe | numeric |  |   True 
+action_result.data.\*.query.is_safe | boolean |  |   True 
 action_result.data.\*.query.options.parent | string |  |   folders/3494881372287936 
 action_result.data.\*.query.options.parameters.\*.name | string |  |   pickup_date 
 action_result.data.\*.query.options.parameters.\*.type | string |  |   datetime-range 
@@ -364,23 +364,23 @@ action_result.data.\*.query.options.parameters.\*.value.end | string |  |   2016
 action_result.data.\*.query.options.parameters.\*.value.start | string |  |   2016-01-01 12:07 
 action_result.data.\*.query.options.parameters.\*.parentWidgetId | string |  |  
 action_result.data.\*.query.options.parameters.\*.value | string |  |   10001 
-action_result.data.\*.query.options.parameters.\*.global | numeric |  |   False 
+action_result.data.\*.query.options.parameters.\*.global | boolean |  |   False 
 action_result.data.\*.query.options.parameters.\*.enumOptions | string |  |   10154 
 action_result.data.\*.query.options.parameters.\*.multiValuesOptions.prefix | string |  |  
 action_result.data.\*.query.options.parameters.\*.multiValuesOptions.suffix | string |  |  
 action_result.data.\*.query.options.parameters.\*.multiValuesOptions.separator | string |  |   , 
 action_result.data.\*.query.options.run_as_role | string |  |   viewer 
-action_result.data.\*.query.options.apply_auto_limit | numeric |  |   True 
+action_result.data.\*.query.options.apply_auto_limit | boolean |  |   True 
 action_result.data.\*.query.options.folder_node_status | string |  |   ACTIVE 
 action_result.data.\*.query.options.folder_node_internal_name | string |  |   tree/3494881372287938 
 action_result.data.\*.query.user_id | numeric |  |   7499675406330167 
 action_result.data.\*.query.version | numeric |  |   1 
-action_result.data.\*.query.is_draft | numeric |  |   False 
+action_result.data.\*.query.is_draft | boolean |  |   False 
 action_result.data.\*.query.schedule | string |  |  
 action_result.data.\*.query.created_at | string |  |   2023-04-26T22:10:39Z 
 action_result.data.\*.query.updated_at | string |  |   2023-04-26T22:10:39Z 
 action_result.data.\*.query.description | string |  |  
-action_result.data.\*.query.is_archived | numeric |  |   False 
+action_result.data.\*.query.is_archived | boolean |  |   False 
 action_result.data.\*.query.run_as_role | string |  |   viewer 
 action_result.data.\*.query.warehouse_id | string |  |   exampleab98bd522 
 action_result.data.\*.query.data_source_id | string |  |   468e81e8-b8f4-49f6-a817-3aaa221f3b88 
@@ -389,7 +389,7 @@ action_result.data.\*.rearm | numeric |  |   5  10
 action_result.data.\*.state | string |  |   unknown 
 action_result.data.\*.parent | string |  |   folders/4082822538617174  folders/3042705489298866 
 action_result.data.\*.options.op | string |  |   > 
-action_result.data.\*.options.muted | numeric |  |   True 
+action_result.data.\*.options.muted | boolean |  |   True 
 action_result.data.\*.options.value | string |  |   1 
 action_result.data.\*.options.column | string |  |   total_trips 
 action_result.data.\*.options.parent | string |  |   folders/4082822538617174  folders/3042705489298866 
@@ -411,7 +411,7 @@ action_result.data.\*.conditions.query_plan | string |  |
 action_result.data.\*.conditions.empty_result_state | string |  |  
 action_result.data.\*.created_at | string |  |   2023-06-24T21:54:47Z  2023-06-26T02:10:12Z  2023-06-26T02:36:39Z 
 action_result.data.\*.updated_at | string |  |   2023-06-24T21:54:47Z  2023-06-26T02:10:12Z  2023-06-26T02:36:39Z 
-action_result.data.\*.is_archived | numeric |  |   False 
+action_result.data.\*.is_archived | boolean |  |   False 
 action_result.data.\*.warehouse_id | string |  |  
 action_result.data.\*.subscriptions.\*.user_id | numeric |  |   1392537950520258 
 action_result.data.\*.permission_tier | string |  |   CAN_MANAGE 
@@ -420,7 +420,7 @@ action_result.status | string |  |   success
 action_result.message | string |  |   Status: Successfully created alert 
 action_result.summary.status | string |  |   Successfully created alert 
 action_result.parameter.name | string |  |   Test alert  test playbook alert 
-action_result.parameter.muted | numeric |  |   True 
+action_result.parameter.muted | boolean |  |   True 
 action_result.parameter.rearm | numeric |  |   5  10 
 action_result.parameter.value | string |  |   1 
 action_result.parameter.column | string |  |   total_trips 
@@ -475,7 +475,7 @@ action_result.data.\*.state | string |  |   RUNNING
 action_result.data.\*.health.status | string |  |   HEALTHY 
 action_result.data.\*.jdbc_url | string |  |   jdbc:spark://example.cloud.databricks.com:443/default;transportMode=http;ssl=1;AuthMech=3;httpPath=/sql/1.0/warehouses/4790cb1ab98bd522;  jdbc:spark://example.cloud.databricks.com:443/default;transportMode=http;ssl=1;AuthMech=3;httpPath=/sql/1.0/warehouses/d4a60a3223b685ff; 
 action_result.data.\*.creator_id | numeric |  |   7499675406330167  1392537950520258 
-action_result.data.\*.auto_resume | numeric |  |   True 
+action_result.data.\*.auto_resume | boolean |  |   True 
 action_result.data.\*.odbc_params.path | string |  |   /sql/1.0/warehouses/4790cb1ab98bd522  /sql/1.0/warehouses/d4a60a3223b685ff 
 action_result.data.\*.odbc_params.port | numeric |  |   443 
 action_result.data.\*.odbc_params.hostname | string |  `host name`  |   example.cloud.databricks.com  example.cloud.databricks.com 
@@ -483,14 +483,14 @@ action_result.data.\*.odbc_params.protocol | string |  `url`  |   https
 action_result.data.\*.cluster_size | string |  |   Small  2X-Small 
 action_result.data.\*.creator_name | string |  `email`  |   testuser@example.com 
 action_result.data.\*.num_clusters | numeric |  |   1 
-action_result.data.\*.enable_photon | numeric |  |   True 
+action_result.data.\*.enable_photon | boolean |  |   True 
 action_result.data.\*.auto_stop_mins | numeric |  |   60  10 
 action_result.data.\*.warehouse_type | string |  |   PRO 
 action_result.data.\*.max_num_clusters | numeric |  |   1 
 action_result.data.\*.min_num_clusters | numeric |  |   1 
 action_result.data.\*.num_active_sessions | numeric |  |   0 
 action_result.data.\*.spot_instance_policy | string |  |   COST_OPTIMIZED 
-action_result.data.\*.enable_serverless_compute | numeric |  |   False 
+action_result.data.\*.enable_serverless_compute | boolean |  |   False 
 action_result.status | string |  |   success 
 action_result.message | string |  |   Status: Successfully listed warehouses, Total warehouses: 2 
 action_result.summary.status | string |  |   Successfully listed warehouses 
@@ -595,7 +595,7 @@ action_result.parameter.catalog | string |  |   samples
 action_result.parameter.schema | string |  |   nyctaxi 
 action_result.parameter.disposition | string |  |   INLINE 
 action_result.data.\*.result.data_array.\* | string |  |   10282 
-action_result.data.\*.manifest.truncated | numeric |  |   False 
+action_result.data.\*.manifest.truncated | boolean |  |   False 
 summary.total_objects | numeric |  |   2 
 summary.total_objects_successful | numeric |  |   2   
 
@@ -635,7 +635,7 @@ action_result.data.\*.task.notebook_task.notebook_path | string |  |   /Users/te
 action_result.data.\*.state.result_state | string |  |   SUCCESS 
 action_result.data.\*.state.state_message | string |  |    
 action_result.data.\*.state.life_cycle_state | string |  |   TERMINATED 
-action_result.data.\*.state.user_cancelled_or_timedout | numeric |  |   False 
+action_result.data.\*.state.user_cancelled_or_timedout | boolean |  |   False 
 action_result.data.\*.format | string |  |   SINGLE_TASK 
 action_result.data.\*.job_id | numeric |  |   713374513094130 
 action_result.data.\*.end_time | numeric |  |   1687745422414 
