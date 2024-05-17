@@ -3186,13 +3186,13 @@
                     "order": 1
                 },
                 "existing_cluster_id": {
-                    "description": "The ID of an existing cluster to use for all runs of this task",
+                    "description": "The ID of an existing cluster to use for all runs of this task (required if new_cluster is unspecified)",
                     "data_type": "string",
                     "required": false,
                     "order": 2
                 },
                 "new_cluster": {
-                    "description": "An object specifying the details of the new cluster to use for this task",
+                    "description": "An object specifying the details of the new cluster to use for this task (required if existing_cluster_id is unspecified)",
                     "data_type": "string",
                     "required": false,
                     "order": 3
@@ -3223,7 +3223,7 @@
                     "order": 7
                 },
                 "access_control_list": {
-                    "description": "List of permissions to set for the run",
+                    "description": "An optional list of permissions to set for the run",
                     "data_type": "string",
                     "required": false,
                     "order": 8
