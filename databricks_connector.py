@@ -46,7 +46,7 @@ class RetVal(tuple):
 class DatabricksConnector(BaseConnector):
 
     def __init__(self):
-        super(DatabricksConnector, self).__init__()
+        super().__init__()
 
         self._state = None
 
