@@ -610,13 +610,13 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
 **notebook_path** |  required  | The path of the notebook to be run in the Databricks workspace or remote repository | string | 
 **git_source** |  optional  | An optional specification for a remote repository containing the notebook | string | 
-**existing_cluster_id** |  optional  | The ID of an existing cluster to use for all runs of this task | string | 
-**new_cluster** |  optional  | An object specifying the details of the new cluster to use for this task | string | 
+**existing_cluster_id** |  optional  | The ID of an existing cluster to use for all runs of this task (required if new_cluster is unspecified) | string | 
+**new_cluster** |  optional  | An object specifying the details of the new cluster to use for this task (required if existing_cluster_id is unspecified) | string | 
 **libraries** |  optional  | An optional list of libraries to be installed on the cluster that executes the task | string | 
 **timeout_seconds** |  optional  | An optional timeout applied to the job | numeric | 
 **run_name** |  optional  | An optional name for the run | string | 
 **idempotency_token** |  optional  | An optional token that can be used to guarantee the idempotency of job run requests. If a run with the provided token already exists, the request does not create a new run but returns the info of the existing run instead. If a run with the provided token is deleted, an error is returned | string | 
-**access_control_list** |  optional  | List of permissions to set for the run | string | 
+**access_control_list** |  optional  | An optional list of permissions to set for the run | string | 
 
 #### Action Output
 DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
