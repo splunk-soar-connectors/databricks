@@ -560,7 +560,7 @@ class DatabricksConnector(BaseConnector):
 
                 state_alerts[alert_id] = last_triggered_at
 
-                container = dict()
+                container = {}
                 container["name"] = (
                     alert.name if alert.name is not None else "Databricks Alert"
                 )
@@ -677,12 +677,12 @@ def main():
             r = requests.get(login_url, verify=args.verify)
             csrftoken = r.cookies["csrftoken"]
 
-            data = dict()
+            data = {}
             data["username"] = username
             data["password"] = password
             data["csrfmiddlewaretoken"] = csrftoken
 
-            headers = dict()
+            headers = {}
             headers["Cookie"] = "csrftoken=" + csrftoken
             headers["Referer"] = login_url
 
