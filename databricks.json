@@ -16,7 +16,7 @@
     "python_version": "3",
     "fips_compliant": true,
     "latest_tested_versions": [
-        "Cloud API, June 28, 2023"
+        "Cloud API, May 17, 2024"
     ],
     "logo": "logo_databricks.svg",
     "logo_dark": "logo_databricks_dark.svg",
@@ -31,16 +31,19 @@
         "username": {
             "description": "Username",
             "data_type": "string",
+            "required": false,
             "order": 1
         },
         "password": {
             "description": "Password",
             "data_type": "password",
+            "required": false,
             "order": 2
         },
         "token": {
             "description": "Authentication Token",
             "data_type": "password",
+            "required": false,
             "order": 3
         }
     },
@@ -94,7 +97,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.state.user_cancelled_or_timedout",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         false
                     ]
@@ -350,7 +353,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.metadata.state.user_cancelled_or_timedout",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         false
                     ]
@@ -513,7 +516,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.notebook_output.truncated",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         false
                     ]
@@ -727,7 +730,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.query.options.parameters.*.global",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         false
                     ]
@@ -763,7 +766,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.query.options.apply_auto_limit",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         true
                     ]
@@ -798,7 +801,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.query.is_draft",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         false
                     ]
@@ -829,7 +832,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.query.is_archived",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         false
                     ]
@@ -884,7 +887,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.options.muted",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         false,
                         true
@@ -1449,7 +1452,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.init_scripts_safe_mode",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         false
                     ]
@@ -1472,7 +1475,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.enable_local_disk_encryption",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         false
                     ]
@@ -1551,7 +1554,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.driver.node_attributes.is_spot",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         false
                     ]
@@ -1565,7 +1568,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.driver.node_aws_attributes.is_spot",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         false
                     ]
@@ -1677,11 +1680,13 @@
                 "custom_body": {
                     "description": "Custom body of alert notification",
                     "data_type": "string",
+                    "required": false,
                     "order": 5
                 },
                 "custom_subject": {
                     "description": "Custom subject of alert notification",
                     "data_type": "string",
+                    "required": false,
                     "order": 6
                 },
                 "muted": {
@@ -1693,16 +1698,19 @@
                 "schedule_failures": {
                     "description": "Number of failures encountered during alert refresh. This counter is used for sending aggregated alert failure email notifications",
                     "data_type": "numeric",
+                    "required": false,
                     "order": 8
                 },
                 "rearm": {
                     "description": "Number of seconds after being triggered before the alert rearms itself and can be triggered again. If not set, alert will never be triggered again",
                     "data_type": "numeric",
+                    "required": false,
                     "order": 9
                 },
                 "parent": {
                     "description": "The identifier of the workspace folder containing the alert. The default is the user's home folder",
                     "data_type": "string",
+                    "required": false,
                     "order": 10
                 }
             },
@@ -1796,7 +1804,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.query.is_safe",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         true
                     ]
@@ -1856,7 +1864,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.query.options.parameters.*.global",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         false
                     ]
@@ -1892,7 +1900,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.query.options.apply_auto_limit",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         true
                     ]
@@ -1927,7 +1935,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.query.is_draft",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         false
                     ]
@@ -1958,7 +1966,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.query.is_archived",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         false
                     ]
@@ -2020,7 +2028,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.options.muted",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         true
                     ]
@@ -2163,7 +2171,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.is_archived",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         false
                     ]
@@ -2223,7 +2231,7 @@
                 },
                 {
                     "data_path": "action_result.parameter.muted",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         true
                     ]
@@ -2479,7 +2487,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.auto_resume",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         true
                     ]
@@ -2547,7 +2555,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.enable_photon",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         true
                     ]
@@ -2597,7 +2605,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.enable_serverless_compute",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         false
                     ]
@@ -2849,6 +2857,7 @@
                 "wait_timeout": {
                     "description": "The time in seconds the API service will wait for the statement's result. Can be set to 0 or to a value between 5 and 50. When set to 0 the statement will execute in asynchronous mode",
                     "data_type": "numeric",
+                    "required": false,
                     "order": 2
                 },
                 "on_wait_timeout": {
@@ -2865,16 +2874,19 @@
                 "byte_limit": {
                     "description": "Applies the given byte limit to the statement's result size",
                     "data_type": "numeric",
+                    "required": false,
                     "order": 4
                 },
                 "catalog": {
                     "description": "Sets default catalog for statement execution, similar to USE CATALOG in SQL",
                     "data_type": "string",
+                    "required": false,
                     "order": 5
                 },
                 "schema": {
                     "description": "Sets default schema for statement execution, similar to USE SCHEMA in SQL.",
                     "data_type": "string",
+                    "required": false,
                     "order": 6
                 },
                 "disposition": {
@@ -3125,7 +3137,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.manifest.truncated",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         false
                     ]
@@ -3170,42 +3182,50 @@
                 "git_source": {
                     "description": "An optional specification for a remote repository containing the notebook",
                     "data_type": "string",
+                    "required": false,
                     "order": 1
                 },
                 "existing_cluster_id": {
                     "description": "The ID of an existing cluster to use for all runs of this task",
                     "data_type": "string",
+                    "required": false,
                     "order": 2
                 },
                 "new_cluster": {
                     "description": "An object specifying the details of the new cluster to use for this task",
                     "data_type": "string",
+                    "required": false,
                     "order": 3
                 },
                 "libraries": {
                     "description": "An optional list of libraries to be installed on the cluster that executes the task",
                     "data_type": "string",
+                    "required": false,
                     "order": 4
                 },
                 "timeout_seconds": {
                     "description": "An optional timeout applied to the job",
                     "data_type": "numeric",
+                    "required": false,
                     "order": 5
                 },
                 "run_name": {
                     "description": "An optional name for the run",
                     "data_type": "string",
                     "order": 6,
+                    "required": false,
                     "default": "Untitled"
                 },
                 "idempotency_token": {
                     "description": "An optional token that can be used to guarantee the idempotency of job run requests. If a run with the provided token already exists, the request does not create a new run but returns the info of the existing run instead. If a run with the provided token is deleted, an error is returned",
                     "data_type": "string",
+                    "required": false,
                     "order": 7
                 },
                 "access_control_list": {
                     "description": "List of permissions to set for the run",
                     "data_type": "string",
+                    "required": false,
                     "order": 8
                 }
             },
@@ -3324,7 +3344,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.state.user_cancelled_or_timedout",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
                         false
                     ]
@@ -3492,111 +3512,36 @@
                 "start_time": {
                     "data_type": "numeric",
                     "description": "Parameter ignored in this app",
+                    "required": false,
                     "order": 0
                 },
                 "end_time": {
                     "data_type": "numeric",
                     "description": "Parameter ignored in this app",
+                    "required": false,
                     "order": 1
                 },
                 "container_id": {
                     "data_type": "string",
                     "description": "Parameter ignored in this app",
+                    "required": false,
                     "order": 2
                 },
                 "container_count": {
                     "data_type": "numeric",
                     "description": "Parameter ignored in this app",
+                    "required": false,
                     "order": 3
                 },
                 "artifact_count": {
                     "data_type": "numeric",
                     "description": "Parameter ignored in this app",
+                    "required": false,
                     "order": 4
                 }
             },
             "output": [],
             "versions": "EQ(*)"
         }
-    ],
-    "pip_dependencies": {
-        "wheel": [
-            {
-                "module": "PyJWT",
-                "input_file": "wheels/py3/PyJWT-2.4.0-py3-none-any.whl"
-            },
-            {
-                "module": "certifi",
-                "input_file": "wheels/py3/certifi-2023.5.7-py3-none-any.whl"
-            },
-            {
-                "module": "charset_normalizer",
-                "input_file": "wheels/py3/charset_normalizer-2.0.12-py3-none-any.whl"
-            },
-            {
-                "module": "click",
-                "input_file": "wheels/py3/click-8.0.4-py3-none-any.whl"
-            },
-            {
-                "module": "databricks_cli",
-                "input_file": "wheels/py3/databricks_cli-0.17.7-py3-none-any.whl"
-            },
-            {
-                "module": "idna",
-                "input_file": "wheels/py3/idna-3.4-py3-none-any.whl"
-            },
-            {
-                "module": "importlib_metadata",
-                "input_file": "wheels/py3/importlib_metadata-4.8.3-py3-none-any.whl"
-            },
-            {
-                "module": "oauthlib",
-                "input_file": "wheels/py3/oauthlib-3.2.2-py3-none-any.whl"
-            },
-            {
-                "module": "six",
-                "input_file": "wheels/shared/six-1.16.0-py2.py3-none-any.whl"
-            },
-            {
-                "module": "tabulate",
-                "input_file": "wheels/py3/tabulate-0.8.10-py3-none-any.whl"
-            },
-            {
-                "module": "typing_extensions",
-                "input_file": "wheels/py3/typing_extensions-4.1.1-py3-none-any.whl"
-            },
-            {
-                "module": "zipp",
-                "input_file": "wheels/py3/zipp-3.6.0-py3-none-any.whl"
-            }
-        ]
-    },
-    "pip39_dependencies": {
-        "wheel": [
-            {
-                "module": "cachetools",
-                "input_file": "wheels/py3/cachetools-5.3.3-py3-none-any.whl"
-            },
-            {
-                "module": "databricks_sdk",
-                "input_file": "wheels/py3/databricks_sdk-0.27.1-py3-none-any.whl"
-            },
-            {
-                "module": "google_auth",
-                "input_file": "wheels/shared/google_auth-2.29.0-py2.py3-none-any.whl"
-            },
-            {
-                "module": "pyasn1",
-                "input_file": "wheels/shared/pyasn1-0.6.0-py2.py3-none-any.whl"
-            },
-            {
-                "module": "pyasn1_modules",
-                "input_file": "wheels/py3/pyasn1_modules-0.4.0-py3-none-any.whl"
-            },
-            {
-                "module": "rsa",
-                "input_file": "wheels/py3/rsa-4.9-py3-none-any.whl"
-            }
-        ]
-    }
+    ]
 }
