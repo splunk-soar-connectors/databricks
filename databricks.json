@@ -1035,13 +1035,6 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.data.*.options.schedule_failures",
-                    "data_type": "numeric",
-                    "example_values": [
-                        0
-                    ]
-                },
-                {
                     "data_path": "action_result.data.*.conditions.empty_result_state",
                     "data_type": "string",
                     "example_values": [
@@ -1695,23 +1688,17 @@
                     "default": false,
                     "order": 7
                 },
-                "schedule_failures": {
-                    "description": "Number of failures encountered during alert refresh. This counter is used for sending aggregated alert failure email notifications",
-                    "data_type": "numeric",
-                    "required": false,
-                    "order": 8
-                },
                 "rearm": {
                     "description": "Number of seconds after being triggered before the alert rearms itself and can be triggered again. If not set, alert will never be triggered again",
                     "data_type": "numeric",
                     "required": false,
-                    "order": 9
+                    "order": 8
                 },
                 "parent": {
                     "description": "The identifier of the workspace folder containing the alert. The default is the user's home folder",
                     "data_type": "string",
                     "required": false,
-                    "order": 10
+                    "order": 9
                 }
             },
             "output": [
@@ -2303,20 +2290,6 @@
                     "data_type": "numeric",
                     "example_values": [
                         1
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.options.schedule_failures",
-                    "data_type": "numeric",
-                    "example_values": [
-                        2
-                    ]
-                },
-                {
-                    "data_path": "action_result.parameter.schedule_failures",
-                    "data_type": "numeric",
-                    "example_values": [
-                        2
                     ]
                 },
                 {
