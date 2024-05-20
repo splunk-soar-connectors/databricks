@@ -232,7 +232,6 @@ action_result.data.\*.updated_at | string |  |   2023-04-27T00:00:52Z  2023-06-2
 action_result.data.\*.warehouse_id | string |  |   d4a60a32example 
 action_result.data.\*.subscriptions.\*.user_id | numeric |  |   7499675406330167  1392537950520258 
 action_result.data.\*.last_triggered_at | string |  |   2023-06-26T02:10:10Z 
-action_result.data.\*.options.schedule_failures | numeric |  |   0 
 action_result.data.\*.conditions.empty_result_state | string |  |   triggered 
 action_result.data.\*.refresh_schedules.\*.id | string |  |   2f96a108-b0f4-44d5-9354-a357ae03de41  1e926f5a-02b8-4643-9643-954ed15d3d2d 
 action_result.data.\*.refresh_schedules.\*.cron | string |  |   0 \*/10 \* \* \* ?  0 \*/2 \* \* \* ? 
@@ -338,7 +337,6 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 **custom_body** |  optional  | Custom body of alert notification | string | 
 **custom_subject** |  optional  | Custom subject of alert notification | string | 
 **muted** |  optional  | Whether or not the alert is muted | boolean | 
-**schedule_failures** |  optional  | Number of failures encountered during alert refresh. This counter is used for sending aggregated alert failure email notifications | numeric | 
 **rearm** |  optional  | Number of seconds after being triggered before the alert rearms itself and can be triggered again. If not set, alert will never be triggered again | numeric | 
 **parent** |  optional  | The identifier of the workspace folder containing the alert. The default is the user's home folder | string | 
 
@@ -430,8 +428,6 @@ action_result.parameter.custom_body | string |  |   This is a custom body  custo
 action_result.parameter.custom_subject | string |  |   This is a custom subject  custom alert subject 
 summary.total_objects | numeric |  |   1 
 summary.total_objects_successful | numeric |  |   1 
-action_result.data.\*.options.schedule_failures | numeric |  |   2 
-action_result.parameter.schedule_failures | numeric |  |   2 
 action_result.parameter.parent | string |  |   folders/3042705489298866   
 
 ## action: 'delete alert'
