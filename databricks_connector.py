@@ -15,10 +15,8 @@
 #
 
 import json
-import sys
 import traceback
 from datetime import datetime
-from pathlib import Path
 from typing import Optional
 
 import phantom.app as phantom
@@ -27,15 +25,11 @@ from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
 
 import databricks_consts as consts
-
-deps_path = Path(__file__).parent.joinpath("dependencies")
-sys.path.insert(0, deps_path.as_posix())
-
-from databricks.sdk import WorkspaceClient  # noqa
-from databricks.sdk.service.compute import ClusterSpec, Library  # noqa
-from databricks.sdk.service.iam import AccessControlRequest  # noqa
-from databricks.sdk.service.jobs import GitSource, NotebookTask, Run, RunResultState, SubmitTask  # noqa
-from databricks.sdk.service.sql import AlertOptions, Disposition, ExecuteStatementRequestOnWaitTimeout, Format  # noqa
+from databricks.sdk import WorkspaceClient
+from databricks.sdk.service.compute import ClusterSpec, Library
+from databricks.sdk.service.iam import AccessControlRequest
+from databricks.sdk.service.jobs import GitSource, NotebookTask, Run, RunResultState, SubmitTask
+from databricks.sdk.service.sql import AlertOptions, Disposition, ExecuteStatementRequestOnWaitTimeout, Format
 
 
 class RetVal(tuple):
@@ -71,18 +65,13 @@ class DatabricksConnector(BaseConnector):
                     error_message = e.args[0]
         except Exception as e:
             self.error_print(
-                "Error occurred while fetching exception information. Details: {}".format(
-                    str(e)
-                )
+                f"Error occurred while fetching exception information. Details: {e}"
             )
 
         if not error_code:
-            error_text = "Error Message: {}".format(error_message)
+            error_text = f"Error Message: {error_message}"
         else:
-            error_text = "Error Code: {}. Error Message: {}".format(
-                error_code, error_message
-            )
-
+            error_text = f"Error Code: {error_code}. Error Message: {error_message}"
         return error_text
 
     @staticmethod
@@ -127,13 +116,13 @@ class DatabricksConnector(BaseConnector):
         try:
             api_client = self._get_api_client()
             api_client.dbfs.get_status(consts.TEST_CONNECTIVITY_FILE_PATH)
-
-            self.save_progress(consts.TEST_CONNECTIVITY_SUCCESS_MESSAGE)
-            return action_result.set_status(phantom.APP_SUCCESS)
         except Exception as e:
             return self._report_error(
                 action_result, e, consts.TEST_CONNECTIVITY_ERROR_MESSAGE
             )
+
+        self.save_progress(consts.TEST_CONNECTIVITY_SUCCESS_MESSAGE)
+        return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_create_alert(self, param):
         self.debug_print(f"In action handler for: {self.get_action_identifier()}")
@@ -161,17 +150,17 @@ class DatabricksConnector(BaseConnector):
         try:
             api_client = self._get_api_client()
             result = api_client.alerts.create(**kwargs_alert)
-            action_result.add_data(result.as_dict())
-            summary = {
-                "status": consts.CREATE_ALERT_SUCCESS_MESSAGE,
-            }
-            action_result.update_summary(summary)
-            return action_result.set_status(phantom.APP_SUCCESS)
-
         except Exception as e:
             return self._report_error(
                 action_result, e, consts.CREATE_ALERT_ERROR_MESSAGE
             )
+
+        action_result.add_data(result.as_dict())
+        summary = {
+            "status": consts.CREATE_ALERT_SUCCESS_MESSAGE,
+        }
+        action_result.update_summary(summary)
+        return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_list_alerts(self, param):
         self.debug_print(f"In action handler for: {self.get_action_identifier()}")
@@ -181,22 +170,21 @@ class DatabricksConnector(BaseConnector):
         try:
             api_client = self._get_api_client()
             result = list(api_client.alerts.list())
-
-            for item in result:
-                action_result.add_data(item.as_dict())
-
-            summary = {
-                "status": consts.LIST_ALERTS_SUCCESS_MESSAGE,
-                "Total alerts": len(result),
-            }
-
-            action_result.update_summary(summary)
-            return action_result.set_status(phantom.APP_SUCCESS)
-
         except Exception as e:
             return self._report_error(
                 action_result, e, consts.LIST_ALERTS_ERROR_MESSAGE
             )
+
+        for item in result:
+            action_result.add_data(item.as_dict())
+
+        summary = {
+            "status": consts.LIST_ALERTS_SUCCESS_MESSAGE,
+            "Total alerts": len(result),
+        }
+
+        action_result.update_summary(summary)
+        return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_list_clusters(self, param):
         self.debug_print(f"In action handler for: {self.get_action_identifier()}")
@@ -206,23 +194,23 @@ class DatabricksConnector(BaseConnector):
         try:
             api_client = self._get_api_client()
             result = list(api_client.clusters.list())
-            total_clusters = len(result)
-
-            for cluster in result:
-                action_result.add_data(cluster.as_dict())
-
-            summary = {
-                "status": consts.LIST_CLUSTERS_SUCCESS_MESSAGE,
-                "Total Clusters": total_clusters,
-            }
-
-            action_result.update_summary(summary)
-            return action_result.set_status(phantom.APP_SUCCESS)
-
         except Exception as e:
             return self._report_error(
                 action_result, e, consts.LIST_CLUSTERS_ERROR_MESSAGE
             )
+
+        total_clusters = len(result)
+
+        for cluster in result:
+            action_result.add_data(cluster.as_dict())
+
+        summary = {
+            "status": consts.LIST_CLUSTERS_SUCCESS_MESSAGE,
+            "Total Clusters": total_clusters,
+        }
+
+        action_result.update_summary(summary)
+        return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_delete_alert(self, param):
         self.debug_print(f"In action handler for: {self.get_action_identifier()}")
@@ -234,31 +222,31 @@ class DatabricksConnector(BaseConnector):
         try:
             api_client = self._get_api_client()
             api_client.alerts.delete(alert_id)
-
-            summary = {
-                "status": consts.DELETE_ALERT_SUCCESS_MESSAGE,
-            }
-            action_result.update_summary(summary)
-
-            # also remove from state file if present
-            if "alerts" in self._state and alert_id in self._state["alerts"]:
-                del self._state["alerts"][alert_id]
-
-            return action_result.set_status(phantom.APP_SUCCESS)
-
         except Exception as e:
             return self._report_error(
                 action_result, e, consts.DELETE_ALERT_ERROR_MESSAGE
             )
+
+        summary = {
+            "status": consts.DELETE_ALERT_SUCCESS_MESSAGE,
+        }
+        action_result.update_summary(summary)
+
+        # also remove from state file if present
+        if "alerts" in self._state and alert_id in self._state["alerts"]:
+            del self._state["alerts"][alert_id]
+
+        return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_perform_query(self, param):
         self.debug_print(f"In action handler for: {self.get_action_identifier()}")
 
         action_result = self.add_action_result(ActionResult(dict(param)))
 
-        data = {}
-        data["statement"] = param["statement"]
-        data["warehouse_id"] = param["warehouse_id"]
+        data = {
+            "statement": param["statement"],
+            "warehouse_id": param["warehouse_id"],
+        }
 
         if "wait_timeout" in param:
             data["wait_timeout"] = f'{param["wait_timeout"]}s'
@@ -283,19 +271,19 @@ class DatabricksConnector(BaseConnector):
         try:
             api_client = self._get_api_client()
             result = api_client.statement_execution.execute_statement(**data)
-            action_result.add_data(result.as_dict())
-
-            summary = {
-                "status": consts.PERFORM_QUERY_SUCCESS_MESSAGE,
-            }
-            action_result.update_summary(summary)
-
-            return action_result.set_status(phantom.APP_SUCCESS)
-
         except Exception as e:
             return self._report_error(
                 action_result, e, consts.PERFORM_QUERY_ERROR_MESSAGE
             )
+
+        action_result.add_data(result.as_dict())
+
+        summary = {
+            "status": consts.PERFORM_QUERY_SUCCESS_MESSAGE,
+        }
+        action_result.update_summary(summary)
+
+        return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_get_query_status(self, param):
         self.debug_print(f"In action handler for: {self.get_action_identifier()}")
@@ -307,19 +295,19 @@ class DatabricksConnector(BaseConnector):
         try:
             api_client = self._get_api_client()
             result = api_client.statement_execution.get_statement(statement_id)
-            action_result.add_data(result.as_dict())
-
-            summary = {
-                "status": consts.GET_QUERY_STATUS_SUCCESS_MESSAGE,
-            }
-            action_result.update_summary(summary)
-
-            return action_result.set_status(phantom.APP_SUCCESS)
-
         except Exception as e:
             return self._report_error(
                 action_result, e, consts.GET_QUERY_STATUS_ERROR_MESSAGE
             )
+
+        action_result.add_data(result.as_dict())
+
+        summary = {
+            "status": consts.GET_QUERY_STATUS_SUCCESS_MESSAGE,
+        }
+        action_result.update_summary(summary)
+
+        return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_cancel_query(self, param):
         self.debug_print(f"In action handler for: {self.get_action_identifier()}")
@@ -331,18 +319,17 @@ class DatabricksConnector(BaseConnector):
         try:
             api_client = self._get_api_client()
             api_client.statement_execution.cancel_execution(statement_id)
-
-            summary = {
-                "status": consts.CANCEL_QUERY_SUCCESS_MESSAGE,
-            }
-            action_result.update_summary(summary)
-
-            return action_result.set_status(phantom.APP_SUCCESS)
-
         except Exception as e:
             return self._report_error(
                 action_result, e, consts.CANCEL_QUERY_ERROR_MESSAGE
             )
+
+        summary = {
+            "status": consts.CANCEL_QUERY_SUCCESS_MESSAGE,
+        }
+        action_result.update_summary(summary)
+
+        return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_get_job_run(self, param):
         self.debug_print(f"In action handler for: {self.get_action_identifier()}")
@@ -369,12 +356,12 @@ class DatabricksConnector(BaseConnector):
         try:
             api_client = self._get_api_client()
             result = api_client.jobs.get_run(run_id)
-            return action_result.set_status(phantom.APP_SUCCESS), result.as_dict()
-
         except Exception as e:
             return self._report_error(
                 action_result, e, consts.GET_JOB_RUN_ERROR_MESSAGE
             )
+
+        return action_result.set_status(phantom.APP_SUCCESS), result.as_dict()
 
     def _handle_get_job_output(self, param):
         self.debug_print(f"In action handler for: {self.get_action_identifier()}")
@@ -386,25 +373,24 @@ class DatabricksConnector(BaseConnector):
         try:
             api_client = self._get_api_client()
             job_run = api_client.jobs.get_run(run_id)
-
-            if job_run.tasks is None:
-                return action_result.set_status(
-                    phantom.APP_ERROR, "This job run contains no task runs"
-                )
-
-            for task_run in job_run.tasks:
-                if task_run.run_id is not None:
-                    task_output = api_client.jobs.get_run_output(task_run.run_id)
-                    action_result.add_data(task_output.as_dict())
-            summary = {
-                "status": consts.GET_JOB_OUTPUT_SUCCESS_MESSAGE,
-            }
-            action_result.update_summary(summary)
-
         except Exception as e:
             return self._report_error(
                 action_result, e, consts.GET_JOB_RUN_ERROR_MESSAGE
             )
+
+        if job_run.tasks is None:
+            return action_result.set_status(
+                phantom.APP_ERROR, "This job run contains no task runs"
+            )
+
+        for task_run in job_run.tasks:
+            if task_run.run_id is not None:
+                task_output = api_client.jobs.get_run_output(task_run.run_id)
+                action_result.add_data(task_output.as_dict())
+        summary = {
+            "status": consts.GET_JOB_OUTPUT_SUCCESS_MESSAGE,
+        }
+        action_result.update_summary(summary)
 
         return action_result.set_status(phantom.APP_SUCCESS)
 
@@ -413,63 +399,62 @@ class DatabricksConnector(BaseConnector):
 
         action_result = self.add_action_result(ActionResult(dict(param)))
 
+        # Task key needs to be unique per parent job and can be used to set a dependency order
+        # within a job. However, for the purposes of this action we always create a one time job
+        # with a single task, so we can hardcode a readable value instead of exposing this
+        # detail to the user.
+        task_info = SubmitTask(
+            task_key="soar_execute_notebook_action",
+            notebook_task=NotebookTask(notebook_path=param["notebook_path"]),
+        )
+        if "new_cluster" in param:
+            cluster_json = json.loads(param["new_cluster"])
+            task_info.new_cluster = ClusterSpec.from_dict(cluster_json)
+        if "existing_cluster_id" in param:
+            task_info.existing_cluster_id = param["existing_cluster_id"]
+        if "libraries" in param:
+            libraries_json = json.loads(param["libraries"])
+            task_info.libraries = [Library.from_dict(d) for d in libraries_json]
+
+        run_info = {}
+        run_info["tasks"] = [task_info]
+        if "git_source" in param:
+            git_json = json.loads(param["git_source"])
+            run_info["git_source"] = GitSource.from_dict(git_json)
+        if "access_control_list" in param:
+            acl_json = json.loads(param["access_control_list"])
+            run_info["access_control_list"] = [
+                AccessControlRequest.from_dict(d) for d in acl_json
+            ]
+        self._set_key_if_param_defined(run_info, param, "timeout_seconds")
+        self._set_key_if_param_defined(run_info, param, "run_name")
+        self._set_key_if_param_defined(run_info, param, "idempotency_token")
+
+        def callback(run: Run):
+            action_result.add_data(run.as_dict())
+
+            if run.state is None:
+                return action_result.set_status(
+                    action_result.set_status(
+                        phantom.APP_ERROR, "Failed to get execution status"
+                    )
+                )
+
+            if run.state.result_state == RunResultState.FAILED:
+                action_result.update_summary(
+                    {"status": consts.EXECUTE_NOTEBOOK_ERROR_MESSAGE}
+                )
+                return action_result.set_status(
+                    phantom.APP_ERROR, run.state.state_message
+                )
+
+            action_result.update_summary(
+                {"status": consts.EXECUTE_NOTEBOOK_SUCCESS_MESSAGE}
+            )
+            return action_result.set_status(phantom.APP_SUCCESS)
+
         try:
             api_client = self._get_api_client()
-
-            # Task key needs to be unique per parent job and can be used to set a dependency order
-            # within a job. However, for the purposes of this action we always create a one time job
-            # with a single task, so we can hardcode a readable value instead of exposing this
-            # detail to the user.
-            task_info = SubmitTask(
-                task_key="soar_execute_notebook_action",
-                notebook_task=NotebookTask(notebook_path=param["notebook_path"]),
-            )
-            if "new_cluster" in param:
-                cluster_json = json.loads(param["new_cluster"])
-                task_info.new_cluster = ClusterSpec.from_dict(cluster_json)
-            if "existing_cluster_id" in param:
-                task_info.existing_cluster_id = param["existing_cluster_id"]
-            if "libraries" in param:
-                libraries_json = json.loads(param["libraries"])
-                task_info.libraries = [Library.from_dict(d) for d in libraries_json]
-
-            run_info = {}
-            run_info["tasks"] = [task_info]
-            if "git_source" in param:
-                git_json = json.loads(param["git_source"])
-                run_info["git_source"] = GitSource.from_dict(git_json)
-            if "access_control_list" in param:
-                acl_json = json.loads(param["access_control_list"])
-                run_info["access_control_list"] = [
-                    AccessControlRequest.from_dict(d) for d in acl_json
-                ]
-            self._set_key_if_param_defined(run_info, param, "timeout_seconds")
-            self._set_key_if_param_defined(run_info, param, "run_name")
-            self._set_key_if_param_defined(run_info, param, "idempotency_token")
-
-            def callback(run: Run):
-                action_result.add_data(run.as_dict())
-
-                if run.state is None:
-                    return action_result.set_status(
-                        action_result.set_status(
-                            phantom.APP_ERROR, "Failed to get execution status"
-                        )
-                    )
-
-                if run.state.result_state == RunResultState.FAILED:
-                    action_result.update_summary(
-                        {"status": consts.EXECUTE_NOTEBOOK_ERROR_MESSAGE}
-                    )
-                    return action_result.set_status(
-                        phantom.APP_ERROR, run.state.state_message
-                    )
-
-                action_result.update_summary(
-                    {"status": consts.EXECUTE_NOTEBOOK_SUCCESS_MESSAGE}
-                )
-                return action_result.set_status(phantom.APP_SUCCESS)
-
             api_client.jobs.submit(**run_info).result(callback=callback)
         except Exception as e:
             return self._report_error(
@@ -484,24 +469,24 @@ class DatabricksConnector(BaseConnector):
         try:
             api_client = self._get_api_client()
             result = api_client.warehouses.list()
-            total_warehouses = 0
-
-            for warehouse in result:
-                action_result.add_data(warehouse.as_dict())
-                total_warehouses += 1
-
-            summary = {
-                "status": consts.LIST_WAREHOUSES_SUCCESS_MESSAGE,
-                "total warehouses": total_warehouses,
-            }
-
-            action_result.update_summary(summary)
-            return action_result.set_status(phantom.APP_SUCCESS)
-
         except Exception as e:
             return self._report_error(
                 action_result, e, consts.LIST_WAREHOUSES_ERROR_MESSAGE
             )
+
+        total_warehouses = 0
+
+        for warehouse in result:
+            action_result.add_data(warehouse.as_dict())
+            total_warehouses += 1
+
+        summary = {
+            "status": consts.LIST_WAREHOUSES_SUCCESS_MESSAGE,
+            "total warehouses": total_warehouses,
+        }
+
+        action_result.update_summary(summary)
+        return action_result.set_status(phantom.APP_SUCCESS)
 
     def _is_later_date(self, alert_triggered_date, last_triggered_date):
         return datetime.strptime(
@@ -609,12 +594,12 @@ class DatabricksConnector(BaseConnector):
         self._password = config.get("password")
         self._token = config.get("token")
 
-        if not (self._username and self._password) and not self._token:
-            return self.set_status(
-                phantom.APP_ERROR, consts.MISSING_AUTHENTICATION_ERROR_MESSAGE
-            )
+        if (self._username and self._password) or self._token:
+            return phantom.APP_SUCCESS
 
-        return phantom.APP_SUCCESS
+        return self.set_status(
+            phantom.APP_ERROR, consts.MISSING_AUTHENTICATION_ERROR_MESSAGE
+        )
 
     def finalize(self):
         # Save the state, this data is saved across actions and app upgrades
