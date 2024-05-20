@@ -1699,6 +1699,17 @@
                     "data_type": "string",
                     "required": false,
                     "order": 9
+                },
+                "empty_result_state": {
+                    "description": "State that alert evaluates to when query result is empty",
+                    "data_type": "string",
+                    "required": false,
+                    "value_list": [
+                        "OK",
+                        "TRIGGERED",
+                        "UNKNOWN"
+                    ],
+                    "order": 10
                 }
             },
             "output": [
