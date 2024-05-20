@@ -339,6 +339,7 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 **muted** |  optional  | Whether or not the alert is muted | boolean | 
 **rearm** |  optional  | Number of seconds after being triggered before the alert rearms itself and can be triggered again. If not set, alert will never be triggered again | numeric | 
 **parent** |  optional  | The identifier of the workspace folder containing the alert. The default is the user's home folder | string | 
+**empty_result_state** |  optional  | State that alert evaluates to when query result is empty | string | 
 
 #### Action Output
 DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
