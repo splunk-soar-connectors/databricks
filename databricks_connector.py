@@ -29,7 +29,7 @@ from databricks.sdk import WorkspaceClient
 from databricks.sdk.service.compute import ClusterSpec, Library
 from databricks.sdk.service.iam import AccessControlRequest
 from databricks.sdk.service.jobs import GitSource, NotebookTask, Run, RunResultState, SubmitTask
-from databricks.sdk.service.sql import AlertOptions, Disposition, ExecuteStatementRequestOnWaitTimeout, Format
+from databricks.sdk.service.sql import AlertOptions, AlertOptionsEmptyResultState, Disposition, ExecuteStatementRequestOnWaitTimeout, Format
 
 
 class RetVal(tuple):
@@ -137,7 +137,8 @@ class DatabricksConnector(BaseConnector):
         self._set_key_if_param_defined(kwargs_options, param, "custom_body")
         self._set_key_if_param_defined(kwargs_options, param, "custom_subject")
         self._set_key_if_param_defined(kwargs_options, param, "muted")
-        self._set_key_if_param_defined(kwargs_options, param, "empty_result_state")
+        if "empty_result_state" in param:
+            kwargs_options["empty_result_state"] = AlertOptionsEmptyResultState(param)
         options = AlertOptions(**kwargs_options)
 
         kwargs_alert = {
