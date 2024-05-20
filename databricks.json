@@ -1705,9 +1705,9 @@
                     "data_type": "string",
                     "required": false,
                     "value_list": [
-                        "OK",
-                        "TRIGGERED",
-                        "UNKNOWN"
+                        "ok",
+                        "triggered",
+                        "unknown"
                     ],
                     "order": 10
                 }
