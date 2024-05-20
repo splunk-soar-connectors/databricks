@@ -138,7 +138,9 @@ class DatabricksConnector(BaseConnector):
         self._set_key_if_param_defined(kwargs_options, param, "custom_subject")
         self._set_key_if_param_defined(kwargs_options, param, "muted")
         if "empty_result_state" in param:
-            kwargs_options["empty_result_state"] = AlertOptionsEmptyResultState(param)
+            kwargs_options["empty_result_state"] = AlertOptionsEmptyResultState(
+                param["empty_result_state"]
+            )
         options = AlertOptions(**kwargs_options)
 
         kwargs_alert = {
