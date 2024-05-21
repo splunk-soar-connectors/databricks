@@ -7,7 +7,7 @@
     "type": "investigative",
     "license": "Copyright (c) 2024 Splunk Inc.",
     "main_module": "databricks_connector.py",
-    "app_version": "1.0.0",
+    "app_version": "1.0.1",
     "utctime_updated": "2022-02-04T18:14:51.000000Z",
     "product_vendor": "Databricks",
     "product_name": "Databricks",
