@@ -8,7 +8,7 @@ Product Name: Databricks
 Product Version Supported (regex): ".\*"  
 Minimum Product Version: 6.2.0  
 
-This app supports investigative and data manipulation actions in Databricks
+This app supports investigation and data manipulation actions in Databricks
 
 [comment]: # " File: README.md"
 [comment]: # "  Copyright (c) 2024 Splunk Inc."
