@@ -1,1 +1,2 @@
 **Unreleased**
+Initial release of Databricks app [PAPP-27457]
