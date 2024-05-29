@@ -30,6 +30,7 @@ from databricks.sdk.service.compute import ClusterSpec, Library
 from databricks.sdk.service.iam import AccessControlRequest
 from databricks.sdk.service.jobs import GitSource, NotebookTask, Run, RunResultState, SubmitTask
 from databricks.sdk.service.sql import AlertOptions, AlertOptionsEmptyResultState, Disposition, ExecuteStatementRequestOnWaitTimeout, Format
+from databricks.sdk.service.workspace import ObjectType
 
 
 class RetVal(tuple):
@@ -149,10 +150,20 @@ class DatabricksConnector(BaseConnector):
             "options": options,
         }
         self._set_key_if_param_defined(kwargs_alert, param, "rearm")
-        self._set_key_if_param_defined(kwargs_alert, param, "parent")
 
         try:
             api_client = self._get_api_client()
+
+            if "parent" in param:
+                # If the user provided a parent directory, check that it exists
+                # and resolve the path to an ID if needed
+                parent_path = param["parent"]
+                parent_obj = api_client.workspace.get_status(path=parent_path)
+                if parent_obj.object_type == ObjectType.DIRECTORY:
+                    kwargs_alert["parent"] = f"folders/{parent_obj.object_id}"
+                else:
+                    raise ValueError(f"parent path is not a folder: {parent_path}")
+
             result = api_client.alerts.create(**kwargs_alert)
         except Exception as e:
             return self._report_error(
