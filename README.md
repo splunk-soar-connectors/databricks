@@ -2,7 +2,7 @@
 # Databricks
 
 Publisher: Splunk  
-Connector Version: 1.0.1  
+Connector Version: 1.0.2  
 Product Vendor: Databricks  
 Product Name: Databricks  
 Product Version Supported (regex): ".\*"  
