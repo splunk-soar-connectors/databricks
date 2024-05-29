@@ -157,12 +157,17 @@ class DatabricksConnector(BaseConnector):
             if "parent" in param:
                 # If the user provided a parent directory, check that it exists
                 # and resolve the path to an ID if needed
-                parent_path = param["parent"]
-                parent_obj = api_client.workspace.get_status(path=parent_path)
-                if parent_obj.object_type == ObjectType.DIRECTORY:
-                    kwargs_alert["parent"] = f"folders/{parent_obj.object_id}"
+                parent_path: str = param["parent"]
+                if parent_path.startswith("folders/"):
+                    # Path is already resolved
+                    kwargs_alert["parent"] = parent_path
                 else:
-                    raise ValueError(f"parent path is not a folder: {parent_path}")
+                    # Need to resolve the path into a folder ID
+                    parent_obj = api_client.workspace.get_status(path=parent_path)
+                    if parent_obj.object_type == ObjectType.DIRECTORY:
+                        kwargs_alert["parent"] = f"folders/{parent_obj.object_id}"
+                    else:
+                        raise ValueError(f"parent path is not a folder: {parent_path}")
 
             result = api_client.alerts.create(**kwargs_alert)
         except Exception as e:
