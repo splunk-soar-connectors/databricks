@@ -6,7 +6,7 @@ Connector Version: 1.0.2
 Product Vendor: Databricks  
 Product Name: Databricks  
 Product Version Supported (regex): ".\*"  
-Minimum Product Version: 6.2.0  
+Minimum Product Version: 6.2.1  
 
 This app supports investigation and data manipulation actions in Databricks
 
