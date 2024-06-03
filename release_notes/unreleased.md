@@ -1,2 +1,1 @@
 **Unreleased**
-* Bump min_phantom_version to 6.2.1 [PAPP-27457]
