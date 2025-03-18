@@ -1,6 +1,6 @@
 # File: databricks_consts.py
 #
-# Copyright (c) 2024 Splunk Inc.
+# Copyright (c) 2024-2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -51,8 +51,6 @@ GET_QUERY_STATUS_ERROR_MESSAGE = "Failed to retrieve query status"
 CANCEL_QUERY_SUCCESS_MESSAGE = "Successfully submitted query cancellation request"
 CANCEL_QUERY_ERROR_MESSAGE = "Failed to submit query cancellation request"
 
-DATABRICKS_ERROR_MESSAGE_UNAVAILABLE = (
-    "Unavailable. Please check the asset configuration and|or the action parameters."
-)
+DATABRICKS_ERROR_MESSAGE_UNAVAILABLE = "Unavailable. Please check the asset configuration and|or the action parameters."
 
 UNHANDLED_ACTION_ID_ERROR_MESSAGE = "Action ID {} does not have a code handler."
