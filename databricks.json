@@ -5,7 +5,7 @@
     "publisher": "Splunk",
     "package_name": "phantom_databricks",
     "type": "investigative",
-    "license": "Copyright (c) 2024 Splunk Inc.",
+    "license": "Copyright (c) 2024-2025 Splunk Inc.",
     "main_module": "databricks_connector.py",
     "app_version": "1.0.3",
     "utctime_updated": "2024-06-03T20:53:08.000000Z",
@@ -2309,6 +2309,10 @@
                     "example_values": [
                         "folders/3042705489298866"
                     ]
+                },
+                {
+                    "data_path": "action_result.parameter.empty_result_state",
+                    "data_type": "string"
                 }
             ],
             "render": {
@@ -3478,6 +3482,14 @@
                     "example_values": [
                         "abc123"
                     ]
+                },
+                {
+                    "data_path": "action_result.parameter.libraries",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.parameter.access_control_list",
+                    "data_type": "string"
                 }
             ],
             "render": {

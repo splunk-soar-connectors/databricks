@@ -1,6 +1,6 @@
 # File: databricks_view.py
 #
-# Copyright (c) 2024 Splunk Inc.
+# Copyright (c) 2024-2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
 
 
 def get_ctx_result(result):
-
     ctx_result = {}
     param = result.get_param()
     summary = result.get_summary()
@@ -24,9 +23,7 @@ def get_ctx_result(result):
     ctx_result["param"] = param
 
     if data:
-        ctx_result["headers"] = (
-            data[0].get("manifest", {}).get("schema", {}).get("columns", {})
-        )
+        ctx_result["headers"] = data[0].get("manifest", {}).get("schema", {}).get("columns", {})
         ctx_result["data"] = data[0].get("result", {}).get("data_array", {})
 
     if summary:
@@ -36,12 +33,10 @@ def get_ctx_result(result):
 
 
 def display_query_results(provides, all_results, context):
-
     context["results"] = results = []
 
     for summary, action_results in all_results:
         for result in action_results:
-
             ctx_result = get_ctx_result(result)
             if not ctx_result:
                 continue

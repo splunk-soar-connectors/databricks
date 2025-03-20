@@ -1,6 +1,6 @@
 # File: databricks_connector.py
 #
-# Copyright (c) 2024 Splunk Inc.
+# Copyright (c) 2024-2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -39,7 +39,6 @@ class RetVal(tuple):
 
 
 class DatabricksConnector(BaseConnector):
-
     def __init__(self):
         super().__init__()
 
@@ -51,7 +50,6 @@ class DatabricksConnector(BaseConnector):
         self._token: Optional[str] = None
 
     def _get_error_msg_from_exception(self, e):
-
         error_code = None
         error_message = consts.DATABRICKS_ERROR_MESSAGE_UNAVAILABLE
 
@@ -65,9 +63,7 @@ class DatabricksConnector(BaseConnector):
                 elif len(e.args) == 1:
                     error_message = e.args[0]
         except Exception as e:
-            self.error_print(
-                f"Error occurred while fetching exception information. Details: {e}"
-            )
+            self.error_print(f"Error occurred while fetching exception information. Details: {e}")
 
         if not error_code:
             error_text = f"Error Message: {error_message}"
@@ -81,7 +77,7 @@ class DatabricksConnector(BaseConnector):
         param: dict,
         key: str,
         is_json: bool = False,
-        param_key: str = None,
+        param_key: Optional[str] = None,
     ):
         if param_key is None:
             param_key = key
@@ -118,9 +114,7 @@ class DatabricksConnector(BaseConnector):
             api_client = self._get_api_client()
             api_client.dbfs.get_status(consts.TEST_CONNECTIVITY_FILE_PATH)
         except Exception as e:
-            return self._report_error(
-                action_result, e, consts.TEST_CONNECTIVITY_ERROR_MESSAGE
-            )
+            return self._report_error(action_result, e, consts.TEST_CONNECTIVITY_ERROR_MESSAGE)
 
         self.save_progress(consts.TEST_CONNECTIVITY_SUCCESS_MESSAGE)
         return action_result.set_status(phantom.APP_SUCCESS)
@@ -139,9 +133,7 @@ class DatabricksConnector(BaseConnector):
         self._set_key_if_param_defined(kwargs_options, param, "custom_subject")
         self._set_key_if_param_defined(kwargs_options, param, "muted")
         if "empty_result_state" in param:
-            kwargs_options["empty_result_state"] = AlertOptionsEmptyResultState(
-                param["empty_result_state"]
-            )
+            kwargs_options["empty_result_state"] = AlertOptionsEmptyResultState(param["empty_result_state"])
         options = AlertOptions(**kwargs_options)
 
         kwargs_alert = {
@@ -171,9 +163,7 @@ class DatabricksConnector(BaseConnector):
 
             result = api_client.alerts.create(**kwargs_alert)
         except Exception as e:
-            return self._report_error(
-                action_result, e, consts.CREATE_ALERT_ERROR_MESSAGE
-            )
+            return self._report_error(action_result, e, consts.CREATE_ALERT_ERROR_MESSAGE)
 
         action_result.add_data(result.as_dict())
         summary = {
@@ -191,9 +181,7 @@ class DatabricksConnector(BaseConnector):
             api_client = self._get_api_client()
             result = list(api_client.alerts.list())
         except Exception as e:
-            return self._report_error(
-                action_result, e, consts.LIST_ALERTS_ERROR_MESSAGE
-            )
+            return self._report_error(action_result, e, consts.LIST_ALERTS_ERROR_MESSAGE)
 
         for item in result:
             action_result.add_data(item.as_dict())
@@ -215,9 +203,7 @@ class DatabricksConnector(BaseConnector):
             api_client = self._get_api_client()
             result = list(api_client.clusters.list())
         except Exception as e:
-            return self._report_error(
-                action_result, e, consts.LIST_CLUSTERS_ERROR_MESSAGE
-            )
+            return self._report_error(action_result, e, consts.LIST_CLUSTERS_ERROR_MESSAGE)
 
         total_clusters = len(result)
 
@@ -243,9 +229,7 @@ class DatabricksConnector(BaseConnector):
             api_client = self._get_api_client()
             api_client.alerts.delete(alert_id)
         except Exception as e:
-            return self._report_error(
-                action_result, e, consts.DELETE_ALERT_ERROR_MESSAGE
-            )
+            return self._report_error(action_result, e, consts.DELETE_ALERT_ERROR_MESSAGE)
 
         summary = {
             "status": consts.DELETE_ALERT_SUCCESS_MESSAGE,
@@ -269,14 +253,12 @@ class DatabricksConnector(BaseConnector):
         }
 
         if "wait_timeout" in param:
-            data["wait_timeout"] = f'{param["wait_timeout"]}s'
+            data["wait_timeout"] = f"{param['wait_timeout']}s"
 
             # 'on_wait_timeout' can only be set if call is synchronous
             if param["wait_timeout"] != 0:
                 on_wait_timeout = param.get("on_wait_timeout")
-                data["on_wait_timeout"] = ExecuteStatementRequestOnWaitTimeout[
-                    on_wait_timeout
-                ]
+                data["on_wait_timeout"] = ExecuteStatementRequestOnWaitTimeout[on_wait_timeout]
 
         self._set_key_if_param_defined(data, param, "byte_limit")
         self._set_key_if_param_defined(data, param, "catalog")
@@ -292,9 +274,7 @@ class DatabricksConnector(BaseConnector):
             api_client = self._get_api_client()
             result = api_client.statement_execution.execute_statement(**data)
         except Exception as e:
-            return self._report_error(
-                action_result, e, consts.PERFORM_QUERY_ERROR_MESSAGE
-            )
+            return self._report_error(action_result, e, consts.PERFORM_QUERY_ERROR_MESSAGE)
 
         action_result.add_data(result.as_dict())
 
@@ -316,9 +296,7 @@ class DatabricksConnector(BaseConnector):
             api_client = self._get_api_client()
             result = api_client.statement_execution.get_statement(statement_id)
         except Exception as e:
-            return self._report_error(
-                action_result, e, consts.GET_QUERY_STATUS_ERROR_MESSAGE
-            )
+            return self._report_error(action_result, e, consts.GET_QUERY_STATUS_ERROR_MESSAGE)
 
         action_result.add_data(result.as_dict())
 
@@ -340,9 +318,7 @@ class DatabricksConnector(BaseConnector):
             api_client = self._get_api_client()
             api_client.statement_execution.cancel_execution(statement_id)
         except Exception as e:
-            return self._report_error(
-                action_result, e, consts.CANCEL_QUERY_ERROR_MESSAGE
-            )
+            return self._report_error(action_result, e, consts.CANCEL_QUERY_ERROR_MESSAGE)
 
         summary = {
             "status": consts.CANCEL_QUERY_SUCCESS_MESSAGE,
@@ -377,9 +353,7 @@ class DatabricksConnector(BaseConnector):
             api_client = self._get_api_client()
             result = api_client.jobs.get_run(run_id)
         except Exception as e:
-            return self._report_error(
-                action_result, e, consts.GET_JOB_RUN_ERROR_MESSAGE
-            )
+            return self._report_error(action_result, e, consts.GET_JOB_RUN_ERROR_MESSAGE)
 
         return action_result.set_status(phantom.APP_SUCCESS), result.as_dict()
 
@@ -394,14 +368,10 @@ class DatabricksConnector(BaseConnector):
             api_client = self._get_api_client()
             job_run = api_client.jobs.get_run(run_id)
         except Exception as e:
-            return self._report_error(
-                action_result, e, consts.GET_JOB_RUN_ERROR_MESSAGE
-            )
+            return self._report_error(action_result, e, consts.GET_JOB_RUN_ERROR_MESSAGE)
 
         if job_run.tasks is None:
-            return action_result.set_status(
-                phantom.APP_ERROR, "This job run contains no task runs"
-            )
+            return action_result.set_status(phantom.APP_ERROR, "This job run contains no task runs")
 
         for task_run in job_run.tasks:
             if task_run.run_id is not None:
@@ -443,9 +413,7 @@ class DatabricksConnector(BaseConnector):
             run_info["git_source"] = GitSource.from_dict(git_json)
         if "access_control_list" in param:
             acl_json = json.loads(param["access_control_list"])
-            run_info["access_control_list"] = [
-                AccessControlRequest.from_dict(d) for d in acl_json
-            ]
+            run_info["access_control_list"] = [AccessControlRequest.from_dict(d) for d in acl_json]
         self._set_key_if_param_defined(run_info, param, "timeout_seconds")
         self._set_key_if_param_defined(run_info, param, "run_name")
         self._set_key_if_param_defined(run_info, param, "idempotency_token")
@@ -454,32 +422,20 @@ class DatabricksConnector(BaseConnector):
             action_result.add_data(run.as_dict())
 
             if run.state is None:
-                return action_result.set_status(
-                    action_result.set_status(
-                        phantom.APP_ERROR, "Failed to get execution status"
-                    )
-                )
+                return action_result.set_status(action_result.set_status(phantom.APP_ERROR, "Failed to get execution status"))
 
             if run.state.result_state == RunResultState.FAILED:
-                action_result.update_summary(
-                    {"status": consts.EXECUTE_NOTEBOOK_ERROR_MESSAGE}
-                )
-                return action_result.set_status(
-                    phantom.APP_ERROR, run.state.state_message
-                )
+                action_result.update_summary({"status": consts.EXECUTE_NOTEBOOK_ERROR_MESSAGE})
+                return action_result.set_status(phantom.APP_ERROR, run.state.state_message)
 
-            action_result.update_summary(
-                {"status": consts.EXECUTE_NOTEBOOK_SUCCESS_MESSAGE}
-            )
+            action_result.update_summary({"status": consts.EXECUTE_NOTEBOOK_SUCCESS_MESSAGE})
             return action_result.set_status(phantom.APP_SUCCESS)
 
         try:
             api_client = self._get_api_client()
             api_client.jobs.submit(**run_info).result(callback=callback)
         except Exception as e:
-            return self._report_error(
-                action_result, e, consts.EXECUTE_NOTEBOOK_ERROR_MESSAGE
-            )
+            return self._report_error(action_result, e, consts.EXECUTE_NOTEBOOK_ERROR_MESSAGE)
 
     def _handle_list_warehouses(self, param):
         self.debug_print(f"In action handler for: {self.get_action_identifier()}")
@@ -490,9 +446,7 @@ class DatabricksConnector(BaseConnector):
             api_client = self._get_api_client()
             result = api_client.warehouses.list()
         except Exception as e:
-            return self._report_error(
-                action_result, e, consts.LIST_WAREHOUSES_ERROR_MESSAGE
-            )
+            return self._report_error(action_result, e, consts.LIST_WAREHOUSES_ERROR_MESSAGE)
 
         total_warehouses = 0
 
@@ -509,18 +463,14 @@ class DatabricksConnector(BaseConnector):
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def _is_later_date(self, alert_triggered_date, last_triggered_date):
-        return datetime.strptime(
-            alert_triggered_date, consts.DATETIME_FORMAT
-        ) > datetime.strptime(last_triggered_date, consts.DATETIME_FORMAT)
+        return datetime.strptime(alert_triggered_date, consts.DATETIME_FORMAT) > datetime.strptime(last_triggered_date, consts.DATETIME_FORMAT)
 
     def _handle_on_poll(self, param):
         self.debug_print(f"In action handler for: {self.get_action_identifier()}")
 
         if self.is_poll_now():
             self.save_progress("Starting polling now")
-            self.save_progress(
-                "Ignoring maximum number of containers and artifacts during poll now"
-            )
+            self.save_progress("Ignoring maximum number of containers and artifacts during poll now")
 
         action_result = self.add_action_result(ActionResult(dict(param)))
 
@@ -539,17 +489,13 @@ class DatabricksConnector(BaseConnector):
 
             # check to see if the latest alert trigger date is later than the last time it triggered
             if alert_id:
-                if alert_id in state_alerts and not self._is_later_date(
-                    last_triggered_at, state_alerts[alert_id]
-                ):
+                if alert_id in state_alerts and not self._is_later_date(last_triggered_at, state_alerts[alert_id]):
                     continue
 
                 state_alerts[alert_id] = last_triggered_at
 
                 container = {}
-                container["name"] = (
-                    alert.name if alert.name is not None else "Databricks Alert"
-                )
+                container["name"] = alert.name if alert.name is not None else "Databricks Alert"
                 container["artifacts"] = [{"cef": alert.as_dict()}]
                 self.save_container(container)
 
@@ -617,9 +563,7 @@ class DatabricksConnector(BaseConnector):
         if (self._username and self._password) or self._token:
             return phantom.APP_SUCCESS
 
-        return self.set_status(
-            phantom.APP_ERROR, consts.MISSING_AUTHENTICATION_ERROR_MESSAGE
-        )
+        return self.set_status(phantom.APP_ERROR, consts.MISSING_AUTHENTICATION_ERROR_MESSAGE)
 
     def finalize(self):
         # Save the state, this data is saved across actions and app upgrades
