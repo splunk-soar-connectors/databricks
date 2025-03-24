@@ -21,16 +21,16 @@ from typing import Optional
 
 import phantom.app as phantom
 import requests
+from phantom.action_result import ActionResult
+from phantom.base_connector import BaseConnector
+
+import databricks_consts as consts
 from databricks.sdk import WorkspaceClient
 from databricks.sdk.service.compute import ClusterSpec, Library
 from databricks.sdk.service.iam import AccessControlRequest
 from databricks.sdk.service.jobs import GitSource, NotebookTask, Run, RunResultState, SubmitTask
 from databricks.sdk.service.sql import AlertOptions, AlertOptionsEmptyResultState, Disposition, ExecuteStatementRequestOnWaitTimeout, Format
 from databricks.sdk.service.workspace import ObjectType
-from phantom.action_result import ActionResult
-from phantom.base_connector import BaseConnector
-
-import databricks_consts as consts
 
 
 class RetVal(tuple):
