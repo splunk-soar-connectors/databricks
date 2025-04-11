@@ -1,7 +1,7 @@
 # Databricks
 
 Publisher: Splunk \
-Connector Version: 1.0.3 \
+Connector Version: 1.0.4 \
 Product Vendor: Databricks \
 Product Name: Databricks \
 Minimum Product Version: 6.2.1
