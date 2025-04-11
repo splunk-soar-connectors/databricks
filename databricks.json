@@ -3544,7 +3544,7 @@
         "wheel": [
             {
                 "module": "cachetools",
-                "input_file": "wheels/py3/cachetools-5.3.3-py3-none-any.whl"
+                "input_file": "wheels/py3/cachetools-5.5.2-py3-none-any.whl"
             },
             {
                 "module": "databricks_sdk",
@@ -3552,15 +3552,15 @@
             },
             {
                 "module": "google_auth",
-                "input_file": "wheels/shared/google_auth-2.29.0-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/google_auth-2.38.0-py2.py3-none-any.whl"
             },
             {
                 "module": "pyasn1",
-                "input_file": "wheels/shared/pyasn1-0.6.0-py2.py3-none-any.whl"
+                "input_file": "wheels/py3/pyasn1-0.6.1-py3-none-any.whl"
             },
             {
                 "module": "pyasn1_modules",
-                "input_file": "wheels/py3/pyasn1_modules-0.4.0-py3-none-any.whl"
+                "input_file": "wheels/py3/pyasn1_modules-0.4.2-py3-none-any.whl"
             },
             {
                 "module": "rsa",
