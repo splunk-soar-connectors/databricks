@@ -5,7 +5,7 @@
     "publisher": "Splunk",
     "package_name": "phantom_databricks",
     "type": "investigative",
-    "license": "Copyright (c) 2024-2025 Splunk Inc.",
+    "license": "Copyright (c) 2024-2026 Splunk Inc.",
     "main_module": "databricks_connector.py",
     "app_version": "1.0.4",
     "utctime_updated": "2025-04-11T21:57:26.443223Z",
@@ -13,7 +13,7 @@
     "product_name": "Databricks",
     "product_version_regex": ".*",
     "min_phantom_version": "6.2.1",
-    "python_version": "3",
+    "python_version": "3.9, 3.13",
     "fips_compliant": true,
     "latest_tested_versions": [
         "Cloud API, May 17, 2024"
@@ -3543,8 +3543,12 @@
     "pip39_dependencies": {
         "wheel": [
             {
-                "module": "cachetools",
-                "input_file": "wheels/py3/cachetools-5.5.2-py3-none-any.whl"
+                "module": "cffi",
+                "input_file": "wheels/py39/cffi-2.0.0-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl"
+            },
+            {
+                "module": "cryptography",
+                "input_file": "wheels/py3/cryptography-46.0.5-cp38-abi3-manylinux_2_28_x86_64.whl"
             },
             {
                 "module": "databricks_sdk",
@@ -3552,19 +3556,63 @@
             },
             {
                 "module": "google_auth",
-                "input_file": "wheels/shared/google_auth-2.38.0-py2.py3-none-any.whl"
+                "input_file": "wheels/py3/google_auth-2.48.0-py3-none-any.whl"
             },
             {
                 "module": "pyasn1",
-                "input_file": "wheels/py3/pyasn1-0.6.1-py3-none-any.whl"
+                "input_file": "wheels/py3/pyasn1-0.6.2-py3-none-any.whl"
             },
             {
                 "module": "pyasn1_modules",
                 "input_file": "wheels/py3/pyasn1_modules-0.4.2-py3-none-any.whl"
             },
             {
+                "module": "pycparser",
+                "input_file": "wheels/py3/pycparser-2.23-py3-none-any.whl"
+            },
+            {
                 "module": "rsa",
-                "input_file": "wheels/py3/rsa-4.9-py3-none-any.whl"
+                "input_file": "wheels/py3/rsa-4.9.1-py3-none-any.whl"
+            },
+            {
+                "module": "typing_extensions",
+                "input_file": "wheels/py3/typing_extensions-4.15.0-py3-none-any.whl"
+            }
+        ]
+    },
+    "pip313_dependencies": {
+        "wheel": [
+            {
+                "module": "cffi",
+                "input_file": "wheels/py313/cffi-2.0.0-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl"
+            },
+            {
+                "module": "cryptography",
+                "input_file": "wheels/py3/cryptography-46.0.5-cp311-abi3-manylinux_2_28_x86_64.whl"
+            },
+            {
+                "module": "databricks_sdk",
+                "input_file": "wheels/py3/databricks_sdk-0.27.1-py3-none-any.whl"
+            },
+            {
+                "module": "google_auth",
+                "input_file": "wheels/py3/google_auth-2.48.0-py3-none-any.whl"
+            },
+            {
+                "module": "pyasn1",
+                "input_file": "wheels/py3/pyasn1-0.6.2-py3-none-any.whl"
+            },
+            {
+                "module": "pyasn1_modules",
+                "input_file": "wheels/py3/pyasn1_modules-0.4.2-py3-none-any.whl"
+            },
+            {
+                "module": "pycparser",
+                "input_file": "wheels/py3/pycparser-3.0-py3-none-any.whl"
+            },
+            {
+                "module": "rsa",
+                "input_file": "wheels/py3/rsa-4.9.1-py3-none-any.whl"
             }
         ]
     }

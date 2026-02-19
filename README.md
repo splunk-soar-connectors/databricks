@@ -1,9 +1,9 @@
 # Databricks
 
-Publisher: Splunk \
-Connector Version: 1.0.4 \
-Product Vendor: Databricks \
-Product Name: Databricks \
+Publisher: Splunk <br>
+Connector Version: 1.0.4 <br>
+Product Vendor: Databricks <br>
+Product Name: Databricks <br>
 Minimum Product Version: 6.2.1
 
 This app supports investigation and data manipulation actions in Databricks
@@ -33,25 +33,25 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 
 ### Supported Actions
 
-[test connectivity](#action-test-connectivity) - Verify connectivity using the configured credentials \
-[get job run](#action-get-job-run) - Get a single job run \
-[get job output](#action-get-job-output) - Get job run output \
-[list alerts](#action-list-alerts) - List alerts \
-[list clusters](#action-list-clusters) - List clusters \
-[create alert](#action-create-alert) - Create a new alert \
-[delete alert](#action-delete-alert) - Delete an alert \
-[list warehouses](#action-list-warehouses) - List all SQL warehouses for which a user has manager permissions \
-[cancel query](#action-cancel-query) - Request that an executing SQL statement be cancelled. Callers must poll for a status of the end state \
-[get query status](#action-get-query-status) - Get status, manifest, and result first chunk of a SQL query \
-[perform query](#action-perform-query) - Perform a SQL query \
-[execute notebook](#action-execute-notebook) - Execute a Databricks notebook \
+[test connectivity](#action-test-connectivity) - Verify connectivity using the configured credentials <br>
+[get job run](#action-get-job-run) - Get a single job run <br>
+[get job output](#action-get-job-output) - Get job run output <br>
+[list alerts](#action-list-alerts) - List alerts <br>
+[list clusters](#action-list-clusters) - List clusters <br>
+[create alert](#action-create-alert) - Create a new alert <br>
+[delete alert](#action-delete-alert) - Delete an alert <br>
+[list warehouses](#action-list-warehouses) - List all SQL warehouses for which a user has manager permissions <br>
+[cancel query](#action-cancel-query) - Request that an executing SQL statement be cancelled. Callers must poll for a status of the end state <br>
+[get query status](#action-get-query-status) - Get status, manifest, and result first chunk of a SQL query <br>
+[perform query](#action-perform-query) - Perform a SQL query <br>
+[execute notebook](#action-execute-notebook) - Execute a Databricks notebook <br>
 [on poll](#action-on-poll) - Ingest tickets from Databricks
 
 ## action: 'test connectivity'
 
 Verify connectivity using the configured credentials
 
-Type: **test** \
+Type: **test** <br>
 Read only: **True**
 
 Checks that the token is valid and tests connectivity to the DBFS service.
@@ -68,7 +68,7 @@ No Output
 
 Get a single job run
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -115,7 +115,7 @@ action_result.summary.status | string | | Successfully retrieved job run |
 
 Get job run output
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -164,7 +164,7 @@ action_result.summary.status | string | | Successfully retrieved job run output 
 
 List alerts
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -257,7 +257,7 @@ action_result.summary.Total alerts | numeric | | 2 |
 
 List clusters
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -334,7 +334,7 @@ action_result.summary.Total Clusters | numeric | | 1 |
 
 Create a new alert
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -449,7 +449,7 @@ action_result.parameter.empty_result_state | string | | |
 
 Delete an alert
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -474,7 +474,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 List all SQL warehouses for which a user has manager permissions
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -520,7 +520,7 @@ action_result.data.\*.channel.name | string | | CHANNEL_NAME_CURRENT |
 
 Request that an executing SQL statement be cancelled. Callers must poll for a status of the end state
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -544,7 +544,7 @@ summary.total_objects_successful | numeric | | 1 2 |
 
 Get status, manifest, and result first chunk of a SQL query
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -570,7 +570,7 @@ summary.total_objects_successful | numeric | | 1 2 |
 
 Perform a SQL query
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -629,7 +629,7 @@ summary.total_objects_successful | numeric | | 2 |
 
 Execute a Databricks notebook
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -692,7 +692,7 @@ action_result.parameter.access_control_list | string | | |
 
 Ingest tickets from Databricks
 
-Type: **ingest** \
+Type: **ingest** <br>
 Read only: **True**
 
 The action will ingest alerts that have been triggered within Databricks.
@@ -715,7 +715,7 @@ ______________________________________________________________________
 
 Auto-generated Splunk SOAR Connector documentation.
 
-Copyright 2025 Splunk Inc.
+Copyright 2026 Splunk Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
