@@ -233,4 +233,3 @@ This software contains code from the following open source projects, licensed un
 x/oauth2 - https://cs.opensource.google/go/x/oauth2/+/master:oauth2.go
 Copyright 2014 The Go Authors. All rights reserved.
 License - https://cs.opensource.google/go/x/oauth2/+/master:LICENSE
-
