@@ -501,6 +501,8 @@ class DatabricksConnector(BaseConnector):
 
         # get list of alerts from state to compare to current list of alerts
         state_alerts = self._state.get("alerts", {})
+        containers_saved = 0
+        save_failures = 0
 
         for alert in result:
             last_triggered_at = alert.last_triggered_at
@@ -514,14 +516,25 @@ class DatabricksConnector(BaseConnector):
                 if alert_id in state_alerts and not self._is_later_date(last_triggered_at, state_alerts[alert_id]):
                     continue
 
-                state_alerts[alert_id] = last_triggered_at
-
                 container = {}
-                container["name"] = alert.name if alert.name is not None else "Databricks Alert"
+                container["name"] = alert.name or "Databricks Alert"
                 container["artifacts"] = [{"cef": alert.as_dict()}]
-                self.save_container(container)
+                save_status, _, _ = self.save_container(container)
+                if phantom.is_fail(save_status):
+                    save_failures += 1
+                    continue
 
-                self._state["alerts"] = state_alerts
+                state_alerts[alert_id] = last_triggered_at
+                containers_saved += 1
+
+        self._state["alerts"] = state_alerts
+        action_result.update_summary({"containers_saved": containers_saved, "save_failures": save_failures})
+
+        if save_failures:
+            return action_result.set_status(
+                phantom.APP_ERROR,
+                f"Failed to save {save_failures} Databricks alert container(s); they will be retried on the next poll",
+            )
 
         return action_result.set_status(phantom.APP_SUCCESS)
 
