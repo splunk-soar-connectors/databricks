@@ -16,6 +16,7 @@
 
 import json
 import traceback
+import uuid
 from datetime import datetime
 from typing import Optional
 
@@ -104,6 +105,13 @@ class DatabricksConnector(BaseConnector):
         error_message = self._get_error_msg_from_exception(exception)
         self.save_progress(error_message)
         return action_result.set_status(phantom.APP_ERROR, error_prefix, error_message)
+
+    @staticmethod
+    def _validate_uuid(value, parameter_name):
+        try:
+            uuid.UUID(str(value))
+        except (TypeError, ValueError, AttributeError) as e:
+            raise ValueError(f"{parameter_name} must be a valid UUID") from e
 
     def _handle_test_connectivity(self, param):
         self.save_progress(consts.TEST_CONNECTIVITY_PROGRESS_MESSAGE)
@@ -226,6 +234,7 @@ class DatabricksConnector(BaseConnector):
         alert_id = param["alert_id"]
 
         try:
+            self._validate_uuid(alert_id, "alert_id")
             api_client = self._get_api_client()
             api_client.alerts.delete(alert_id)
         except Exception as e:
@@ -293,6 +302,7 @@ class DatabricksConnector(BaseConnector):
         statement_id = param["statement_id"]
 
         try:
+            self._validate_uuid(statement_id, "statement_id")
             api_client = self._get_api_client()
             result = api_client.statement_execution.get_statement(statement_id)
         except Exception as e:
@@ -315,6 +325,7 @@ class DatabricksConnector(BaseConnector):
         statement_id = param["statement_id"]
 
         try:
+            self._validate_uuid(statement_id, "statement_id")
             api_client = self._get_api_client()
             api_client.statement_execution.cancel_execution(statement_id)
         except Exception as e:
