@@ -1,3 +1,4 @@
 **Unreleased**
 
 * Validated statement and alert identifiers as UUIDs before passing them to SDK URL paths.
+* Propagated failed SQL statements and notebook runs to the SOAR action status instead of reporting success.
