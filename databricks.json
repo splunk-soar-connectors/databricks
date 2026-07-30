@@ -3548,7 +3548,7 @@
             },
             {
                 "module": "cryptography",
-                "input_file": "wheels/py3/cryptography-46.0.5-cp38-abi3-manylinux_2_28_x86_64.whl"
+                "input_file": "wheels/py39/cryptography-49.0.0-cp39-abi3-manylinux_2_28_x86_64.whl"
             },
             {
                 "module": "databricks_sdk",
@@ -3556,11 +3556,11 @@
             },
             {
                 "module": "google_auth",
-                "input_file": "wheels/py3/google_auth-2.48.0-py3-none-any.whl"
+                "input_file": "wheels/py3/google_auth-2.50.0-py3-none-any.whl"
             },
             {
                 "module": "pyasn1",
-                "input_file": "wheels/py3/pyasn1-0.6.2-py3-none-any.whl"
+                "input_file": "wheels/py3/pyasn1-0.6.4-py3-none-any.whl"
             },
             {
                 "module": "pyasn1_modules",
@@ -3571,12 +3571,8 @@
                 "input_file": "wheels/py3/pycparser-2.23-py3-none-any.whl"
             },
             {
-                "module": "rsa",
-                "input_file": "wheels/py3/rsa-4.9.1-py3-none-any.whl"
-            },
-            {
                 "module": "typing_extensions",
-                "input_file": "wheels/py3/typing_extensions-4.15.0-py3-none-any.whl"
+                "input_file": "wheels/py3/typing_extensions-4.16.0-py3-none-any.whl"
             }
         ]
     },
@@ -3584,11 +3580,11 @@
         "wheel": [
             {
                 "module": "cffi",
-                "input_file": "wheels/py313/cffi-2.0.0-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl"
+                "input_file": "wheels/py313/cffi-2.1.0-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl"
             },
             {
                 "module": "cryptography",
-                "input_file": "wheels/py3/cryptography-46.0.5-cp311-abi3-manylinux_2_28_x86_64.whl"
+                "input_file": "wheels/py3/cryptography-49.0.0-cp311-abi3-manylinux_2_28_x86_64.whl"
             },
             {
                 "module": "databricks_sdk",
@@ -3596,11 +3592,11 @@
             },
             {
                 "module": "google_auth",
-                "input_file": "wheels/py3/google_auth-2.48.0-py3-none-any.whl"
+                "input_file": "wheels/py3/google_auth-2.56.0-py3-none-any.whl"
             },
             {
                 "module": "pyasn1",
-                "input_file": "wheels/py3/pyasn1-0.6.2-py3-none-any.whl"
+                "input_file": "wheels/py3/pyasn1-0.6.4-py3-none-any.whl"
             },
             {
                 "module": "pyasn1_modules",
@@ -3609,10 +3605,6 @@
             {
                 "module": "pycparser",
                 "input_file": "wheels/py3/pycparser-3.0-py3-none-any.whl"
-            },
-            {
-                "module": "rsa",
-                "input_file": "wheels/py3/rsa-4.9.1-py3-none-any.whl"
             }
         ]
     }

@@ -16,6 +16,7 @@
 
 import json
 import traceback
+import uuid
 from datetime import datetime
 from typing import Optional
 
@@ -104,6 +105,33 @@ class DatabricksConnector(BaseConnector):
         error_message = self._get_error_msg_from_exception(exception)
         self.save_progress(error_message)
         return action_result.set_status(phantom.APP_ERROR, error_prefix, error_message)
+
+    @staticmethod
+    def _validate_uuid(value, parameter_name):
+        try:
+            uuid.UUID(str(value))
+        except (TypeError, ValueError, AttributeError) as e:
+            raise ValueError(f"{parameter_name} must be a valid UUID") from e
+
+    @staticmethod
+    def _enum_value(value):
+        return getattr(value, "value", str(value)) if value is not None else None
+
+    def _set_statement_result_status(self, action_result, result, success_message):
+        status = getattr(result, "status", None)
+        state = self._enum_value(getattr(status, "state", None))
+        if state == "SUCCEEDED":
+            action_result.update_summary({"status": success_message})
+            return action_result.set_status(phantom.APP_SUCCESS)
+        if state in {"PENDING", "RUNNING"}:
+            message = f"Databricks statement is still {state.lower()}"
+            action_result.update_summary({"status": message})
+            return action_result.set_status(phantom.APP_SUCCESS, message)
+
+        error = getattr(status, "error", None)
+        error_message = getattr(error, "message", None) or f"Databricks statement finished in state {state or 'unknown'}"
+        action_result.update_summary({"status": consts.PERFORM_QUERY_ERROR_MESSAGE})
+        return action_result.set_status(phantom.APP_ERROR, error_message)
 
     def _handle_test_connectivity(self, param):
         self.save_progress(consts.TEST_CONNECTIVITY_PROGRESS_MESSAGE)
@@ -226,6 +254,7 @@ class DatabricksConnector(BaseConnector):
         alert_id = param["alert_id"]
 
         try:
+            self._validate_uuid(alert_id, "alert_id")
             api_client = self._get_api_client()
             api_client.alerts.delete(alert_id)
         except Exception as e:
@@ -277,13 +306,7 @@ class DatabricksConnector(BaseConnector):
             return self._report_error(action_result, e, consts.PERFORM_QUERY_ERROR_MESSAGE)
 
         action_result.add_data(result.as_dict())
-
-        summary = {
-            "status": consts.PERFORM_QUERY_SUCCESS_MESSAGE,
-        }
-        action_result.update_summary(summary)
-
-        return action_result.set_status(phantom.APP_SUCCESS)
+        return self._set_statement_result_status(action_result, result, consts.PERFORM_QUERY_SUCCESS_MESSAGE)
 
     def _handle_get_query_status(self, param):
         self.debug_print(f"In action handler for: {self.get_action_identifier()}")
@@ -293,19 +316,14 @@ class DatabricksConnector(BaseConnector):
         statement_id = param["statement_id"]
 
         try:
+            self._validate_uuid(statement_id, "statement_id")
             api_client = self._get_api_client()
             result = api_client.statement_execution.get_statement(statement_id)
         except Exception as e:
             return self._report_error(action_result, e, consts.GET_QUERY_STATUS_ERROR_MESSAGE)
 
         action_result.add_data(result.as_dict())
-
-        summary = {
-            "status": consts.GET_QUERY_STATUS_SUCCESS_MESSAGE,
-        }
-        action_result.update_summary(summary)
-
-        return action_result.set_status(phantom.APP_SUCCESS)
+        return self._set_statement_result_status(action_result, result, consts.GET_QUERY_STATUS_SUCCESS_MESSAGE)
 
     def _handle_cancel_query(self, param):
         self.debug_print(f"In action handler for: {self.get_action_identifier()}")
@@ -315,6 +333,7 @@ class DatabricksConnector(BaseConnector):
         statement_id = param["statement_id"]
 
         try:
+            self._validate_uuid(statement_id, "statement_id")
             api_client = self._get_api_client()
             api_client.statement_execution.cancel_execution(statement_id)
         except Exception as e:
@@ -421,21 +440,24 @@ class DatabricksConnector(BaseConnector):
         def callback(run: Run):
             action_result.add_data(run.as_dict())
 
-            if run.state is None:
-                return action_result.set_status(action_result.set_status(phantom.APP_ERROR, "Failed to get execution status"))
+        try:
+            api_client = self._get_api_client()
+            final_run = api_client.jobs.submit(**run_info).result(callback=callback)
+        except Exception as e:
+            return self._report_error(action_result, e, consts.EXECUTE_NOTEBOOK_ERROR_MESSAGE)
 
-            if run.state.result_state == RunResultState.FAILED:
-                action_result.update_summary({"status": consts.EXECUTE_NOTEBOOK_ERROR_MESSAGE})
-                return action_result.set_status(phantom.APP_ERROR, run.state.state_message)
+        if final_run.state is None:
+            action_result.update_summary({"status": consts.EXECUTE_NOTEBOOK_ERROR_MESSAGE})
+            return action_result.set_status(phantom.APP_ERROR, "Failed to get final notebook execution status")
 
+        if final_run.state.result_state == RunResultState.SUCCESS:
             action_result.update_summary({"status": consts.EXECUTE_NOTEBOOK_SUCCESS_MESSAGE})
             return action_result.set_status(phantom.APP_SUCCESS)
 
-        try:
-            api_client = self._get_api_client()
-            api_client.jobs.submit(**run_info).result(callback=callback)
-        except Exception as e:
-            return self._report_error(action_result, e, consts.EXECUTE_NOTEBOOK_ERROR_MESSAGE)
+        result_state = self._enum_value(final_run.state.result_state) or "unknown"
+        message = final_run.state.state_message or f"Notebook execution finished in state {result_state}"
+        action_result.update_summary({"status": consts.EXECUTE_NOTEBOOK_ERROR_MESSAGE})
+        return action_result.set_status(phantom.APP_ERROR, message)
 
     def _handle_list_warehouses(self, param):
         self.debug_print(f"In action handler for: {self.get_action_identifier()}")
@@ -479,6 +501,8 @@ class DatabricksConnector(BaseConnector):
 
         # get list of alerts from state to compare to current list of alerts
         state_alerts = self._state.get("alerts", {})
+        containers_saved = 0
+        save_failures = 0
 
         for alert in result:
             last_triggered_at = alert.last_triggered_at
@@ -492,14 +516,25 @@ class DatabricksConnector(BaseConnector):
                 if alert_id in state_alerts and not self._is_later_date(last_triggered_at, state_alerts[alert_id]):
                     continue
 
-                state_alerts[alert_id] = last_triggered_at
-
                 container = {}
-                container["name"] = alert.name if alert.name is not None else "Databricks Alert"
+                container["name"] = alert.name or "Databricks Alert"
                 container["artifacts"] = [{"cef": alert.as_dict()}]
-                self.save_container(container)
+                save_status, _, _ = self.save_container(container)
+                if phantom.is_fail(save_status):
+                    save_failures += 1
+                    continue
 
-                self._state["alerts"] = state_alerts
+                state_alerts[alert_id] = last_triggered_at
+                containers_saved += 1
+
+        self._state["alerts"] = state_alerts
+        action_result.update_summary({"containers_saved": containers_saved, "save_failures": save_failures})
+
+        if save_failures:
+            return action_result.set_status(
+                phantom.APP_ERROR,
+                f"Failed to save {save_failures} Databricks alert container(s); they will be retried on the next poll",
+            )
 
         return action_result.set_status(phantom.APP_SUCCESS)
 
