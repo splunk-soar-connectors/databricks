@@ -145,6 +145,44 @@ def test_job_run_id_can_feed_a_follow_up_action(monkeypatch, sdk):
     client.jobs.get_run.assert_called_once_with(LARGE_ID)
 
 
+def test_notebook_reports_progress_on_every_poll(monkeypatch, sdk):
+    client = Mock()
+    progress = Mock()
+    monkeypatch.setattr(execute_notebook, "get_client", lambda asset: client)
+    monkeypatch.setattr(execute_notebook.logger, "progress", progress)
+    states = ["PENDING", "PENDING", "RUNNING"]
+
+    def finish(callback):
+        for index, state in enumerate(states, start=1):
+            payload = {"run_id": LARGE_ID, "state": {"life_cycle_state": state}}
+            callback(SimpleNamespace(as_dict=lambda payload=payload: payload))
+            assert progress.call_count == index
+            message, *args = progress.call_args.args
+            assert str(LARGE_ID) in message % tuple(args)
+            assert state in message % tuple(args)
+        return SimpleNamespace(
+            state=SimpleNamespace(result_state=RunResultState.SUCCESS),
+            as_dict=lambda: {"run_id": LARGE_ID, "state": {"result_state": "SUCCESS"}},
+        )
+
+    client.jobs.submit.return_value.result.side_effect = finish
+    assert (
+        execute_notebook.execute_notebook(
+            execute_notebook.ExecuteNotebookParams(
+                notebook_path="/test", new_cluster='{"num_workers": 1}'
+            ),
+            soar=sdk.soar,
+            asset=sdk.asset,
+        )
+        is True
+    )
+    data = sdk.results[0].get_data()
+    assert [row["state"]["life_cycle_state"] for row in data] == states
+    assert sdk.results[0].get_summary() == {
+        "status": consts.EXECUTE_NOTEBOOK_SUCCESS_MESSAGE
+    }
+
+
 def test_notebook_callback_keeps_integer_identifiers(monkeypatch, sdk):
     payload = {
         "run_id": LARGE_ID,

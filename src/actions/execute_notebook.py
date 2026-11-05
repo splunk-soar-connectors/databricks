@@ -18,7 +18,7 @@ from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import ActionOutput, ActionResult, OutputField
 from soar_sdk.params import Params, Param
 from soar_sdk.exceptions import ActionFailure
-from ..app import app, Asset
+from ..app import app, Asset, logger
 from .. import consts
 from ..helper import DatabricksOutput, get_client
 
@@ -170,11 +170,17 @@ def execute_notebook(params: ExecuteNotebookParams, soar: SOARClient, asset: Ass
             for key in ("timeout_seconds", "run_name", "idempotency_token"):
                 if getattr(params, key) is not None:
                     kwargs[key] = getattr(params, key)
-            result = client.jobs.submit(**kwargs).result(
-                callback=lambda run: results.append(
-                    ExecuteNotebookOutput.model_validate(run.as_dict())
+
+            def report_progress(run):
+                output = ExecuteNotebookOutput.model_validate(run.as_dict())
+                results.append(output)
+                logger.progress(
+                    "Notebook run %s: %s",
+                    output.run_id,
+                    output.state.life_cycle_state if output.state else "unknown",
                 )
-            )
+
+            result = client.jobs.submit(**kwargs).result(callback=report_progress)
             final_output = ExecuteNotebookOutput.model_validate(result.as_dict())
             if (
                 result.state is None
