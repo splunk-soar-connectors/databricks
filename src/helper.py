@@ -110,7 +110,7 @@ class PollSummary(ActionOutput):
 
 
 def retain_poll_summary(app):
-    """Attach counts to the result that SDK 6.1.3 creates without a summary."""
+    """Attach counts to the result that SDK 7.1.2 creates without a summary."""
 
     def decorate(poll):
         @wraps(poll)
