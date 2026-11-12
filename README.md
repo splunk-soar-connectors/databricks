@@ -24,7 +24,7 @@ To generate and configure a PAT:
 
 ### SDK migration
 
-This version uses the Splunk SOAR SDK and requires SOAR 7.0 or later with Python 3.13 or 3.15. Existing asset fields and per-alert ingestion checkpoints are retained. SQL result rows are represented as a matrix, matching the Databricks API; use `result.data_array.*.*` to access individual cells. Complex values in string fields (including query parameter date ranges) are JSON encoded.
+This version uses the Splunk SOAR SDK and requires SOAR 7.0 or later with Python 3.13 or 3.15. Existing asset fields and per-alert ingestion checkpoints are retained. SQL result rows are represented as a matrix, matching the Databricks API; use `result.data_array.*.*` to access individual cells.
 
 Query actions use standard tables with Statement Id, Query State, and Rows Returned columns. SQL result rows and schema remain in the action outputs.
 

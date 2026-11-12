@@ -62,15 +62,7 @@ class TerminationReasonOutput(ActionOutput):
     parameters: ParametersOutput | None = None
 
 
-class DriverInstanceSourceOutput(ActionOutput):
-    node_type_id: str | None = OutputField(example_values=["i3.xlarge"])
-
-
 class NodeAttributesOutput(ActionOutput):
-    is_spot: bool | None = OutputField(example_values=[False])
-
-
-class NodeAwsAttributesOutput(ActionOutput):
     is_spot: bool | None = OutputField(example_values=[False])
 
 
@@ -87,7 +79,7 @@ class DriverOutput(ActionOutput):
     )
     node_attributes: NodeAttributesOutput | None = None
     start_timestamp: int | None = OutputField(example_values=[1687733773425])
-    node_aws_attributes: NodeAwsAttributesOutput | None = None
+    node_aws_attributes: NodeAttributesOutput | None = None
 
 
 class DiskSpecOutput(ActionOutput):
@@ -159,7 +151,7 @@ class ListClustersOutput(PermissiveActionOutput):
     last_state_loss_time: int | None = OutputField(
         example_values=[1685721657913, 1687733852234]
     )
-    driver_instance_source: DriverInstanceSourceOutput | None = None
+    driver_instance_source: InstanceSourceOutput | None = None
     init_scripts_safe_mode: bool | None = OutputField(example_values=[False])
     autotermination_minutes: int | None = OutputField(example_values=[4320, 120])
     effective_spark_version: str | None = OutputField(

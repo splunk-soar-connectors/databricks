@@ -18,14 +18,13 @@ from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import (
     PermissiveActionOutput,
     ActionOutput,
-    ActionResult,
     OutputField,
 )
 from soar_sdk.params import Params, Param
 from soar_sdk.exceptions import ActionFailure
 from ..app import app, Asset, logger
 from .. import consts
-from ..helper import get_client
+from ..helper import failed_action_result, get_client
 
 
 class ExecuteNotebookParams(Params):
@@ -208,16 +207,7 @@ def execute_notebook(params: ExecuteNotebookParams, soar: SOARClient, asset: Ass
     except ActionFailure as exc:
         if not results:
             raise
-        exc.set_action_name("execute notebook")
-        failure = ActionResult(
-            status=False,
-            message=str(exc),
-            param=params.model_dump(by_alias=True),
-        )
-        for output in results:
-            data = output.model_dump(by_alias=True)
-            data["action_status"] = "failed"
-            failure.add_data(data)
+        failure = failed_action_result(params, exc, "execute notebook", results)
         failure.set_summary(
             Summary(status=consts.EXECUTE_NOTEBOOK_ERROR_MESSAGE).model_dump()
         )
