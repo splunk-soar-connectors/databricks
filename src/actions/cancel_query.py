@@ -45,10 +45,10 @@ class Summary(ActionOutput):
 )
 def cancel_query(
     params: CancelQueryParams, soar: SOARClient, asset: Asset
-) -> ActionOutput:
+) -> list[ActionOutput]:
     with action_errors(consts.CANCEL_QUERY_ERROR_MESSAGE):
         client = get_client(asset)
         validate_uuid(params.statement_id, "statement_id")
         client.statement_execution.cancel_execution(params.statement_id)
         soar.set_summary(Summary(status=consts.CANCEL_QUERY_SUCCESS_MESSAGE))
-        return ActionOutput()
+        return []

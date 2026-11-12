@@ -14,11 +14,11 @@
 
 from ..helper import action_errors
 from soar_sdk.abstract import SOARClient
-from soar_sdk.action_results import ActionOutput, OutputField
+from soar_sdk.action_results import PermissiveActionOutput, ActionOutput, OutputField
 from soar_sdk.params import Params, Param
 from ..app import app, Asset
 from .. import consts
-from ..helper import DatabricksOutput, get_client
+from ..helper import get_client, serialize_alert
 
 
 class CreateAlertParams(Params):
@@ -55,7 +55,7 @@ class CreateAlertParams(Params):
     )
 
 
-class UserOutput(DatabricksOutput):
+class UserOutput(ActionOutput):
     id: int | None = OutputField(example_values=[1392537950520258])
     name: str | None = OutputField(example_values=["Test User"])
     email: str | None = OutputField(
@@ -63,27 +63,29 @@ class UserOutput(DatabricksOutput):
     )
 
 
-class MultivaluesoptionsOutput(DatabricksOutput):
+class MultivaluesoptionsOutput(ActionOutput):
     prefix: str | None = None
     suffix: str | None = None
     separator: str | None = OutputField(example_values=[","])
 
 
-class ParametersOutput(DatabricksOutput):
+class ParametersOutput(PermissiveActionOutput):
+    """Keep polymorphic parameter values without imposing a scalar type."""
+
     name: str | None = OutputField(example_values=["pickup_date"])
     type: str | None = OutputField(example_values=["datetime-range"])
     title: str | None = OutputField(example_values=["Data Range"])
-    value: str | None = OutputField(example_values=["10001"])
     parentWidgetId: str | None = None
     global_: bool | None = OutputField(example_values=[False], alias="global")
     enumOptions: str | None = OutputField(example_values=["10154"])
     multiValuesOptions: MultivaluesoptionsOutput | None = None
 
 
-class OptionsOutput(DatabricksOutput):
+class OptionsOutput(PermissiveActionOutput):
+    """Keep alert values in their API-provided string, number, or boolean type."""
+
     op: str | None = OutputField(example_values=[">"])
     muted: bool | None = OutputField(example_values=[True])
-    value: str | None = OutputField(example_values=["1"])
     column: str | None = OutputField(example_values=["total_trips"])
     parent: str | None = OutputField(
         example_values=["folders/4082822538617174", "folders/3042705489298866"]
@@ -108,7 +110,7 @@ class OptionsOutput(DatabricksOutput):
     )
 
 
-class QueryOptionsOutput(DatabricksOutput):
+class QueryOptionsOutput(ActionOutput):
     parent: str | None = None
     parameters: list[ParametersOutput] | None = None
     run_as_role: str | None = None
@@ -117,14 +119,14 @@ class QueryOptionsOutput(DatabricksOutput):
     folder_node_internal_name: str | None = None
 
 
-class QueryOutput(DatabricksOutput):
+class QueryOutput(ActionOutput):
     id: str | None = OutputField(
         example_values=["738f7950-c5f7-4c75-b364-47eac73439dd"], column_name="Query Id"
     )
     name: str | None = OutputField(
         example_values=["Total Trips"], column_name="Query Name"
     )
-    tags: str | None = OutputField(example_values=["Sample"])
+    tags: list[str] | None = OutputField(example_values=["Sample"])
     query: str | None = OutputField(
         example_values=[
             "USE CATALOG SAMPLES; SELECT count(*) as total_trips FROM `samples`.`nyctaxi`.`trips` WHERE tpep_pickup_datetime BETWEEN TIMESTAMP '{{ pickup_date.start }}' AND TIMESTAMP '{{ pickup_date.end }}' AND pickup_zip IN ({{ pickupzip }})"
@@ -149,21 +151,21 @@ class QueryOutput(DatabricksOutput):
     run_as_service_principal_id: str | None = None
 
 
-class ColumnOutput(DatabricksOutput):
+class ColumnOutput(ActionOutput):
     name: str | None = OutputField(example_values=["total_trips"])
     display: str | None = None
     aggregation: str | None = None
 
 
-class AlertOutput(DatabricksOutput):
+class AlertOutput(ActionOutput):
     column: ColumnOutput | None = None
 
 
-class ThresholdOutput(DatabricksOutput):
+class ThresholdOutput(ActionOutput):
     value: str | None = OutputField(example_values=["1"])
 
 
-class ConditionsOutput(DatabricksOutput):
+class ConditionsOutput(ActionOutput):
     op: str | None = OutputField(example_values=[">"])
     alert: AlertOutput | None = None
     threshold: ThresholdOutput | None = None
@@ -171,11 +173,13 @@ class ConditionsOutput(DatabricksOutput):
     empty_result_state: str | None = None
 
 
-class SubscriptionsOutput(DatabricksOutput):
+class SubscriptionsOutput(ActionOutput):
     user_id: int | None = OutputField(example_values=[1392537950520258])
 
 
-class CreateAlertOutput(DatabricksOutput):
+class CreateAlertOutput(PermissiveActionOutput):
+    """Preserve polymorphic alert values and query parameters."""
+
     id: str | None = OutputField(
         cef_types=["databricks alert id"],
         example_values=[
@@ -198,7 +202,7 @@ class CreateAlertOutput(DatabricksOutput):
         column_name="Created At",
     )
     user: UserOutput | None = None
-    rearm: float | None = OutputField(example_values=[5, 10])
+    rearm: int | None = OutputField(example_values=[5, 10])
     state: str | None = OutputField(example_values=["unknown"])
     parent: str | None = OutputField(
         example_values=["folders/4082822538617174", "folders/3042705489298866"]
@@ -273,4 +277,4 @@ def create_alert(
                 kwargs["parent"] = f"folders/{parent.object_id}"
         result = client.alerts.create(**kwargs)
         soar.set_summary(Summary(status=consts.CREATE_ALERT_SUCCESS_MESSAGE))
-        return CreateAlertOutput.model_validate(result.as_dict())
+        return CreateAlertOutput.model_validate(serialize_alert(result))

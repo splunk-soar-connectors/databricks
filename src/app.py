@@ -26,7 +26,13 @@ from soar_sdk.models.container import Container
 from soar_sdk.params import OnPollParams
 
 from . import consts
-from .helper import action_errors, get_client, migrate_alert_state, retain_poll_summary
+from .helper import (
+    action_errors,
+    get_client,
+    migrate_alert_state,
+    retain_poll_summary,
+    serialize_alert,
+)
 
 logger = getLogger()
 
@@ -100,7 +106,7 @@ def on_poll(
                 state[alert_id], consts.DATETIME_FORMAT
             ).replace(tzinfo=UTC):
                 continue
-            payload = alert.as_dict()
+            payload = serialize_alert(alert)
             container = Container(
                 name=alert.name or "Databricks Alert",
                 source_data_identifier=f"{alert_id}:{triggered}",

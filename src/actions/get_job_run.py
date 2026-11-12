@@ -14,29 +14,29 @@
 
 from ..helper import action_errors
 from soar_sdk.abstract import SOARClient
-from soar_sdk.action_results import ActionOutput, OutputField
+from soar_sdk.action_results import PermissiveActionOutput, ActionOutput, OutputField
 from soar_sdk.params import Params, Param
 from ..app import app, Asset
 from .. import consts
-from ..helper import DatabricksOutput, get_client
+from ..helper import get_client
 
 
 class GetJobRunParams(Params):
     run_id: int = Param(description="Job run id")
 
 
-class NotebookTaskOutput(DatabricksOutput):
+class NotebookTaskOutput(ActionOutput):
     source: str | None = OutputField(example_values=["WORKSPACE"])
     notebook_path: str | None = OutputField(
         example_values=["/Users/testuser@example.com/Notebook 1"]
     )
 
 
-class TaskOutput(DatabricksOutput):
+class TaskOutput(ActionOutput):
     notebook_task: NotebookTaskOutput | None = None
 
 
-class StateOutput(DatabricksOutput):
+class StateOutput(ActionOutput):
     life_cycle_state: str | None = OutputField(
         example_values=["RUNNING", "TERMINATED"], column_name="Life Cycle State"
     )
@@ -45,20 +45,22 @@ class StateOutput(DatabricksOutput):
     result_state: str | None = OutputField(example_values=["SUCCESS"])
 
 
-class ClusterSpecOutput(DatabricksOutput):
+class ClusterSpecOutput(ActionOutput):
     existing_cluster_id: str | None = OutputField(
         example_values=["0624-224055-efbqpghm"]
     )
 
 
-class ClusterInstanceOutput(DatabricksOutput):
+class ClusterInstanceOutput(ActionOutput):
     cluster_id: str | None = OutputField(example_values=["0624-224055-efbqpghm"])
     spark_context_id: str | None = OutputField(
         example_values=["8191206118150829076", "5808117308087458174"]
     )
 
 
-class GetJobRunOutput(DatabricksOutput):
+class GetJobRunOutput(PermissiveActionOutput):
+    """Keep additional Run fields, including tasks and their configuration."""
+
     run_id: int | None = OutputField(
         example_values=[68227, 86328], column_name="Run Id"
     )
@@ -68,16 +70,12 @@ class GetJobRunOutput(DatabricksOutput):
     state: StateOutput | None = None
     task: TaskOutput | None = None
     format: str | None = OutputField(example_values=["SINGLE_TASK"])
-    end_time: float | None = OutputField(
-        example_values=[0, 1687659346388, 1687745422414]
-    )
+    end_time: int | None = OutputField(example_values=[0, 1687659346388, 1687745422414])
     run_name: str | None = OutputField(
         example_values=["i ran a test", "sample job from test playbook"]
     )
     run_type: str | None = OutputField(example_values=["SUBMIT_RUN"])
-    start_time: float | None = OutputField(
-        example_values=[1687659091160, 1687745413368]
-    )
+    start_time: int | None = OutputField(example_values=[1687659091160, 1687745413368])
     cluster_spec: ClusterSpecOutput | None = None
     run_page_url: str | None = OutputField(
         cef_types=["url"],
@@ -87,14 +85,14 @@ class GetJobRunOutput(DatabricksOutput):
         ],
     )
     number_in_job: int | None = OutputField(example_values=[68227, 86328])
-    attempt_number: float | None = OutputField(example_values=[0])
-    setup_duration: float | None = OutputField(example_values=[236000, 0])
-    cleanup_duration: float | None = OutputField(example_values=[0])
+    attempt_number: int | None = OutputField(example_values=[0])
+    setup_duration: int | None = OutputField(example_values=[236000, 0])
+    cleanup_duration: int | None = OutputField(example_values=[0])
     cluster_instance: ClusterInstanceOutput | None = None
     creator_user_name: str | None = OutputField(
         cef_types=["email"], example_values=["testuser@example.com"]
     )
-    execution_duration: float | None = OutputField(example_values=[0, 19000, 9000])
+    execution_duration: int | None = OutputField(example_values=[0, 19000, 9000])
     action_status: str | None = OutputField(column_name="Status")
 
 
@@ -118,4 +116,4 @@ def get_job_run(
         client = get_client(asset)
         result = client.jobs.get_run(params.run_id)
         soar.set_summary(Summary(status=consts.GET_JOB_RUN_SUCCESS_MESSAGE))
-        return GetJobRunOutput.model_validate(result.as_dict())
+        return GetJobRunOutput(action_status="success", **result.as_dict())

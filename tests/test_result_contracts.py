@@ -15,9 +15,11 @@ from soar_sdk.params import OnPollParams, Params
 
 from src import app as hub
 from src import consts
-from src.helper import get_client
+from src.helper import get_client, serialize_alert
 from src.actions import (
+    cancel_query,
     create_alert,
+    delete_alert,
     execute_notebook,
     get_job_output,
     get_job_run,
@@ -228,7 +230,7 @@ def test_sql_result_contract_through_sdk(action, state, monkeypatch, sdk):
         }
         if state
         else None,
-        "vendor_extension": {"retained": True},
+        "manifest": {"total_byte_count": 512},
     }
     response = SimpleNamespace(
         status=SimpleNamespace(state=state, error=SimpleNamespace(message="SQL failed"))
@@ -257,7 +259,7 @@ def test_sql_result_contract_through_sdk(action, state, monkeypatch, sdk):
     assert result.get_status() is successful
     assert result.get_data()[0]["statement_id"] == STATEMENT_ID
     assert result.get_data()[0]["status"] == payload["status"]
-    assert result.get_data()[0]["vendor_extension"] == payload["vendor_extension"]
+    assert result.get_data()[0]["manifest"]["total_byte_count"] == 512
     assert result.get_param() == params.model_dump(by_alias=True)
     if successful:
         message = (
@@ -304,6 +306,180 @@ def test_sql_vendor_exceptions_still_fail_the_action(action, monkeypatch, sdk):
     assert getattr(module, action)(params, soar=sdk.soar, asset=sdk.asset) is False
     assert "Vendor unavailable" in sdk.results[0].get_message()
     assert sdk.results[0].get_data() == []
+
+
+@pytest.mark.parametrize(
+    "module,params_class,values,method_path",
+    [
+        (
+            create_alert,
+            create_alert.CreateAlertParams,
+            {
+                "name": "alert",
+                "query_id": STATEMENT_ID,
+                "column": "count",
+                "operator": ">",
+                "value": "1",
+            },
+            "alerts.create",
+        ),
+        (
+            delete_alert,
+            delete_alert.DeleteAlertParams,
+            {"alert_id": STATEMENT_ID},
+            "alerts.delete",
+        ),
+        (
+            cancel_query,
+            cancel_query.CancelQueryParams,
+            {"statement_id": STATEMENT_ID},
+            "statement_execution.cancel_execution",
+        ),
+        (
+            perform_query,
+            perform_query.PerformQueryParams,
+            {"statement": "select 1", "warehouse_id": "w", "schema": "default"},
+            "statement_execution.execute_statement",
+        ),
+        (
+            get_query_status,
+            get_query_status.GetQueryStatusParams,
+            {"statement_id": STATEMENT_ID},
+            "statement_execution.get_statement",
+        ),
+        (
+            get_job_run,
+            get_job_run.GetJobRunParams,
+            {"run_id": LARGE_ID},
+            "jobs.get_run",
+        ),
+        (
+            get_job_output,
+            get_job_output.GetJobOutputParams,
+            {"run_id": LARGE_ID},
+            "jobs.get_run",
+        ),
+        (list_warehouses, Params, {}, "warehouses.list"),
+        (
+            execute_notebook,
+            execute_notebook.ExecuteNotebookParams,
+            {"notebook_path": "/test", "existing_cluster_id": "cluster"},
+            "jobs.submit",
+        ),
+    ],
+)
+def test_vendor_failures_use_sdk_error_handling(
+    module, params_class, values, method_path, monkeypatch, sdk
+):
+    client = Mock()
+    method = client
+    for name in method_path.split("."):
+        method = getattr(method, name)
+    method.side_effect = RuntimeError("Vendor unavailable")
+    monkeypatch.setattr(module, "get_client", lambda asset: client)
+    params = params_class.model_validate(values)
+    function = getattr(module, module.__name__.rsplit(".", 1)[-1])
+    assert function(params, soar=sdk.soar, asset=sdk.asset) is False
+    result = sdk.results[0]
+    assert not result.get_param()
+    assert result.get_data() == []
+    assert "Vendor unavailable" in result.get_message()
+
+
+@pytest.mark.parametrize(
+    "module,params_class,values",
+    [
+        (delete_alert, delete_alert.DeleteAlertParams, {"alert_id": "invalid"}),
+        (cancel_query, cancel_query.CancelQueryParams, {"statement_id": "invalid"}),
+        (
+            get_query_status,
+            get_query_status.GetQueryStatusParams,
+            {"statement_id": "invalid"},
+        ),
+    ],
+)
+def test_uuid_validation_failures_use_sdk_error_handling(
+    module, params_class, values, monkeypatch, sdk
+):
+    client = Mock()
+    monkeypatch.setattr(module, "get_client", lambda asset: client)
+    params = params_class.model_validate(values)
+    function = getattr(module, module.__name__.rsplit(".", 1)[-1])
+    assert function(params, soar=sdk.soar, asset=sdk.asset) is False
+    assert not sdk.results[0].get_param()
+    assert "valid UUID" in sdk.results[0].get_message()
+    assert client.mock_calls == []
+
+
+def test_get_job_output_keeps_completed_task_on_later_failure(monkeypatch, sdk):
+    client = Mock()
+    client.jobs.get_run.return_value.tasks = [
+        SimpleNamespace(run_id=1),
+        SimpleNamespace(run_id=2),
+    ]
+    client.jobs.get_run_output.side_effect = [
+        SimpleNamespace(
+            as_dict=lambda: {
+                "metadata": {"run_id": 1},
+                "notebook_output": {"result": "completed output"},
+            }
+        ),
+        RuntimeError("Second task unavailable"),
+    ]
+    monkeypatch.setattr(get_job_output, "get_client", lambda asset: client)
+    params = get_job_output.GetJobOutputParams(run_id=LARGE_ID)
+    assert (
+        get_job_output.get_job_output(params, soar=sdk.soar, asset=sdk.asset) is False
+    )
+    result = sdk.results[0]
+    assert result.get_param() == params.model_dump(by_alias=True)
+    assert len(result.get_data()) == 1
+    assert result.get_data()[0]["notebook_output"]["result"] == "completed output"
+    assert result.get_data()[0]["metadata"]["run_id"] == 1
+    assert result.get_data()[0]["action_status"] == "failed"
+    assert "Second task unavailable" in result.get_message()
+
+
+def test_list_warehouses_keeps_completed_page_on_later_failure(monkeypatch, sdk):
+    def pages():
+        yield SimpleNamespace(as_dict=lambda: {"id": "w", "name": "Warehouse"})
+        raise RuntimeError("Next page unavailable")
+
+    client = Mock()
+    client.warehouses.list.return_value = pages()
+    monkeypatch.setattr(list_warehouses, "get_client", lambda asset: client)
+    assert (
+        list_warehouses.list_warehouses(Params(), soar=sdk.soar, asset=sdk.asset)
+        is False
+    )
+    result = sdk.results[0]
+    assert len(result.get_data()) == 1
+    assert result.get_data()[0]["id"] == "w"
+    assert "Next page unavailable" in result.get_message()
+
+
+@pytest.mark.parametrize("action", ["delete_alert", "cancel_query"])
+def test_no_payload_actions_keep_empty_data(action, monkeypatch, sdk):
+    module = delete_alert if action == "delete_alert" else cancel_query
+    params = (
+        delete_alert.DeleteAlertParams(alert_id=STATEMENT_ID)
+        if action == "delete_alert"
+        else cancel_query.CancelQueryParams(statement_id=STATEMENT_ID)
+    )
+    sdk.asset.ingest_state = {"alerts": {STATEMENT_ID: "2026-01-01T00:00:00Z"}}
+    client = Mock()
+    monkeypatch.setattr(module, "get_client", lambda asset: client)
+    assert getattr(module, action)(params, soar=sdk.soar, asset=sdk.asset) is True
+    result = sdk.results[0]
+    assert result.get_data() == []
+    assert result.get_param() == params.model_dump(by_alias=True)
+    assert result.get_summary() == {
+        "status": consts.DELETE_ALERT_SUCCESS_MESSAGE
+        if action == "delete_alert"
+        else consts.CANCEL_QUERY_SUCCESS_MESSAGE
+    }
+    if action == "delete_alert":
+        assert sdk.asset.ingest_state["alerts"] == {}
 
 
 @pytest.mark.parametrize(
@@ -380,6 +556,359 @@ def test_vendor_booleans_remain_booleans_in_sdk_results(
 def test_driver_health_is_boolean(value):
     output = list_clusters.ListClustersOutput.model_validate({"driver_healthy": value})
     assert output.model_dump()["driver_healthy"] is value
+
+
+def test_cluster_output_preserves_documented_maps(monkeypatch, sdk):
+    payload = {
+        "cluster_id": "cluster",
+        "custom_tags": {"cluster": "production", "team": "security"},
+        "spark_conf": {"spark.master": "local[*]"},
+        "spark_env_vars": {"CUSTOM_ENV": "enabled"},
+        "autoscale": {"min_workers": 1, "max_workers": 4},
+    }
+    client = Mock()
+    client.clusters.list.return_value = [ClusterDetails.from_dict(payload)]
+    monkeypatch.setattr(list_clusters, "get_client", lambda asset: client)
+    assert list_clusters.list_clusters(Params(), soar=sdk.soar, asset=sdk.asset) is True
+    data = sdk.results[0].get_data()[0]
+    for key in ("custom_tags", "spark_conf", "spark_env_vars", "autoscale"):
+        for name, value in payload[key].items():
+            assert data[key][name] == value
+    assert data["spark_conf"] == payload["spark_conf"]
+    assert "cluster" not in data
+
+
+def test_warehouse_output_preserves_documented_fields(monkeypatch, sdk):
+    from databricks.sdk.service.sql import EndpointInfo
+
+    payload = {
+        "id": "warehouse",
+        "instance_profile_arn": "arn:aws:iam::123456789012:instance-profile/test",
+        "tags": {"custom_tags": [{"key": "team", "value": "security"}]},
+        "channel": {"name": "CHANNEL_NAME_CURRENT", "dbsql_version": "2024.10"},
+    }
+    client = Mock()
+    client.warehouses.list.return_value = [EndpointInfo.from_dict(payload)]
+    monkeypatch.setattr(list_warehouses, "get_client", lambda asset: client)
+    assert (
+        list_warehouses.list_warehouses(Params(), soar=sdk.soar, asset=sdk.asset)
+        is True
+    )
+    data = sdk.results[0].get_data()[0]
+    assert data["instance_profile_arn"] == payload["instance_profile_arn"]
+    assert data["tags"] == payload["tags"]
+    assert data["channel"]["dbsql_version"] == "2024.10"
+
+
+def test_job_output_preserves_documented_logs_and_errors(monkeypatch, sdk):
+    from databricks.sdk.service.jobs import RunOutput
+
+    payload = {
+        "metadata": {"run_id": 1},
+        "logs": "Task log output",
+        "logs_truncated": True,
+        "error": "Task failed",
+        "error_trace": "Task error details",
+    }
+    client = Mock()
+    client.jobs.get_run.return_value.tasks = [SimpleNamespace(run_id=1)]
+    client.jobs.get_run_output.return_value = RunOutput.from_dict(payload)
+    monkeypatch.setattr(get_job_output, "get_client", lambda asset: client)
+    assert (
+        get_job_output.get_job_output(
+            get_job_output.GetJobOutputParams(run_id=1), soar=sdk.soar, asset=sdk.asset
+        )
+        is True
+    )
+    data = sdk.results[0].get_data()[0]
+    for key in ("logs", "logs_truncated", "error", "error_trace"):
+        assert data[key] == payload[key]
+
+
+@pytest.mark.parametrize("action", ["create_alert", "list_alerts"])
+@pytest.mark.parametrize("value", [True, False, 0, 0.0, "", 5, 5.5, "5"])
+def test_alert_outputs_preserve_documented_value_types(action, value, monkeypatch, sdk):
+    warning = Mock()
+    monkeypatch.setattr("soar_sdk.action_results.warning", warning)
+    payload = {
+        "id": STATEMENT_ID,
+        "rearm": 300,
+        "options": {"column": "count", "op": ">", "value": value},
+        "query": {
+            "tags": ["production"],
+            "options": {
+                "catalog": "samples",
+                "schema": "default",
+                "parameters": [{"name": "filter", "value": value}],
+            },
+        },
+    }
+    client = Mock()
+    response = Alert.from_dict(payload)
+    if action == "create_alert":
+        module = create_alert
+        params = create_alert.CreateAlertParams(
+            name="alert", query_id=STATEMENT_ID, column="count", operator=">", value="5"
+        )
+        client.alerts.create.return_value = response
+    else:
+        module = list_alerts
+        params = Params()
+        client.alerts.list.return_value = [response]
+    monkeypatch.setattr(module, "get_client", lambda asset: client)
+    assert getattr(module, action)(params, soar=sdk.soar, asset=sdk.asset) is True
+    data = sdk.results[0].get_data()[0]
+    assert data["options"]["value"] == value
+    assert type(data["options"]["value"]) is type(value)
+    assert data["rearm"] == 300
+    assert isinstance(data["rearm"], int)
+    assert data["query"]["tags"] == ["production"]
+    assert data["query"]["options"]["catalog"] == "samples"
+    assert data["query"]["options"]["schema"] == "default"
+    parameter = data["query"]["options"]["parameters"][0]
+    assert parameter["value"] == value
+    assert type(parameter["value"]) is type(value)
+    warning.assert_not_called()
+
+
+@pytest.mark.parametrize(
+    "output_class", [create_alert.CreateAlertOutput, list_alerts.ListAlertsOutput]
+)
+@pytest.mark.parametrize(
+    "value",
+    [True, False, 5, 5.5, "production", {"start": "2026-01-01"}, ["a", "b"], None],
+)
+def test_query_parameter_values_keep_their_native_type(
+    output_class, value, monkeypatch
+):
+    warning = Mock()
+    monkeypatch.setattr("soar_sdk.action_results.warning", warning)
+    payload = {
+        "query": {"options": {"parameters": [{"name": "filter", "value": value}]}}
+    }
+    output = output_class.model_validate(payload)
+    actual = output.model_dump()["query"]["options"]["parameters"][0]
+    assert actual["value"] == value
+    assert type(actual["value"]) is type(value)
+    warning.assert_not_called()
+
+
+@pytest.mark.parametrize(
+    "output_class", [create_alert.CreateAlertOutput, list_alerts.ListAlertsOutput]
+)
+@pytest.mark.parametrize("value", [False, 0, 0.0, ""])
+def test_alert_output_models_preserve_falsey_values(output_class, value, monkeypatch):
+    warning = Mock()
+    monkeypatch.setattr("soar_sdk.action_results.warning", warning)
+    output = output_class.model_validate(
+        {"options": {"column": "count", "op": "==", "value": value}}
+    )
+    actual = output.model_dump()["options"]["value"]
+    assert actual == value
+    assert type(actual) is type(value)
+    warning.assert_not_called()
+
+
+@pytest.mark.parametrize(
+    "payload",
+    [
+        {"id": "alert"},
+        {"options": {"column": "count", "op": "==", "value": None}},
+        {"query": {}},
+        {"query": {"options": {}}},
+        {"query": {"options": {"parameters": []}}},
+        {"query": {"options": {"parameters": [{"name": "filter", "value": None}]}}},
+    ],
+)
+def test_alert_serialization_keeps_absent_and_none_values_unchanged(payload):
+    alert = Alert.from_dict(payload)
+    assert serialize_alert(alert) == alert.as_dict()
+
+
+@pytest.mark.parametrize("value", [False, 0, 0.0, ""])
+def test_poll_preserves_falsey_alert_values_in_cef_and_raw_data(
+    value, monkeypatch, sdk
+):
+    backend = Mock()
+    backend.load_state.return_value = {}
+    asset = SimpleNamespace(
+        ingest_state=AssetState(backend, "ingest", "test-asset", encrypted=False)
+    )
+    monkeypatch.setattr(hub.app, "_asset", asset, raising=False)
+    alert = Alert.from_dict(
+        {
+            "id": STATEMENT_ID,
+            "name": "Alert",
+            "last_triggered_at": "2026-01-02T00:00:00Z",
+            "options": {"column": "count", "op": "==", "value": value},
+            "query": {"options": {"parameters": [{"name": "filter", "value": value}]}},
+        }
+    )
+    client = Mock()
+    client.alerts.list.return_value = [alert]
+    monkeypatch.setattr(hub, "get_client", lambda asset: client)
+    save = Mock(return_value=(True, "saved", 1))
+    monkeypatch.setattr(hub.app.actions_manager, "save_container", save)
+    assert hub.on_poll(OnPollParams(), soar=sdk.soar, asset=asset) is True
+    container = save.call_args.args[0]
+    for area in ("cef", "data"):
+        payload = container["artifacts"][0][area]
+        assert payload["options"]["value"] == value
+        assert type(payload["options"]["value"]) is type(value)
+        parameter = payload["query"]["options"]["parameters"][0]
+        assert parameter["value"] == value
+        assert type(parameter["value"]) is type(value)
+
+
+@pytest.mark.parametrize("action", ["perform_query", "get_query_status"])
+def test_sql_integer_counts_keep_precision_through_sdk(action, monkeypatch, sdk):
+    payload = {
+        "statement_id": STATEMENT_ID,
+        "status": {"state": "SUCCEEDED"},
+        "result": {"row_count": LARGE_ID, "row_offset": LARGE_ID, "chunk_index": 1},
+        "manifest": {
+            "total_row_count": LARGE_ID,
+            "total_chunk_count": 2,
+            "chunks": [
+                {"row_count": LARGE_ID, "row_offset": LARGE_ID, "chunk_index": 1}
+            ],
+            "schema": {
+                "column_count": 1,
+                "columns": [{"name": "value", "position": 0}],
+            },
+        },
+    }
+    response = SimpleNamespace(
+        status=SimpleNamespace(state="SUCCEEDED"), as_dict=lambda: payload
+    )
+    client = Mock()
+    client.statement_execution.execute_statement.return_value = response
+    client.statement_execution.get_statement.return_value = response
+    module = perform_query if action == "perform_query" else get_query_status
+    params = (
+        perform_query.PerformQueryParams(statement="select 1", warehouse_id="w")
+        if action == "perform_query"
+        else get_query_status.GetQueryStatusParams(statement_id=STATEMENT_ID)
+    )
+    monkeypatch.setattr(module, "get_client", lambda asset: client)
+    assert getattr(module, action)(params, soar=sdk.soar, asset=sdk.asset) is True
+    data = sdk.results[0].get_data()[0]
+    for chunk in (data["result"], data["manifest"]["chunks"][0]):
+        for name in ("row_count", "row_offset"):
+            assert chunk[name] == LARGE_ID
+            assert type(chunk[name]) is int
+        assert type(chunk["chunk_index"]) is int
+    assert data["manifest"]["total_row_count"] == LARGE_ID
+    assert type(data["manifest"]["total_row_count"]) is int
+    assert type(data["manifest"]["total_chunk_count"]) is int
+    assert type(data["manifest"]["schema"]["column_count"]) is int
+    assert type(data["manifest"]["schema"]["columns"][0]["position"]) is int
+
+
+@pytest.mark.parametrize(
+    "output_class",
+    [
+        get_job_run.GetJobRunOutput,
+        get_job_output.MetadataOutput,
+        execute_notebook.ExecuteNotebookOutput,
+    ],
+)
+def test_job_timings_and_attempt_counts_are_integers(output_class):
+    payload = {
+        "start_time": LARGE_ID,
+        "end_time": LARGE_ID + 2,
+        "attempt_number": 0,
+        "setup_duration": 1000,
+        "execution_duration": 2000,
+        "cleanup_duration": 0,
+    }
+    output = output_class.model_validate(dict(payload))
+    for name, expected in payload.items():
+        actual = getattr(output, name)
+        assert actual == expected
+        assert type(actual) is int
+
+
+@pytest.mark.parametrize(
+    "output_class,payload",
+    [
+        (
+            list_clusters.AwsAttributesOutput,
+            {
+                "first_on_demand": 1,
+                "spot_bid_price_percent": 100,
+                "ebs_volume_count": 0,
+            },
+        ),
+        (list_clusters.DriverOutput, {"start_timestamp": LARGE_ID}),
+        (
+            list_clusters.ListClustersOutput,
+            {
+                "start_time": LARGE_ID,
+                "num_workers": 0,
+                "terminated_time": LARGE_ID,
+                "last_restarted_time": LARGE_ID,
+                "last_state_loss_time": LARGE_ID,
+                "autotermination_minutes": 120,
+                "jdbc_port": 10000,
+                "cluster_memory_mb": 31232,
+            },
+        ),
+        (list_warehouses.OdbcParamsOutput, {"port": 443}),
+        (
+            list_warehouses.ListWarehousesOutput,
+            {
+                "num_clusters": 0,
+                "auto_stop_mins": 120,
+                "max_num_clusters": 4,
+                "min_num_clusters": 1,
+                "num_active_sessions": 0,
+            },
+        ),
+    ],
+)
+def test_compute_counts_timestamps_and_ports_are_integers(output_class, payload):
+    output = output_class.model_validate(dict(payload))
+    for name, expected in payload.items():
+        actual = getattr(output, name)
+        assert actual == expected
+        assert type(actual) is int
+
+
+def test_cluster_cores_preserve_fractional_values():
+    output = list_clusters.ListClustersOutput.model_validate({"cluster_cores": 7.5})
+    assert output.cluster_cores == 7.5
+    assert output.model_dump()["cluster_cores"] == 7.5
+
+
+def test_sql_output_preserves_documented_chunk_fields():
+    output = perform_query.PerformQueryOutput.model_validate(
+        {
+            "status": {"state": "SUCCEEDED"},
+            "result": {
+                "external_links": [{"external_link": "https://storage.example/result"}],
+                "next_chunk_index": 1,
+                "byte_count": 512,
+            },
+            "manifest": {
+                "total_byte_count": 512,
+                "chunks": [{"byte_count": 512}],
+                "schema": {
+                    "columns": [
+                        {"name": "value", "type_precision": 10, "type_scale": 2}
+                    ]
+                },
+            },
+        }
+    )
+    data = output.model_dump(by_alias=True)
+    assert data["result"]["external_links"][0]["external_link"].endswith("/result")
+    assert data["result"]["next_chunk_index"] == 1
+    assert data["result"]["byte_count"] == 512
+    assert data["manifest"]["total_byte_count"] == 512
+    assert data["manifest"]["chunks"][0]["byte_count"] == 512
+    assert data["manifest"]["schema"]["columns"][0]["type_precision"] == 10
+    assert data["manifest"]["schema"]["columns"][0]["type_scale"] == 2
 
 
 @pytest.mark.parametrize("state", ["SUCCESS", "FAILED", "CANCELED", "TIMEDOUT", None])
@@ -528,6 +1057,8 @@ def test_sdk_poll_checkpoint_commit_and_failed_save_retry(
             id=key,
             name=key,
             last_triggered_at=date,
+            options=None,
+            query=None,
             as_dict=lambda key=key: {"id": key},
         )
         for key, date in [("old", old), ("a", new), ("b", new)]

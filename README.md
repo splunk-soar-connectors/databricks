@@ -179,7 +179,7 @@ action_result.data.\*.id | string | `databricks alert id` | 1d7a3867-8a7d-45a7-8
 action_result.data.\*.name | string | | Test alert test playbook alert |
 action_result.data.\*.query.id | string | | 738f7950-c5f7-4c75-b364-47eac73439dd |
 action_result.data.\*.query.name | string | | Total Trips |
-action_result.data.\*.query.tags | string | | Sample |
+action_result.data.\*.query.tags.\* | string | | Sample |
 action_result.data.\*.query.query | string | | USE CATALOG SAMPLES; SELECT count(\*) as total_trips FROM `samples`.`nyctaxi`.`trips` WHERE tpep_pickup_datetime BETWEEN TIMESTAMP '{{ pickup_date.start }}' AND TIMESTAMP '{{ pickup_date.end }}' AND pickup_zip IN ({{ pickupzip }}) |
 action_result.data.\*.query.parent | string | | folders/3494881372287936 |
 action_result.data.\*.query.is_safe | boolean | | True False |
@@ -187,7 +187,6 @@ action_result.data.\*.query.options.parent | string | | |
 action_result.data.\*.query.options.parameters.\*.name | string | | pickup_date |
 action_result.data.\*.query.options.parameters.\*.type | string | | datetime-range |
 action_result.data.\*.query.options.parameters.\*.title | string | | Data Range |
-action_result.data.\*.query.options.parameters.\*.value | string | | 10001 |
 action_result.data.\*.query.options.parameters.\*.parentWidgetId | string | | |
 action_result.data.\*.query.options.parameters.\*.global | boolean | | True False |
 action_result.data.\*.query.options.parameters.\*.enumOptions | string | | 10154 |
@@ -219,7 +218,6 @@ action_result.data.\*.state | string | | unknown |
 action_result.data.\*.parent | string | | folders/4082822538617174 folders/3042705489298866 |
 action_result.data.\*.options.op | string | | > |
 action_result.data.\*.options.muted | boolean | | True False |
-action_result.data.\*.options.value | string | | 1 |
 action_result.data.\*.options.column | string | | total_trips |
 action_result.data.\*.options.parent | string | | folders/4082822538617174 folders/3042705489298866 |
 action_result.data.\*.options.query_plan | string | | |
@@ -558,14 +556,13 @@ action_result.data.\*.user.name | string | | Test User John Smith |
 action_result.data.\*.user.email | string | `email` | testuser@example.com |
 action_result.data.\*.query.id | string | `databricks query id` | 738f7950-c5f7-4c75-b364-47eac73439dd |
 action_result.data.\*.query.name | string | | Total Trips |
-action_result.data.\*.query.tags | string | | Sample |
+action_result.data.\*.query.tags.\* | string | | Sample |
 action_result.data.\*.query.query | string | | USE CATALOG SAMPLES; SELECT count(\*) as total_trips FROM `samples`.`nyctaxi`.`trips` WHERE tpep_pickup_datetime BETWEEN TIMESTAMP '{{ pickup_date.start }}' AND TIMESTAMP '{{ pickup_date.end }}' AND pickup_zip IN ({{ pickupzip }}) |
 action_result.data.\*.query.is_safe | boolean | | True False |
 action_result.data.\*.query.options.parent | string | | |
 action_result.data.\*.query.options.parameters.\*.name | string | | pickup_date |
 action_result.data.\*.query.options.parameters.\*.type | string | | datetime-range |
 action_result.data.\*.query.options.parameters.\*.title | string | | Data Range |
-action_result.data.\*.query.options.parameters.\*.value | string | | 10001 |
 action_result.data.\*.query.options.parameters.\*.parentWidgetId | string | | |
 action_result.data.\*.query.options.parameters.\*.global | boolean | | True False |
 action_result.data.\*.query.options.parameters.\*.enumOptions | string | | 10154 |
@@ -588,11 +585,10 @@ action_result.data.\*.query.run_as_role | string | | viewer |
 action_result.data.\*.query.warehouse_id | string | | 4790cbabexample |
 action_result.data.\*.query.data_source_id | string | | 468e81e8-b8f4-49f6-a817-3aaa221f3b88 |
 action_result.data.\*.query.run_as_service_principal_id | string | | |
-action_result.data.\*.rearm | string | | 5 |
+action_result.data.\*.rearm | numeric | | 5 |
 action_result.data.\*.state | string | | unknown triggered |
 action_result.data.\*.options.op | string | | > |
 action_result.data.\*.options.muted | boolean | | True False |
-action_result.data.\*.options.value | string | | 1 |
 action_result.data.\*.options.column | string | | total_trips |
 action_result.data.\*.options.parent | string | | folders/3042705489298866 folders/4082822538617174 |
 action_result.data.\*.options.query_plan | string | | |
@@ -642,28 +638,20 @@ DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
 --------- | ---- | -------- | --------------
 action_result.status | string | | success failure |
 action_result.message | string | | |
-action_result.data.\*.cluster.profile | string | | singleNode |
 action_result.data.\*.cluster_id | string | `databricks cluster id` | 0424-172834-62g8ca99 0624-224055-efbqpg99 |
 action_result.data.\*.cluster_name | string | | Test User's Personal Compute Cluster Test User's Cluster |
 action_result.data.\*.state | string | | TERMINATED RUNNING |
 action_result.data.\*.state_message | string | | Inactive cluster terminated (inactive for 4320 minutes). |
 action_result.data.\*.policy_id | string | | |
-action_result.data.\*.spark_conf.cluster.profile | string | | singleNode |
-action_result.data.\*.spark_conf.spark.cluster.profile | string | | singleNode |
-action_result.data.\*.spark_conf.spark.master | string | | local[\*, 4] |
-action_result.data.\*.spark_conf.spark.databricks.cluster.profile | string | | singleNode |
 action_result.data.\*.start_time | numeric | | 1682357315089 1687646455924 |
-action_result.data.\*.custom_tags.cluster.profile | string | | singleNode |
 action_result.data.\*.custom_tags.ResourceClass | string | | SingleNode |
 action_result.data.\*.num_workers | numeric | | 0 |
-action_result.data.\*.default_tags.cluster.profile | string | | singleNode |
 action_result.data.\*.default_tags.Vendor | string | | Databricks |
 action_result.data.\*.default_tags.Creator | string | `email` | testuser@example.com |
 action_result.data.\*.default_tags.ClusterId | string | | 0424-172834-62g8ca99 0624-224055-efbqpg99 |
 action_result.data.\*.default_tags.ClusterName | string | | Test User's Personal Compute Cluster John Smith's Cluster |
 action_result.data.\*.node_type_id | string | | i3.xlarge |
 action_result.data.\*.spark_version | string | | 13.0.x-cpu-ml-scala2.12 12.2.x-scala2.12 |
-action_result.data.\*.aws_attributes.cluster.profile | string | | singleNode |
 action_result.data.\*.aws_attributes.zone_id | string | | auto |
 action_result.data.\*.aws_attributes.availability | string | | ON_DEMAND SPOT_WITH_FALLBACK |
 action_result.data.\*.aws_attributes.first_on_demand | numeric | | 0 1 |
@@ -672,7 +660,6 @@ action_result.data.\*.aws_attributes.ebs_volume_count | numeric | | 0 |
 action_result.data.\*.cluster_source | string | | UI |
 action_result.data.\*.driver_healthy | boolean | | True False |
 action_result.data.\*.runtime_engine | string | | STANDARD PHOTON |
-action_result.data.\*.instance_source.cluster.profile | string | | singleNode |
 action_result.data.\*.instance_source.node_type_id | string | | i3.xlarge |
 action_result.data.\*.terminated_time | numeric | | 1685993057468 |
 action_result.data.\*.single_user_name | string | `email` | testuser@example.com |
@@ -680,36 +667,28 @@ action_result.data.\*.spark_context_id | numeric | | 4218622610576032053 5808117
 action_result.data.\*.creator_user_name | string | `email` | testuser@example.com |
 action_result.data.\*.data_security_mode | string | | LEGACY_SINGLE_USER_STANDARD |
 action_result.data.\*.last_activity_time | numeric | | 1685733831059 1687745241253 |
-action_result.data.\*.termination_reason.cluster.profile | string | | singleNode |
 action_result.data.\*.termination_reason.code | string | | INACTIVITY |
 action_result.data.\*.termination_reason.type | string | | SUCCESS |
-action_result.data.\*.termination_reason.parameters.cluster.profile | string | | singleNode |
 action_result.data.\*.termination_reason.parameters.inactivity_duration_min | string | | 4320 |
 action_result.data.\*.driver_node_type_id | string | | i3.xlarge |
 action_result.data.\*.enable_elastic_disk | boolean | | True False |
 action_result.data.\*.last_restarted_time | numeric | | 1685721657951 1687733852263 |
 action_result.data.\*.last_state_loss_time | numeric | | 1685721657913 1687733852234 |
-action_result.data.\*.driver_instance_source.cluster.profile | string | | singleNode |
 action_result.data.\*.driver_instance_source.node_type_id | string | | i3.xlarge |
 action_result.data.\*.init_scripts_safe_mode | boolean | | True False |
 action_result.data.\*.autotermination_minutes | numeric | | 4320 120 |
 action_result.data.\*.effective_spark_version | string | | 13.0.x-cpu-ml-scala2.12 12.2.x-photon-scala2.12 |
 action_result.data.\*.enable_local_disk_encryption | boolean | | True False |
-action_result.data.\*.driver.cluster.profile | string | | singleNode |
 action_result.data.\*.driver.node_id | string | `md5` | 081ac1a81449example9383abef5514 |
 action_result.data.\*.driver.private_ip | string | `ip` | 10.26.193.115 |
 action_result.data.\*.driver.instance_id | string | | i-0ab7bd9b85477a279 |
 action_result.data.\*.driver.host_private_ip | string | `ip` | 10.26.208.44 |
-action_result.data.\*.driver.node_attributes.cluster.profile | string | | singleNode |
 action_result.data.\*.driver.node_attributes.is_spot | boolean | | True False |
 action_result.data.\*.driver.start_timestamp | numeric | | 1687733773425 |
-action_result.data.\*.driver.node_aws_attributes.cluster.profile | string | | singleNode |
 action_result.data.\*.driver.node_aws_attributes.is_spot | boolean | | True False |
-action_result.data.\*.disk_spec.cluster.profile | string | | singleNode |
 action_result.data.\*.disk_spec.disk_count | numeric | | 0 |
 action_result.data.\*.jdbc_port | numeric | | 10000 |
 action_result.data.\*.cluster_cores | numeric | | 4 |
-action_result.data.\*.spark_env_vars.cluster.profile | string | | singleNode |
 action_result.data.\*.spark_env_vars.PYSPARK_PYTHON | string | | /databricks/python3/bin/python3 |
 action_result.data.\*.cluster_memory_mb | numeric | | 31232 |
 action_result.summary.status | string | | |

@@ -12,27 +12,28 @@
 # and limitations under the License.
 #
 
-from ..helper import action_errors
+from ..helper import action_errors, failed_action_result
 from soar_sdk.abstract import SOARClient
-from soar_sdk.action_results import ActionOutput, OutputField
+from soar_sdk.action_results import PermissiveActionOutput, ActionOutput, OutputField
 from soar_sdk.params import Params
+from soar_sdk.exceptions import ActionFailure
 from ..app import app, Asset
 from .. import consts
-from ..helper import DatabricksOutput, get_client
+from ..helper import get_client
 
 
-class HealthOutput(DatabricksOutput):
+class HealthOutput(ActionOutput):
     status: str | None = OutputField(example_values=["HEALTHY"], column_name="Status")
 
 
-class OdbcParamsOutput(DatabricksOutput):
+class OdbcParamsOutput(ActionOutput):
     path: str | None = OutputField(
         example_values=[
             "/sql/1.0/warehouses/4790cb1ab98bd522",
             "/sql/1.0/warehouses/d4a60a3223b685ff",
         ]
     )
-    port: float | None = OutputField(example_values=[443])
+    port: int | None = OutputField(example_values=[443])
     hostname: str | None = OutputField(
         cef_types=["host name"],
         example_values=["example.cloud.databricks.com", "example.cloud.databricks.com"],
@@ -40,11 +41,13 @@ class OdbcParamsOutput(DatabricksOutput):
     protocol: str | None = OutputField(cef_types=["url"], example_values=["https"])
 
 
-class ChannelOutput(DatabricksOutput):
+class ChannelOutput(ActionOutput):
     name: str | None = OutputField(example_values=["CHANNEL_NAME_CURRENT"])
 
 
-class ListWarehousesOutput(DatabricksOutput):
+class ListWarehousesOutput(PermissiveActionOutput):
+    """Keep additional warehouse fields, including tags and instance profiles."""
+
     id: str | None = OutputField(
         cef_types=["databricks warehouse id"],
         example_values=["d4a60a32example"],
@@ -73,13 +76,13 @@ class ListWarehousesOutput(DatabricksOutput):
     creator_name: str | None = OutputField(
         cef_types=["email"], example_values=["testuser@example.com"]
     )
-    num_clusters: float | None = OutputField(example_values=[1])
+    num_clusters: int | None = OutputField(example_values=[1])
     enable_photon: bool | None = OutputField(example_values=[True])
-    auto_stop_mins: float | None = OutputField(example_values=[60, 10])
+    auto_stop_mins: int | None = OutputField(example_values=[60, 10])
     warehouse_type: str | None = OutputField(example_values=["PRO"])
-    max_num_clusters: float | None = OutputField(example_values=[1])
-    min_num_clusters: float | None = OutputField(example_values=[1])
-    num_active_sessions: float | None = OutputField(example_values=[0])
+    max_num_clusters: int | None = OutputField(example_values=[1])
+    min_num_clusters: int | None = OutputField(example_values=[1])
+    num_active_sessions: int | None = OutputField(example_values=[0])
     spot_instance_policy: str | None = OutputField(example_values=["COST_OPTIMIZED"])
     enable_serverless_compute: bool | None = OutputField(example_values=[False])
     channel: ChannelOutput | None = None
@@ -96,16 +99,24 @@ class Summary(ActionOutput):
     description="List all SQL warehouses for which a user has manager permissions",
     action_type="generic",
     read_only=True,
+    output_class=ListWarehousesOutput,
     summary_type=Summary,
     render_as="table",
 )
-def list_warehouses(
-    params: Params, soar: SOARClient, asset: Asset
-) -> list[ListWarehousesOutput]:
-    with action_errors(consts.LIST_WAREHOUSES_ERROR_MESSAGE):
-        client = get_client(asset)
-        items = list(client.warehouses.list())
-        soar.set_summary(
-            Summary(status=consts.LIST_WAREHOUSES_SUCCESS_MESSAGE, total=len(items))
-        )
-        return [ListWarehousesOutput.model_validate(item.as_dict()) for item in items]
+def list_warehouses(params: Params, soar: SOARClient, asset: Asset):
+    results = []
+    try:
+        with action_errors(consts.LIST_WAREHOUSES_ERROR_MESSAGE):
+            client = get_client(asset)
+            for item in client.warehouses.list():
+                results.append(ListWarehousesOutput.model_validate(item.as_dict()))
+            soar.set_summary(
+                Summary(
+                    status=consts.LIST_WAREHOUSES_SUCCESS_MESSAGE, total=len(results)
+                )
+            )
+            return results
+    except ActionFailure as exc:
+        if not results:
+            raise
+        return failed_action_result(params, exc, "list warehouses", results)

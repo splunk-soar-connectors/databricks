@@ -15,11 +15,11 @@
 from ..helper import action_errors
 from pydantic import ConfigDict
 from soar_sdk.abstract import SOARClient
-from soar_sdk.action_results import ActionOutput, OutputField
+from soar_sdk.action_results import PermissiveActionOutput, ActionOutput, OutputField
 from soar_sdk.params import Params, Param
 from ..app import app, Asset
 from .. import consts
-from ..helper import DatabricksOutput, get_client, statement_result
+from ..helper import get_client, statement_result
 
 
 class PerformQueryParams(Params):
@@ -58,49 +58,49 @@ class PerformQueryParams(Params):
     )
 
 
-class ResultOutput(DatabricksOutput):
-    row_count: float | None = OutputField(
+class ResultOutput(PermissiveActionOutput):
+    row_count: int | None = OutputField(
         column_name="Rows Returned", example_values=[1000, 5]
     )
     data_array: list[list[str | None]] | None = OutputField(example_values=["10282"])
-    row_offset: float | None = OutputField(example_values=[0])
-    chunk_index: float | None = OutputField(example_values=[0])
+    row_offset: int | None = OutputField(example_values=[0])
+    chunk_index: int | None = OutputField(example_values=[0])
 
 
-class StatusOutput(DatabricksOutput):
+class StatusOutput(PermissiveActionOutput):
     state: str | None = OutputField(
         column_name="Query State", example_values=["SUCCEEDED"]
     )
 
 
-class ChunksOutput(DatabricksOutput):
-    row_count: float | None = OutputField(example_values=[1000, 5])
-    row_offset: float | None = OutputField(example_values=[0])
-    chunk_index: float | None = OutputField(example_values=[0])
+class ChunksOutput(PermissiveActionOutput):
+    row_count: int | None = OutputField(example_values=[1000, 5])
+    row_offset: int | None = OutputField(example_values=[0])
+    chunk_index: int | None = OutputField(example_values=[0])
 
 
-class ColumnsOutput(DatabricksOutput):
+class ColumnsOutput(PermissiveActionOutput):
     name: str | None = OutputField(example_values=["route", "tpep_pickup_datetime"])
-    position: float | None = OutputField(example_values=[0])
+    position: int | None = OutputField(example_values=[0])
     type_name: str | None = OutputField(example_values=["STRING", "TIMESTAMP"])
     type_text: str | None = OutputField(example_values=["STRING", "TIMESTAMP"])
 
 
-class SchemaOutput(DatabricksOutput):
+class SchemaOutput(ActionOutput):
     columns: list[ColumnsOutput] | None = None
-    column_count: float | None = OutputField(example_values=[2, 6])
+    column_count: int | None = OutputField(example_values=[2, 6])
 
 
-class ManifestOutput(DatabricksOutput):
+class ManifestOutput(PermissiveActionOutput):
     chunks: list[ChunksOutput] | None = None
     format: str | None = OutputField(example_values=["JSON_ARRAY"])
     schema_name: SchemaOutput | None = OutputField(alias="schema")
-    total_row_count: float | None = OutputField(example_values=[1000, 5])
-    total_chunk_count: float | None = OutputField(example_values=[1])
+    total_row_count: int | None = OutputField(example_values=[1000, 5])
+    total_chunk_count: int | None = OutputField(example_values=[1])
     truncated: bool | None = OutputField(example_values=[False])
 
 
-class PerformQueryOutput(DatabricksOutput):
+class PerformQueryOutput(ActionOutput):
     statement_id: str | None = OutputField(
         column_name="Statement Id",
         example_values=["01edd5a1-16c6-136e-9b1e-95fc566d5199"],

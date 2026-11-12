@@ -14,13 +14,12 @@
 
 """Shared Databricks client, result, and checkpoint helpers."""
 
-import json
 import uuid
 from contextlib import contextmanager
 from functools import wraps
 from urllib.parse import urlsplit
 
-from pydantic import ConfigDict, PrivateAttr, model_validator
+from pydantic import PrivateAttr
 from soar_sdk.action_results import ActionOutput, ActionResult
 from soar_sdk.exceptions import ActionFailure
 from soar_sdk.logging import getLogger
@@ -28,28 +27,6 @@ from soar_sdk.logging import getLogger
 from . import consts
 
 logger = getLogger()
-
-
-class DatabricksOutput(ActionOutput):
-    """Keep unmodeled API properties and accept sparse Databricks responses."""
-
-    model_config = ConfigDict(
-        extra="allow", populate_by_name=True, coerce_numbers_to_str=True
-    )
-
-    @model_validator(mode="before")
-    @classmethod
-    def serialize_complex_strings(cls, values):
-        values = dict(values)
-        if "action_status" in cls.model_fields:
-            values.setdefault("action_status", "success")
-        for name, field in cls.model_fields.items():
-            key = field.alias or name
-            if field.annotation in (str, str | None) and isinstance(
-                values.get(key), dict | list
-            ):
-                values[key] = json.dumps(values[key])
-        return values
 
 
 def get_client(asset):
@@ -71,6 +48,20 @@ def get_client(asset):
     )
 
 
+def serialize_alert(alert):
+    """Restore non-None values omitted by databricks-sdk 0.27.1 serialization."""
+    payload = alert.as_dict()
+    if alert.options is not None and alert.options.value is not None:
+        payload["options"]["value"] = alert.options.value
+    if alert.query is not None and alert.query.options is not None:
+        for index, parameter in enumerate(alert.query.options.parameters or []):
+            if parameter.value is not None:
+                payload["query"]["options"]["parameters"][index]["value"] = (
+                    parameter.value
+                )
+    return payload
+
+
 @contextmanager
 def action_errors(prefix):
     try:
@@ -80,6 +71,22 @@ def action_errors(prefix):
     except Exception as exc:
         logger.debug("Databricks operation failed", exc_info=True)
         raise ActionFailure(f"{prefix}: {exc}") from exc
+
+
+def failed_action_result(params, exception, action_name, outputs):
+    """Keep completed rows in an SDK failure result."""
+    exception.set_action_name(action_name)
+    failure = ActionResult(
+        status=False,
+        message=str(exception),
+        param=params.model_dump(by_alias=True),
+    )
+    for output in outputs:
+        data = output.model_dump(by_alias=True)
+        if "action_status" in data:
+            data["action_status"] = "failed"
+        failure.add_data(data)
+    return failure
 
 
 def validate_uuid(value, parameter_name):

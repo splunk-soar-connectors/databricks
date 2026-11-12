@@ -23,6 +23,7 @@ from soar_sdk.exceptions import ActionFailure
 from soar_sdk.params import OnPollParams, Params
 
 from databricks.sdk.service.workspace import ObjectType
+from databricks.sdk.service.sql import Alert
 from src.actions import create_alert
 from src.actions import delete_alert
 from databricks.sdk.service.jobs import RunResultState
@@ -72,7 +73,8 @@ def test_sparse_job_response_keeps_nested_and_unknown_fields(monkeypatch):
     payload = {
         "run_id": 123,
         "state": {"life_cycle_state": "RUNNING"},
-        "new_api_property": {"a": 1},
+        "description": "Notebook run",
+        "tasks": [{"task_key": "notebook", "run_id": 456}],
     }
     client = Mock()
     client.jobs.get_run.return_value.as_dict.return_value = payload
@@ -82,7 +84,8 @@ def test_sparse_job_response_keeps_nested_and_unknown_fields(monkeypatch):
     )
     assert result.state.life_cycle_state == "RUNNING"
     assert result.action_status == "success"
-    assert result.model_dump()["new_api_property"] == {"a": 1}
+    assert result.model_dump()["description"] == "Notebook run"
+    assert result.model_dump()["tasks"] == payload["tasks"]
 
 
 def test_empty_list_summary_is_preserved(monkeypatch):
@@ -116,6 +119,8 @@ def test_poll_commits_checkpoint_after_container_is_consumed(monkeypatch):
         id="new",
         name="Alert",
         last_triggered_at="2026-01-02T00:00:00Z",
+        options=None,
+        query=None,
         as_dict=lambda: {"id": "new", "nested": {"x": 1}},
     )
     client = Mock()
@@ -156,7 +161,7 @@ def test_create_alert_resolves_folder(monkeypatch):
     client.workspace.get_status.return_value = SimpleNamespace(
         object_type=ObjectType.DIRECTORY, object_id=42
     )
-    client.alerts.create.return_value.as_dict.return_value = {"id": "new-alert"}
+    client.alerts.create.return_value = Alert(id="new-alert")
     monkeypatch.setattr(create_alert, "get_client", lambda asset: client)
     params = create_alert.CreateAlertParams(
         name="alert",

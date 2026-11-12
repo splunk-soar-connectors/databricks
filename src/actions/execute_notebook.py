@@ -15,12 +15,17 @@
 from ..helper import action_errors
 import json
 from soar_sdk.abstract import SOARClient
-from soar_sdk.action_results import ActionOutput, ActionResult, OutputField
+from soar_sdk.action_results import (
+    PermissiveActionOutput,
+    ActionOutput,
+    ActionResult,
+    OutputField,
+)
 from soar_sdk.params import Params, Param
 from soar_sdk.exceptions import ActionFailure
 from ..app import app, Asset, logger
 from .. import consts
-from ..helper import DatabricksOutput, get_client
+from ..helper import get_client
 
 
 class ExecuteNotebookParams(Params):
@@ -53,47 +58,49 @@ class ExecuteNotebookParams(Params):
     )
 
 
-class NotebookTaskOutput(DatabricksOutput):
+class NotebookTaskOutput(ActionOutput):
     source: str | None = OutputField(example_values=["WORKSPACE"])
     notebook_path: str | None = OutputField(
         example_values=["/Users/testuser@example.com/Notebook 1"]
     )
 
 
-class TaskOutput(DatabricksOutput):
+class TaskOutput(ActionOutput):
     notebook_task: NotebookTaskOutput | None = None
 
 
-class StateOutput(DatabricksOutput):
+class StateOutput(ActionOutput):
     result_state: str | None = OutputField(example_values=["SUCCESS"])
     state_message: str | None = OutputField(example_values=[""])
     life_cycle_state: str | None = OutputField(example_values=["TERMINATED"])
     user_cancelled_or_timedout: bool | None = OutputField(example_values=[False])
 
 
-class ClusterSpecOutput(DatabricksOutput):
+class ClusterSpecOutput(ActionOutput):
     existing_cluster_id: str | None = OutputField(
         example_values=["0624-224055-efbqpghm"]
     )
 
 
-class ClusterInstanceOutput(DatabricksOutput):
+class ClusterInstanceOutput(ActionOutput):
     cluster_id: str | None = OutputField(example_values=["0624-224055-efbqpghn"])
     spark_context_id: str | None = OutputField(example_values=["5808117308087458174"])
 
 
-class ExecuteNotebookOutput(DatabricksOutput):
+class ExecuteNotebookOutput(PermissiveActionOutput):
+    """Keep additional Run fields, including tasks and their configuration."""
+
     run_id: int | None = OutputField(example_values=[6794, 86328], column_name="Run Id")
     task: TaskOutput | None = None
     state: StateOutput | None = None
     format: str | None = OutputField(example_values=["SINGLE_TASK"])
     job_id: int | None = OutputField(example_values=[713374513094130])
-    end_time: float | None = OutputField(example_values=[1687745422414])
+    end_time: int | None = OutputField(example_values=[1687745422414])
     run_name: str | None = OutputField(
         column_name="Run Name", example_values=["sample job from test playbook"]
     )
     run_type: str | None = OutputField(example_values=["SUBMIT_RUN"])
-    start_time: float | None = OutputField(example_values=[1687745413368])
+    start_time: int | None = OutputField(example_values=[1687745413368])
     cluster_spec: ClusterSpecOutput | None = None
     run_page_url: str | None = OutputField(
         cef_types=["url"],
@@ -102,14 +109,14 @@ class ExecuteNotebookOutput(DatabricksOutput):
         ],
     )
     number_in_job: int | None = OutputField(example_values=[86328])
-    attempt_number: float | None = OutputField(example_values=[0])
-    setup_duration: float | None = OutputField(example_values=[0])
-    cleanup_duration: float | None = OutputField(example_values=[0])
+    attempt_number: int | None = OutputField(example_values=[0])
+    setup_duration: int | None = OutputField(example_values=[0])
+    cleanup_duration: int | None = OutputField(example_values=[0])
     cluster_instance: ClusterInstanceOutput | None = None
     creator_user_name: str | None = OutputField(
         cef_types=["email"], example_values=["testuser@example.com"]
     )
-    execution_duration: float | None = OutputField(example_values=[9000])
+    execution_duration: int | None = OutputField(example_values=[9000])
     action_status: str | None = OutputField(column_name="Status")
 
 
@@ -172,7 +179,7 @@ def execute_notebook(params: ExecuteNotebookParams, soar: SOARClient, asset: Ass
                     kwargs[key] = getattr(params, key)
 
             def report_progress(run):
-                output = ExecuteNotebookOutput.model_validate(run.as_dict())
+                output = ExecuteNotebookOutput(action_status="success", **run.as_dict())
                 results.append(output)
                 logger.progress(
                     "Notebook run %s: %s",
@@ -181,7 +188,9 @@ def execute_notebook(params: ExecuteNotebookParams, soar: SOARClient, asset: Ass
                 )
 
             result = client.jobs.submit(**kwargs).result(callback=report_progress)
-            final_output = ExecuteNotebookOutput.model_validate(result.as_dict())
+            final_output = ExecuteNotebookOutput(
+                action_status="success", **result.as_dict()
+            )
             if (
                 result.state is None
                 or result.state.result_state != RunResultState.SUCCESS
@@ -197,6 +206,8 @@ def execute_notebook(params: ExecuteNotebookParams, soar: SOARClient, asset: Ass
             soar.set_summary(Summary(status=consts.EXECUTE_NOTEBOOK_SUCCESS_MESSAGE))
             return results or [final_output]
     except ActionFailure as exc:
+        if not results:
+            raise
         exc.set_action_name("execute notebook")
         failure = ActionResult(
             status=False,

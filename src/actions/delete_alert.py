@@ -45,7 +45,7 @@ class Summary(ActionOutput):
 )
 def delete_alert(
     params: DeleteAlertParams, soar: SOARClient, asset: Asset
-) -> ActionOutput:
+) -> list[ActionOutput]:
     with action_errors(consts.DELETE_ALERT_ERROR_MESSAGE):
         client = get_client(asset)
         validate_uuid(params.alert_id, "alert_id")
@@ -54,4 +54,4 @@ def delete_alert(
         state.pop(params.alert_id, None)
         asset.ingest_state["alerts"] = state
         soar.set_summary(Summary(status=consts.DELETE_ALERT_SUCCESS_MESSAGE))
-        return ActionOutput()
+        return []
