@@ -749,10 +749,16 @@ def test_poll_preserves_falsey_alert_values_in_cef_and_raw_data(
     monkeypatch.setattr(hub, "get_client", lambda asset: client)
     save = Mock(return_value=(True, "saved", 1))
     monkeypatch.setattr(hub.app.actions_manager, "save_container", save)
+    save_artifacts = Mock(return_value=(True, "saved", [1]))
+    monkeypatch.setattr(hub.app.actions_manager, "save_artifacts", save_artifacts)
     assert hub.on_poll(OnPollParams(), soar=sdk.soar, asset=asset) is True
     container = save.call_args.args[0]
+    assert "artifacts" not in container
+    artifact = save_artifacts.call_args.args[0][0]
+    assert artifact["container_id"] == 1
+    assert artifact["run_automation"] is True
     for area in ("cef", "data"):
-        payload = container["artifacts"][0][area]
+        payload = artifact[area]
         assert payload["options"]["value"] == value
         assert type(payload["options"]["value"]) is type(value)
         parameter = payload["query"]["options"]["parameters"][0]
@@ -1037,9 +1043,12 @@ def test_notebook_failure_keeps_progress_and_final_run(monkeypatch, sdk):
     )
 
 
-@pytest.mark.parametrize("failed_save", [0, 1, 2])
+@pytest.mark.parametrize(
+    "failed_save,failed_artifact",
+    [(0, False), (1, False), (2, False), (1, True), (2, True)],
+)
 def test_sdk_poll_checkpoint_commit_and_failed_save_retry(
-    failed_save, monkeypatch, sdk
+    failed_save, failed_artifact, monkeypatch, sdk
 ):
     old = "2026-01-01T00:00:00Z"
     new = "2026-01-02T00:00:00Z"
@@ -1065,23 +1074,38 @@ def test_sdk_poll_checkpoint_commit_and_failed_save_retry(
     ]
     monkeypatch.setattr(hub, "get_client", lambda asset: client)
     outcomes = [(True, "saved", 1), (True, "saved", 2)]
-    if failed_save:
+    if failed_save and not failed_artifact:
         outcomes[failed_save - 1] = (False, "Save failed", None)
     save = Mock(side_effect=outcomes)
     monkeypatch.setattr(hub.app.actions_manager, "save_container", save)
+    artifact_outcomes = [(True, "saved", [1]), (True, "saved", [2])]
+    if failed_artifact:
+        artifact_outcomes[failed_save - 1] = (False, "Artifact save failed", None)
+    save_artifacts = Mock(side_effect=artifact_outcomes)
+    monkeypatch.setattr(hub.app.actions_manager, "save_artifacts", save_artifacts)
     assert hub.on_poll(OnPollParams(), soar=sdk.soar, asset=asset) is (not failed_save)
     assert asset.ingest_state.in_transaction is False
     if failed_save:
         assert "ingest" not in stored
         assert sdk.results[-1].get_status() is False
         assert sdk.results[-1].get_summary() == {
-            "containers_saved": failed_save - 1,
+            "containers_saved": failed_save if failed_artifact else failed_save - 1,
             "save_failures": 1,
         }
-        save.side_effect = [(False, "Duplicate container found", 1), (True, "saved", 2)]
+        saved_count = failed_save if failed_artifact else failed_save - 1
+        save.side_effect = [
+            (False, "Duplicate container found", cid)
+            if cid <= saved_count
+            else (True, "saved", cid)
+            for cid in (1, 2)
+        ]
+        save_artifacts.side_effect = [(True, "saved", [1]), (True, "saved", [2])]
         assert hub.on_poll(OnPollParams(), soar=sdk.soar, asset=asset) is True
     assert stored["ingest"]["alerts"] == {"old": old, "a": new, "b": new}
     assert sdk.results[-1].get_summary() == {"containers_saved": 2, "save_failures": 0}
+    for call in save_artifacts.call_args_list:
+        assert call.args[0][0]["run_automation"] is True
+        assert call.args[0][0]["container_id"] in (1, 2)
     first_summary = sdk.results[-1].get_summary().copy()
     assert hub.on_poll(OnPollParams(), soar=sdk.soar, asset=asset) is True
     assert sdk.results[-1].get_summary() == {"containers_saved": 0, "save_failures": 0}
@@ -1105,3 +1129,51 @@ def test_poll_vendor_error_does_not_count_as_a_container_save_failure(monkeypatc
     assert "Vendor unavailable" in sdk.results[0].get_message()
     assert asset.ingest_state.in_transaction is False
     save.assert_not_called()
+
+
+@pytest.mark.parametrize("artifact_failure", [False, True])
+def test_poll_error_after_container_save_rolls_back_checkpoint(
+    artifact_failure, monkeypatch, sdk
+):
+    backend = Mock()
+    stored = {}
+    backend.load_state.side_effect = lambda: stored
+    backend.save_state.side_effect = stored.update
+    asset = SimpleNamespace(
+        ingest_state=AssetState(backend, "ingest", "test-asset", encrypted=False)
+    )
+    monkeypatch.setattr(hub.app, "_asset", asset, raising=False)
+
+    def alerts():
+        yield SimpleNamespace(
+            id="a",
+            name="Alert",
+            last_triggered_at="2026-01-02T00:00:00Z",
+            options=None,
+            query=None,
+            as_dict=lambda: {"id": "a"},
+        )
+        if not artifact_failure:
+            raise RuntimeError("Vendor unavailable")
+
+    client = Mock()
+    client.alerts.list.side_effect = alerts
+    monkeypatch.setattr(hub, "get_client", lambda asset: client)
+    save = Mock(return_value=(True, "saved", 1))
+    save_artifacts = Mock(side_effect=RuntimeError("Artifact unavailable"))
+    monkeypatch.setattr(hub.app.actions_manager, "save_container", save)
+    monkeypatch.setattr(hub.app.actions_manager, "save_artifacts", save_artifacts)
+    assert hub.on_poll(OnPollParams(), soar=sdk.soar, asset=asset) is False
+    assert sdk.results[0].get_summary() == {
+        "containers_saved": 1,
+        "save_failures": int(artifact_failure),
+    }
+    assert "ingest" not in stored
+    assert asset.ingest_state.in_transaction is False
+    save.assert_called_once()
+    if artifact_failure:
+        save_artifacts.assert_called_once()
+        assert "Artifact unavailable" in sdk.results[0].get_message()
+    else:
+        save_artifacts.assert_not_called()
+        assert "Vendor unavailable" in sdk.results[0].get_message()

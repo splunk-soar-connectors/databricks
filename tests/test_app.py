@@ -112,7 +112,7 @@ def test_query_rows_preserve_null_cells():
     assert data["manifest"]["schema"]["columns"][0]["name"] == "value"
 
 
-def test_poll_commits_checkpoint_after_container_is_consumed(monkeypatch):
+def test_poll_stages_checkpoint_after_container_and_artifact_are_consumed(monkeypatch):
     state = State({"alerts": {"old": "2026-01-01T00:00:00Z"}})
     asset = SimpleNamespace(ingest_state=state)
     alert = SimpleNamespace(
@@ -131,7 +131,10 @@ def test_poll_commits_checkpoint_after_container_is_consumed(monkeypatch):
     )
     container = next(iterator)
     assert "new" not in state["alerts"]
-    assert container.artifacts[0]["cef"] is not container.artifacts[0]["data"]
+    assert container.artifacts is None
+    artifact = next(iterator)
+    assert artifact.cef is not artifact.data
+    assert "new" not in state["alerts"]
     with pytest.raises(StopIteration):
         next(iterator)
     assert state["alerts"]["new"] == alert.last_triggered_at

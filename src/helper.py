@@ -110,7 +110,7 @@ class PollSummary(ActionOutput):
 
 
 def retain_poll_summary(app):
-    """Attach counts to the result that SDK 7.1.2 creates without a summary."""
+    """Attach counts to the result that SDK 7.1.3 creates without a summary."""
 
     def decorate(poll):
         @wraps(poll)
@@ -121,6 +121,7 @@ def retain_poll_summary(app):
             success = poll(params, soar, *args, **kwargs)
             if not success and summary._pending_save:
                 summary.save_failures += 1
+            summary._pending_save = False
             for result in app.actions_manager.get_results()[first_result:]:
                 result.set_summary(summary.model_dump())
             return success

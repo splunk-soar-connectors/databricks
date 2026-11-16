@@ -22,6 +22,7 @@ from soar_sdk.abstract import SOARClient
 from soar_sdk.app import App
 from soar_sdk.asset import AssetField, BaseAsset, FieldCategory
 from soar_sdk.logging import getLogger
+from soar_sdk.models.artifact import Artifact
 from soar_sdk.models.container import Container
 from soar_sdk.params import OnPollParams
 
@@ -88,37 +89,42 @@ def test_connectivity(asset: Asset) -> None:
 @app.on_poll()
 def on_poll(
     params: OnPollParams, soar: SOARClient, asset: Asset
-) -> Iterator[Container]:
+) -> Iterator[Container | Artifact]:
     """Ingest alerts triggered after the saved per-alert checkpoint."""
     state = migrate_alert_state(asset)
     summary = soar.get_summary()
-    with action_errors("Alert ingestion failed"):
-        for alert in get_client(asset).alerts.list():
-            triggered = alert.last_triggered_at
-            alert_id = alert.id
-            if not alert_id or not triggered:
-                continue
-            # Validate before yielding; a malformed checkpoint must not ingest a row.
-            timestamp = datetime.strptime(triggered, consts.DATETIME_FORMAT).replace(
-                tzinfo=UTC
-            )
-            if alert_id in state and timestamp <= datetime.strptime(
-                state[alert_id], consts.DATETIME_FORMAT
-            ).replace(tzinfo=UTC):
-                continue
-            payload = serialize_alert(alert)
-            container = Container(
-                name=alert.name or "Databricks Alert",
-                source_data_identifier=f"{alert_id}:{triggered}",
-                artifacts=[{"cef": deepcopy(payload), "data": payload}],
-            )
-            summary._pending_save = True
-            yield container
-            # The SDK saves the container before resuming this generator.
-            summary._pending_save = False
-            summary.containers_saved += 1
-            state[alert_id] = triggered
-            asset.ingest_state["alerts"] = dict(state)
+    try:
+        with action_errors("Alert ingestion failed"):
+            for alert in get_client(asset).alerts.list():
+                triggered = alert.last_triggered_at
+                alert_id = alert.id
+                if not alert_id or not triggered:
+                    continue
+                # Validate before yielding; a malformed checkpoint must not ingest a row.
+                timestamp = datetime.strptime(
+                    triggered, consts.DATETIME_FORMAT
+                ).replace(tzinfo=UTC)
+                if alert_id in state and timestamp <= datetime.strptime(
+                    state[alert_id], consts.DATETIME_FORMAT
+                ).replace(tzinfo=UTC):
+                    continue
+                payload = serialize_alert(alert)
+                container = Container(
+                    name=alert.name or "Databricks Alert",
+                    source_data_identifier=f"{alert_id}:{triggered}",
+                )
+                summary._pending_save = True
+                yield container
+                # The SDK saves the container before resuming this generator.
+                summary.containers_saved += 1
+                yield Artifact(cef=deepcopy(payload), data=payload)
+                # The SDK commits these checkpoints only after flushing artifacts.
+                state[alert_id] = triggered
+                asset.ingest_state["alerts"] = dict(state)
+    except Exception:
+        # Generator errors are not SDK container/artifact save failures.
+        summary._pending_save = False
+        raise
 
 
 from .actions import (  # noqa: F401
